@@ -1,7 +1,7 @@
 /* Apps1D76 — service worker : fonctionnement hors ligne.
    VERSION et CORE sont mis à jour par « npm run generer » : les postes récupèrent la nouvelle version. */
-const VERSION = 'apps1d-fd9d349034';
-const CORE = ["./","./index.html","./style.css","./script.js","./outils.js","./manifest.webmanifest","./icones/apple-touch-icon.png","./icones/icon-192.png","./icones/icon-512.png","./icones/icon-maskable-512.png","./icones/icon.svg","https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/fonts/Marianne-Regular.woff2","https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/fonts/Marianne-Bold.woff2"];
+const VERSION = 'apps1d-2158e5e292';
+const CORE = ["./","./index.html","./manifest.webmanifest","./accueil/icones/apple-touch-icon.png","./accueil/icones/icon-192.png","./accueil/icones/icon-512.png","./accueil/icones/icon-maskable-512.png","./accueil/icones/icon.svg","./accueil/outils.js","./accueil/script.js","./accueil/style.css","https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/fonts/Marianne-Regular.woff2","https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/fonts/Marianne-Bold.woff2"];
 const POLICES = 'https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@';
 
 self.addEventListener('install', e => {
@@ -29,7 +29,7 @@ self.addEventListener('fetch', e => {
   const req = e.request;
   const origine = new URL(req.url).origin === location.origin;
   if (req.method !== 'GET' || !(origine || req.url.startsWith(POLICES))) return;
-  const frais = req.mode === 'navigate' || (origine && req.url.split(/[?#]/)[0].endsWith('/outils.js'));
+  const frais = req.mode === 'navigate' || (origine && req.url.split(/[?#]/)[0].endsWith('/accueil/outils.js'));
   e.respondWith(frais
     // Pages et liste des outils : réseau d'abord (toujours à jour), cache si hors ligne
     ? fetch(req).then(res => put(req, res)).catch(async () => (await caches.match(req)) || (req.mode === 'navigate' ? horsLigne() : Response.error()))

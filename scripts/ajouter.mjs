@@ -3,8 +3,7 @@ import { readdirSync, writeFileSync, existsSync, lstatSync } from 'node:fs';
 import { join } from 'node:path';
 import { createInterface } from 'node:readline';
 import { stdin, stdout } from 'node:process';
-import { execFileSync } from 'node:child_process';
-import { RACINE, OUTILS, FICHE, FICHIER_CATEGORIES, COULEURS, lireJSON, slug, infosPage, construireCatalogue } from './catalogue.mjs';
+import { OUTILS, FICHE, FICHIER_CATEGORIES, COULEURS, lireJSON, slug, infosPage, construireCatalogue, generer } from './generer.mjs';
 
 /* ---------- Questions (clavier ou réponses collées en bloc) ---------- */
 const rl = createInterface({ input: stdin, output: stdout, terminal: stdin.isTTY });
@@ -98,7 +97,7 @@ rl.close();
 const { erreurs } = construireCatalogue();
 if (erreurs.length) console.log(`\n⚠ Fiche enregistrée, mais le catalogue signale :\n${erreurs.map(e => '  • ' + e).join('\n')}`);
 else {
-  execFileSync(process.execPath, [join(RACINE, 'scripts', 'generer.mjs')], { stdio: 'ignore' }); // met à jour outils.js
+  generer(); // met à jour accueil/outils.js, la CSP et sw.js
   console.log(`\n✔ Outils/${dossier}/${FICHE} enregistré, page d'accueil mise à jour.`);
 }
 console.log(`

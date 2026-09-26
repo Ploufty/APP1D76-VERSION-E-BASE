@@ -3,7 +3,7 @@
 import { readdirSync, readFileSync, lstatSync } from 'node:fs';
 import { join, extname } from 'node:path';
 import { execSync } from 'node:child_process';
-import { RACINE } from './catalogue.mjs';
+import { RACINE } from './generer.mjs';
 
 const PUB = RACINE.replace(/[\\/]$/, '');
 const bloquants = [], aExaminer = [];

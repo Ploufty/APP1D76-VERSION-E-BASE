@@ -5,7 +5,7 @@
   "type": "module",
   "engines": { "node": ">=18" },
   "scripts": {
-    "ajouter": "node scripts/ajouter-outil.mjs",
+    "ajouter": "node scripts/ajouter.mjs",
     "generer": "node scripts/generer.mjs && node scripts/securite.mjs",
     "verifier": "node scripts/generer.mjs --verifier",
     "securite": "node scripts/securite.mjs",

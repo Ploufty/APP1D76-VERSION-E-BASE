@@ -1,0 +1,20 @@
+# Forge (GitLab) : génère la page puis la publie sur GitLab Pages (branche par défaut).
+# Sur les autres branches : vérification seulement.
+image: node:20-alpine
+
+pages:
+  script:
+    - npm run generer
+    - mkdir public
+    - cp -r index.html sw.js manifest.webmanifest accueil Outils public/
+  artifacts:
+    paths: [public]
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+
+verifier:
+  script:
+    - npm run verifier
+    - npm run securite
+  rules:
+    - if: $CI_COMMIT_BRANCH != $CI_DEFAULT_BRANCH
