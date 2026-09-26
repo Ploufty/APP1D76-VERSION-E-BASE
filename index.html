@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<!-- Politique de sécurité : l'empreinte du script ci-dessous est mise à jour par « npm run generer » -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-st4udG2+EKsnYmV8/2Q6iJsiL6TNn0WO3fgZ4HdOfqQ='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://cdn.jsdelivr.net; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="strict-origin-when-cross-origin">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Apps1D76 - Outils numériques</title>
+<meta name="description" content="Outils numériques pour l'école primaire - Mission Numérique Éducatif 76">
+<meta name="theme-color" content="#000091">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icones/icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="icones/apple-touch-icon.png">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/fonts/Marianne-Regular.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/fonts/Marianne-Bold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="style.css">
+<!-- Applique les préférences d'affichage avant le premier rendu (évite le flash) -->
+<script>
+(function (d, p) {
+  try { p = JSON.parse(localStorage.getItem('apps1d-prefs')) || {}; } catch (e) { p = {}; }
+  var mq = function (q) { return window.matchMedia && matchMedia(q).matches; };
+  d.dataset.theme = p.theme === 'dark' || (p.theme !== 'light' && mq('(prefers-color-scheme: dark)')) ? 'dark' : 'light';
+  d.dataset.motion = p.motion === 'reduce' || (p.motion !== 'on' && mq('(prefers-reduced-motion: reduce)')) ? 'reduce' : 'full';
+  d.dataset.contrast = p.contrast ? 'high' : 'normal';
+  d.style.setProperty('--text-scale', ({ 115: 1.15, 130: 1.3 })[p.text] || 1);
+  d.classList.add('js');
+})(document.documentElement);
+</script>
+</head>
+<body>
+<a class="skip" href="#main">Aller aux outils</a>
+<div class="progress" aria-hidden="true"></div>
+<div class="bg" aria-hidden="true">
+  <div class="layer layer-a"><div class="blob blob-a"></div></div>
+  <div class="layer layer-b"><div class="blob blob-b"></div></div>
+  <div class="layer layer-c"><div class="dots"></div></div>
+</div>
+<div class="tricolore" aria-hidden="true"></div>
+
+<header>
+  <div class="brandbar container">
+    <a class="brand" href="./">
+      <!-- Logo : déposer logo.png à la racine puis décommenter la ligne suivante -->
+      <!-- <img src="logo.png" alt="Logo DSDEN 76" height="46"> -->
+      <div><b>Apps1D<span>76</span></b><small>Mission Numérique Éducatif 76</small></div>
+    </a>
+    <div class="actions">
+      <button type="button" class="icon-btn" id="theme-toggle" aria-label="Activer le mode sombre">
+        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1"/></svg>
+      </button>
+      <button type="button" class="icon-btn" id="settings-open" aria-haspopup="dialog" aria-controls="settings">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z"/></svg>
+        <span class="btn-label">Affichage</span>
+      </button>
+    </div>
+  </div>
+
+  <section class="hero">
+    <canvas aria-hidden="true"></canvas>
+    <div class="container hero-content">
+      <h1><span style="--w:0">Des</span> <span style="--w:1">outils</span> <span style="--w:2">numériques</span> <span class="accent" style="--w:3">pour l'école<svg viewBox="0 0 300 20" preserveAspectRatio="none" aria-hidden="true"><path d="M4 14C80 4 200 4 296 12"/></svg></span></h1>
+      <p>Des ressources simples et gratuites pour les enseignants et les directeurs du 1<sup>er</sup> degré.</p>
+      <div class="search" role="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <label for="q" class="sr-only">Rechercher un outil</label>
+        <input id="q" type="search" placeholder="Rechercher un outil…" autocomplete="off">
+      </div>
+    </div>
+  </section>
+</header>
+
+<nav class="catnav" aria-label="Catégories"><ul class="container" id="catnav"></ul></nav>
+
+<main class="main container" id="main">
+  <div id="categories"></div>
+  <p class="empty" id="empty" role="status" hidden>Aucun outil ne correspond à votre recherche.</p>
+  <p class="soon">D'autres outils arrivent bientôt</p>
+  <noscript><p class="empty">Activez JavaScript pour afficher la liste des outils.</p></noscript>
+</main>
+
+<footer class="footer">Académie de Normandie · Seine-Maritime (76) · Conçu pour faciliter l'apprentissage</footer>
+
+<!-- Paramètres d'affichage -->
+<dialog id="settings" aria-labelledby="settings-title">
+  <form method="dialog" class="settings">
+    <div class="settings-head">
+      <h2 id="settings-title">Paramètres d'affichage</h2>
+      <button type="submit" class="icon-btn" value="close" aria-label="Fermer"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6 6 18"/></svg></button>
+    </div>
+
+    <fieldset>
+      <legend>Thème</legend>
+      <div class="seg">
+        <label><input type="radio" name="theme" value="light"><span>Clair</span></label>
+        <label><input type="radio" name="theme" value="dark"><span>Sombre</span></label>
+        <label><input type="radio" name="theme" value="auto"><span>Système</span></label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Taille du texte</legend>
+      <div class="seg">
+        <label><input type="radio" name="text" value="100"><span>Normale</span></label>
+        <label><input type="radio" name="text" value="115"><span class="t115">Grande</span></label>
+        <label><input type="radio" name="text" value="130"><span class="t130">Très grande</span></label>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Animations</legend>
+      <div class="seg">
+        <label><input type="radio" name="motion" value="on"><span>Activées</span></label>
+        <label><input type="radio" name="motion" value="reduce"><span>Réduites</span></label>
+        <label><input type="radio" name="motion" value="auto"><span>Système</span></label>
+      </div>
+    </fieldset>
+
+    <label class="switch"><input type="checkbox" name="contrast"><span>Contraste renforcé</span></label>
+
+    <div class="install" id="install" hidden>
+      <p><strong>Installer l'application</strong><br>Accès direct depuis l'écran d'accueil, même hors connexion.</p>
+      <button type="button" class="btn" id="install-btn" hidden>Installer</button>
+      <p class="ios-hint" id="ios-hint" hidden>Sur iPad / iPhone : touchez <b>Partager</b> puis <b>Sur l'écran d'accueil</b>.</p>
+    </div>
+
+    <div class="settings-foot">
+      <button type="button" class="btn btn-ghost" id="reset">Réinitialiser</button>
+      <button type="submit" class="btn" value="close">Fermer</button>
+    </div>
+  </form>
+</dialog>
+<!-- outils.js : liste des outils, générée automatiquement à partir du dossier Outils/ (ne pas modifier à la main) -->
+<script src="outils.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
