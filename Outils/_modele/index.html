@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<!-- Modèle d'outil Apps1D76 (UI de référence). Le dossier commence par « _ » : il n'apparaît pas sur l'accueil.
+     Pour un nouvel outil : copier ce dossier sous un nouveau nom (sans « _ »), remplacer le contenu de <main>,
+     garder l'en-tête, le pied de page et les deux lignes accueil/outil.css et accueil/outil.js.
+     Composants disponibles : voir le commentaire en tête de accueil/outil.css. -->
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nom de l'outil</title>
+<meta name="description" content="Une phrase qui dit ce qu'on fait avec l'outil.">
+<meta name="theme-color" content="#000091">
+<link rel="icon" href="../../accueil/icones/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="../../accueil/outil.css">
+<script src="../../accueil/outil.js"></script>
+<style>
+  /* Styles propres à l'outil : réutiliser les variables (--blue, --surface, --border, --muted…) */
+</style>
+</head>
+<body>
+
+<header class="outil-header">
+  <div class="container brandbar">
+    <a class="brand" href="../../index.html" aria-label="Retour à l'accueil Apps1D76">
+      <span class="back" aria-hidden="true">←</span>
+      <span><b>Apps1D<span>76</span></b><small>Mission Numérique Éducatif 76</small></span>
+    </a>
+    <div class="actions">
+      <button type="button" class="icon-btn" id="theme-toggle" aria-label="Activer le mode sombre">
+        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="container hero">
+    <h1>Nom <span class="accent">de l'outil</span></h1>
+    <p>Sous-titre : à quoi sert l'outil</p>
+  </div>
+  <div class="tricolore" aria-hidden="true"></div>
+</header>
+
+<main class="container">
+
+  <!-- Étape repliable (ouverte/fermée par accueil/outil.js) -->
+  <section class="step">
+    <button type="button" class="step-header" aria-expanded="true" aria-controls="etape1">
+      <span class="step-num">1</span>
+      <span class="step-title">Réglages</span>
+      <svg class="step-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
+    <div class="step-body" id="etape1">
+      <div class="form-row">
+        <div>
+          <label for="champ">Un champ</label>
+          <input type="text" id="champ" placeholder="Exemple">
+        </div>
+        <label class="toggle-wrap">
+          <span class="toggle"><input type="checkbox" id="option"><span class="toggle-slider"></span></span>
+          Une option
+        </label>
+      </div>
+      <p class="hint">Un texte d'aide.</p>
+    </div>
+  </section>
+
+  <!-- Carte simple -->
+  <section class="card">
+    <div class="alert alert-info">Une information utile.</div>
+    <div class="table-wrap">
+      <table class="table">
+        <thead><tr><th scope="col">Colonne</th><th scope="col">Colonne</th></tr></thead>
+        <tbody><tr><td>Valeur</td><td>Valeur</td></tr><tr><td>Valeur</td><td>Valeur</td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="btn-row">
+    <button type="button" class="btn" id="exporter">📄 Exporter en Word</button>
+    <button type="button" class="btn btn-ghost" onclick="print()">🖨 Imprimer</button>
+  </div>
+</main>
+
+<footer class="footer">Académie de Normandie · Seine-Maritime (76) · Mission Numérique Éducatif 76</footer>
+
+<script>
+  // Exemple d'export Word (voir accueil/outil.js pour le format des blocs)
+  document.getElementById('exporter').addEventListener('click', () => {
+    Outil.word('document.docx', [
+      { titre: 'Titre du document' },
+      { texte: 'Un paragraphe.' },
+      { tableau: { entetes: ['Colonne', 'Colonne'], lignes: [['Valeur', { texte: 'En gras', gras: true }]] } }
+    ]);
+  });
+</script>
+</body>
+</html>
