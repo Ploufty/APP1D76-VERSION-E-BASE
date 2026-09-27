@@ -25,6 +25,7 @@ Le site est **100 % statique** (HTML, CSS, JavaScript). Il n'y a ni serveur, ni 
 Outils/                 ★ LES OUTILS : un dossier par outil
   categories.json       Liste et ordre des catégories
   tirage-au-sort/       Exemple d'outil : ses fichiers + sa fiche outil.json
+  _modele/              Page modèle d'un outil avec l'UI de référence (ignorée par l'accueil car « _ »)
 a-migrer/               Outils en attente : fiches de l'ancien site et nouveaux outils déposés pour Claude
 
 index.html              La page d'accueil (structure HTML)
@@ -33,6 +34,8 @@ accueil/                Tout ce que charge la page d'accueil
   script.js             Tout le fonctionnement (affichage des outils, menu, recherche, réglages, animations)
   outils.js             ⚙ GÉNÉRÉ : la liste des outils (ne jamais modifier à la main)
   icones/               Icônes de l'application et favicon
+  outil.css             UI DE RÉFÉRENCE DES OUTILS : thème, en-tête, étapes, formulaires, boutons, tableaux, alertes
+  outil.js              Script commun des outils : réglages partagés, bouton de thème, étapes, export Word (Outil.word)
 sw.js                   Service worker : hors ligne (VERSION et CORE mis à jour automatiquement ; doit rester à la racine)
 manifest.webmanifest    Fiche de l'application installable (nom, couleurs, icônes)
 
@@ -117,9 +120,22 @@ Claude fait alors tout, sans poser de question sauf blocage réel :
 2. **Dossier** : déplacer vers `Outils/<nom-sans-espace-ni-accent>/`. Retirer ce qui ne sert pas à l'outil (`README.md`, notes, `node_modules`, `.zip`, fichiers de sauvegarde). Si une fiche préparée existe déjà dans `a-migrer/`, reprendre ses valeurs.
 3. **Lire l'outil** pour le comprendre : page d'entrée, ce qu'il fait, pour qui.
 4. **Fiche `outil.json`** : titre court et parlant ; description d'une phrase (160 caractères max) qui dit ce qu'on fait avec l'outil ; un emoji ; la catégorie la plus juste parmi `Outils/categories.json` (en créer une seulement si aucune ne convient) ; `page` si ce n'est pas `index.html` ; `ordre` si utile.
-5. **Contrôler l'outil** : chemins relatifs et majuscules exactes, pas de ressource en `http://`, pas de données d'élèves ni de secret, fonctionne hors connexion si possible. Corriger les petits défauts sans changer le fonctionnement ; signaler les gros.
-6. **`npm run generer`** (« Aucun problème bloquant »), puis test dans le navigateur : la carte, la recherche, l'ouverture de l'outil, aucune erreur dans la console.
-7. **Commit, push, demande de fusion** vers `main`, avec un résumé : catégorie choisie, description et corrections faites.
+5. **Appliquer l'UI de référence** (voir « UI de référence des outils ») sans changer le fonctionnement de l'outil.
+6. **Contrôler l'outil** : chemins relatifs et majuscules exactes, pas de ressource en `http://`, pas de données d'élèves ni de secret, fonctionne hors connexion si possible. Corriger les petits défauts sans changer le fonctionnement ; signaler les gros.
+7. **`npm run generer`** (« Aucun problème bloquant »), puis test dans le navigateur : la carte, la recherche, l'ouverture de l'outil, aucune erreur dans la console.
+8. **Commit, push, demande de fusion** vers `main`, avec un résumé : catégorie choisie, description et corrections faites.
+
+### UI de référence des outils
+Deux niveaux de design :
+- **UI de base = la page d'accueil** (`accueil/style.css`) : animations, fond, constellation, cartes. Elle ne sert qu'à l'accueil.
+- **UI de référence des outils = `accueil/outil.css` + `accueil/outil.js`** : même esprit (Marianne, bleu-blanc-rouge, mêmes couleurs),
+  en plus simple, avec les réglages d'affichage **partagés** avec l'accueil (thème, contraste, taille du texte, animations).
+
+Pour un outil : partir de `Outils/_modele/index.html` (en-tête avec retour à l'accueil et bouton de thème, pied de page), puis
+ajouter les styles propres à l'outil dans sa page en réutilisant les variables (`--blue`, `--surface`, `--border`, `--muted`, `--green`…).
+Composants : `.card`, `.step` (étape repliable), `.form-row`, `.toggle-wrap`, `.btn` / `.btn-ghost` / `.btn-accent` / `.btn-block` / `.btn-remove`,
+`.table-wrap` + `.table`, `.alert-info` / `-warning` / `-error`, `.hint`. En JS : `Outil.esc`, `Outil.telecharger`, `Outil.word` (export .docx sans dépendance).
+Exemple complet : `Outils/orga-recre/`. Modifier `outil.css` change tous les outils : vérifier chacun après modification.
 
 ### Retirer ou déplacer un outil
 - **Retirer :** supprimer son dossier, puis `npm run generer`.
@@ -253,3 +269,4 @@ Pour tester l'installation et le hors ligne, il faut passer par `npm run apercu`
 | v4 | « Un outil = un dossier dans `Outils/` » avec une fiche `outil.json`, et contrôle de sécurité |
 | **Clean** | Page directement à la racine sans compilation, `outils.js` généré automatiquement, zéro dépendance |
 | Simplification | Fichiers de l'accueil regroupés dans `accueil/`, `catalogue.mjs` fusionné dans `generer.mjs`, `AJOUTER-UN-OUTIL.md` fusionné dans `README.md`, workflow GitHub et `.gitlab-ci.yml` rétablis |
+| UI des outils | UI de référence commune aux outils (`accueil/outil.css`, `accueil/outil.js`, modèle `Outils/_modele/`), réglages partagés avec l'accueil, export Word |

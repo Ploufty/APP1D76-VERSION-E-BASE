@@ -10,7 +10,8 @@ Outils/          ← UN DOSSIER PAR OUTIL : c'est le seul endroit où l'on trava
   tirage-au-sort/   exemple : les fichiers de l'outil + sa fiche outil.json
 a-migrer/        ← fiches des outils de l'ancien site, en attente de leurs fichiers
 index.html       ← la page d'accueil
-accueil/         ← son apparence, son fonctionnement, ses icônes et la liste générée outils.js (ne pas modifier)
+accueil/         ← son apparence, son fonctionnement, ses icônes, la liste générée outils.js (ne pas modifier)
+                   et l'UI commune des outils (outil.css, outil.js ; modèle dans Outils/_modele/)
 sw.js  manifest.webmanifest   ← application installable et hors ligne
 scripts/         ← assistant, mise à jour, sécurité
 ```

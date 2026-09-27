@@ -1,252 +1,175 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="fr" data-theme="light">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Organiseur — Services de récréation</title>
-<link href="https://fonts.googleapis.com/css2?family=Marianne:wght@400;500;700;800&display=swap" rel="stylesheet">
+<meta name="description" content="Répartition automatique des services d'accueil et de récréation entre les enseignants, exportable en Word.">
+<meta name="theme-color" content="#000091">
+<link rel="icon" href="../../accueil/icones/icon.svg" type="image/svg+xml">
+<!-- UI de référence des outils Apps1D76 -->
+<link rel="stylesheet" href="../../accueil/outil.css">
+<script src="../../accueil/outil.js"></script>
 <style>
-  :root {
-    --bleu: #1C3F87;
-    --bleu-fonce: #0D2B6B;
-    --bleu-clair: #3A5FA8;
-    --rouge: #E1000F;
-    --blanc: #FFFFFF;
-    --gris-bg: #F0F2F5;
-    --gris-border: #D0D5DD;
-    --gris-texte: #3D3D3D;
-    --gris-secondaire: #6B7280;
-    --vert: #1E7A4A;
-    --vert-bg: #E8F5EE;
-    --shadow: 0 2px 8px rgba(28,63,135,0.10);
-    --shadow-lg: 0 8px 32px rgba(28,63,135,0.15);
-  }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Marianne', 'Segoe UI', Arial, sans-serif; background: var(--gris-bg); color: var(--gris-texte); min-height: 100vh; }
+  /* Styles propres à l'organisateur (le reste vient de accueil/outil.css) */
 
-  header { background: var(--bleu); color: white; padding: 28px 40px 24px; position: relative; overflow: hidden; }
-  header::before { content: ''; position: absolute; right: -60px; top: -60px; width: 280px; height: 280px; border-radius: 50%; background: rgba(255,255,255,0.05); }
-  header::after { content: ''; position: absolute; right: 60px; top: 40px; width: 160px; height: 160px; border-radius: 50%; background: rgba(255,255,255,0.04); }
-  .header-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: 0.75; margin-bottom: 8px; }
-  header h1 { font-size: 2.2rem; font-weight: 800; line-height: 1.15; position: relative; z-index: 1; }
-  .header-stripe { height: 4px; background: var(--rouge); margin-top: 20px; }
-  header p.subtitle { font-size: 14px; opacity: 0.7; margin-top: 6px; }
+  /* Cartes enseignants */
+  #teachers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(16.5rem, 1fr)); gap: .9rem; margin-top: 1rem; }
+  .teacher-card { border: 1.5px solid var(--border); border-radius: .8rem; padding: .8rem .9rem; background: var(--surface-2); transition: border-color .2s; }
+  .teacher-card:focus-within { border-color: var(--blue); }
+  .teacher-card-top { margin-bottom: .6rem; }
+  .teacher-card-top label { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
+  .teacher-card-top input[type=text] { font-weight: 700; }
+  .days-row { display: flex; gap: .25rem; flex-wrap: wrap; }
+  .day-btn { width: 2.75rem; height: 2.75rem; border-radius: .5rem; border: 1.5px solid var(--border); font-size: .8rem; font-weight: 700; display: flex; align-items: center; justify-content: center; background: var(--surface); color: var(--muted); user-select: none; transition: background .15s, border-color .15s, color .15s; }
+  .day-btn.present { background: var(--green-soft); border-color: var(--green); color: var(--green); }
+  .day-btn.absent  { background: var(--red-soft); border-color: var(--red); color: var(--red); text-decoration: line-through; }
 
-  main { max-width: 920px; margin: 0 auto; padding: 32px 20px 60px; }
+  /* Services */
+  .services-section h3 { font-size: .85rem; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: .08em; margin-bottom: .75rem; }
+  .services-section + .services-section { margin-top: 1.5rem; }
+  .service-row { display: flex; align-items: center; gap: .6rem; margin-bottom: .6rem; flex-wrap: wrap; }
+  .service-row input[type=time] { width: 8rem; }
+  .service-row input[type=number] { width: 4.5rem; }
+  .service-row span { font-size: .9rem; color: var(--muted); }
+  .mt-12 { margin-top: .75rem; }
 
-  .step { background: white; border-radius: 10px; box-shadow: var(--shadow); margin-bottom: 24px; overflow: hidden; }
-  .step-header { display: flex; align-items: center; gap: 14px; padding: 18px 24px; border-bottom: 0.5px solid var(--gris-border); cursor: pointer; user-select: none; }
-  .step-num { width: 30px; height: 30px; border-radius: 50%; background: var(--bleu); color: white; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
-  .step-num.done { background: var(--vert); }
-  .step-title { font-size: 15px; font-weight: 700; flex: 1; }
-  .step-chevron { font-size: 18px; color: var(--gris-secondaire); transition: transform .2s; }
-  .step-chevron.open { transform: rotate(180deg); }
-  .step-body { padding: 24px; display: none; }
-  .step-body.open { display: block; }
+  /* Résultat */
+  #result { margin-top: 2rem; }
+  .result-header { display: flex; align-items: center; justify-content: space-between; gap: .75rem; flex-wrap: wrap; margin-bottom: 1rem; }
+  .result-header h2 { font-size: 1.3rem; font-weight: 700; color: var(--blue); }
+  .planning th.day-header { text-align: center; }
+  .slot-label { font-weight: 700; font-size: .78rem; white-space: nowrap; }
+  .slot-label strong { font-size: .9rem; }
+  .slot-type-grille { color: var(--orange); }
+  .slot-type-matin { color: var(--blue); }
+  .slot-type-aprem { color: var(--green); }
+  .cell-drop { min-width: 6rem; min-height: 2.5rem; display: flex; flex-wrap: wrap; gap: .25rem; align-items: center; padding: .25rem; border-radius: .5rem; transition: background .15s; }
+  .cell-drop.drag-over { background: var(--blue-soft); outline: 2px dashed var(--blue); }
+  .cell-empty { justify-content: center; color: var(--muted); opacity: .6; }
+  .drag-tip { font-size: .8rem; color: var(--muted); margin-top: .75rem; text-align: center; }
 
-  label { display: block; font-size: 13px; font-weight: 700; color: var(--bleu-fonce); margin-bottom: 6px; }
-  input[type=number], input[type=text], input[type=time], select { width: 100%; padding: 10px 14px; border: 1.5px solid var(--gris-border); border-radius: 6px; font-size: 14px; font-family: inherit; color: var(--gris-texte); background: white; transition: border .2s; outline: none; }
-  input:focus, select:focus { border-color: var(--bleu); }
-  .form-row { display: grid; gap: 16px; margin-bottom: 16px; }
-  .form-row.cols-2 { grid-template-columns: 1fr 1fr; }
+  /* Étiquettes enseignants (12 couleurs, lisibles en clair comme en sombre ; reprises dans l'export Word) */
+  .teacher-badge { display: inline-flex; align-items: center; padding: .25rem .6rem; border-radius: 999px; font-size: .8rem; font-weight: 700; cursor: grab; user-select: none; white-space: nowrap; transition: transform .1s, box-shadow .1s; }
+  .teacher-badge:active { cursor: grabbing; transform: scale(1.08); box-shadow: 0 4px 12px rgba(0,0,0,.15); }
+  .teacher-badge.dragging { opacity: .4; }
+  .tc-0 { background: #DBEAFE; color: #1D4ED8; }  .tc-1 { background: #FCE7F3; color: #9D174D; }
+  .tc-2 { background: #D1FAE5; color: #065F46; }  .tc-3 { background: #FEF3C7; color: #92400E; }
+  .tc-4 { background: #EDE9FE; color: #5B21B6; }  .tc-5 { background: #FFE4E6; color: #9F1239; }
+  .tc-6 { background: #CFFAFE; color: #164E63; }  .tc-7 { background: #FEF9C3; color: #713F12; }
+  .tc-8 { background: #F0FDF4; color: #14532D; }  .tc-9 { background: #F5F3FF; color: #4C1D95; }
+  .tc-10 { background: #FFF7ED; color: #7C2D12; } .tc-11 { background: #ECFDF5; color: #064E3B; }
 
-  /* TEACHER CARDS GRID */
-  #teachers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin-top: 16px; }
+  /* Statistiques */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr)); gap: .6rem; margin-bottom: 1rem; }
+  .stat-card { background: var(--surface); border-radius: .8rem; border: 1px solid var(--border); padding: .75rem .9rem; }
+  .stat-name { font-size: .85rem; font-weight: 700; margin-bottom: .1rem; overflow-wrap: anywhere; }
+  .stat-quotite { font-size: .72rem; color: var(--muted); margin-bottom: .35rem; }
+  .stat-counts { display: flex; align-items: baseline; gap: .35rem; margin-bottom: .25rem; }
+  .stat-done { font-size: 1.4rem; font-weight: 700; color: var(--blue); }
+  .stat-target { font-size: .8rem; color: var(--muted); }
+  .stat-bar-wrap { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
+  .stat-bar { height: 100%; border-radius: 3px; background: var(--blue); transition: width .4s; }
+  .stat-bar.over { background: var(--red); }
+  .stat-bar.exact { background: var(--green); }
+  .stat-days-mini { display: flex; gap: .2rem; margin-top: .4rem; }
+  .stat-day-dot { min-width: 1.4rem; height: 1.1rem; border-radius: 3px; font-size: .6rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .stat-day-dot.p { background: var(--green-soft); color: var(--green); }
+  .stat-day-dot.a { background: var(--red-soft); color: var(--red); }
 
-  .teacher-card {
-    border: 1.5px solid var(--gris-border);
-    border-radius: 8px;
-    padding: 12px 14px;
-    background: #FAFBFD;
-    transition: border-color .2s;
-  }
-  .teacher-card:focus-within { border-color: var(--bleu); }
-
-  .teacher-card-top { margin-bottom: 10px; }
-  .teacher-card-top label { font-size: 11px; color: var(--gris-secondaire); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
-  .teacher-card-top input[type=text] { padding: 7px 10px; font-size: 14px; font-weight: 700; border-radius: 5px; }
-
-
-  /* DAY TOGGLES */
-  .days-row { display: flex; gap: 4px; flex-wrap: wrap; }
-  .day-btn {
-    width: 28px; height: 24px;
-    border-radius: 4px;
-    border: 1.5px solid var(--gris-border);
-    font-size: 10px; font-weight: 700;
-    cursor: pointer; display: flex; align-items: center; justify-content: center;
-    transition: background .15s, border-color .15s, color .15s;
-    background: white; color: var(--gris-secondaire);
-    user-select: none;
-  }
-  .day-btn.present { background: #D1FAE5; border-color: #065F46; color: #065F46; }
-  .day-btn.absent  { background: #FEE2E2; border-color: #991B1B; color: #991B1B; }
-
-  /* SERVICES */
-  .services-section { margin-bottom: 20px; }
-  .services-section h3 { font-size: 13px; font-weight: 700; color: var(--bleu); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
-  .service-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
-  .service-row input[type=time] { width: 120px; }
-  .service-row span { font-size: 13px; color: var(--gris-secondaire); }
-  .service-row input[type=number] { width: 60px; }
-  .btn-remove { background: none; border: 1.5px solid var(--gris-border); border-radius: 6px; padding: 8px 10px; cursor: pointer; color: var(--rouge); font-size: 14px; transition: background .15s; }
-  .btn-remove:hover { background: #fef2f2; }
-
-  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 6px; font-size: 14px; font-family: inherit; font-weight: 700; cursor: pointer; transition: all .15s; border: none; }
-  .btn-secondary { background: white; color: var(--bleu); border: 1.5px solid var(--bleu); }
-  .btn-secondary:hover { background: #EEF2FB; }
-  .btn-primary { background: var(--bleu); color: white; }
-  .btn-primary:hover { background: var(--bleu-fonce); }
-  .btn-generate { background: var(--rouge); color: white; font-size: 15px; padding: 14px 32px; width: 100%; justify-content: center; margin-top: 8px; border-radius: 8px; }
-  .btn-generate:hover { background: #b8000c; }
-
-  .toggle-wrap { display: flex; align-items: center; gap: 14px; }
-  .toggle { position: relative; width: 46px; height: 26px; display: inline-block; }
-  .toggle input { opacity: 0; width: 0; height: 0; }
-  .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--gris-border); border-radius: 26px; transition: .2s; }
-  .toggle-slider::before { content: ''; position: absolute; height: 20px; width: 20px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: .2s; }
-  .toggle input:checked + .toggle-slider { background: var(--bleu); }
-  .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
-  .toggle-label { font-size: 14px; font-weight: 500; }
-
-  /* RESULT */
-  #result { margin-top: 32px; }
-  .result-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
-  .result-header h2 { font-size: 18px; font-weight: 800; color: var(--bleu-fonce); }
-  .planning-wrap { overflow-x: auto; }
-  table.planning { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); }
-  table.planning th { background: var(--bleu); color: white; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 12px 14px; text-align: left; }
-  table.planning th.day-header { text-align: center; }
-  table.planning td { padding: 10px 14px; border-bottom: 0.5px solid var(--gris-border); font-size: 13px; vertical-align: middle; }
-  table.planning tr:last-child td { border-bottom: none; }
-  table.planning tr:nth-child(even) td { background: #F7F8FB; }
-  .slot-label { font-weight: 700; font-size: 12px; color: var(--gris-secondaire); }
-  .slot-type-grille { color: #7C4A00; }
-  .slot-type-matin { color: #0C447C; }
-  .slot-type-aprem { color: #1E7A4A; }
-  .cell-drop { min-width: 90px; min-height: 36px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; padding: 4px; border-radius: 6px; transition: background .15s; }
-  .cell-drop.drag-over { background: #EEF2FB; outline: 2px dashed var(--bleu); }
-  .cell-absent { background: #FEF2F2; opacity: 0.5; font-size: 11px; color: #991B1B; padding: 4px 6px; border-radius: 4px; }
-
-  /* BADGES */
-  .teacher-badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: grab; user-select: none; transition: transform .1s, box-shadow .1s; white-space: nowrap; }
-  .teacher-badge:active { cursor: grabbing; transform: scale(1.08); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
-  .teacher-badge.dragging { opacity: 0.4; }
-  .tc-0 { background: #DBEAFE; color: #1D4ED8; }
-  .tc-1 { background: #FCE7F3; color: #9D174D; }
-  .tc-2 { background: #D1FAE5; color: #065F46; }
-  .tc-3 { background: #FEF3C7; color: #92400E; }
-  .tc-4 { background: #EDE9FE; color: #5B21B6; }
-  .tc-5 { background: #FFE4E6; color: #9F1239; }
-  .tc-6 { background: #CFFAFE; color: #164E63; }
-  .tc-7 { background: #FEF9C3; color: #713F12; }
-  .tc-8 { background: #F0FDF4; color: #14532D; }
-  .tc-9 { background: #F5F3FF; color: #4C1D95; }
-  .tc-10 { background: #FFF7ED; color: #7C2D12; }
-  .tc-11 { background: #ECFDF5; color: #064E3B; }
-
-  /* STATS */
-  .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 16px; }
-  .stat-card { background: white; border-radius: 8px; border: 0.5px solid var(--gris-border); padding: 12px 14px; }
-  .stat-name { font-size: 13px; font-weight: 700; color: var(--bleu-fonce); margin-bottom: 2px; }
-  .stat-quotite { font-size: 11px; color: var(--gris-secondaire); margin-bottom: 6px; }
-  .stat-counts { display: flex; align-items: baseline; gap: 6px; margin-bottom: 4px; }
-  .stat-done { font-size: 22px; font-weight: 800; color: var(--bleu); }
-  .stat-target { font-size: 13px; color: var(--gris-secondaire); }
-  .stat-bar-wrap { height: 5px; background: #E5E7EB; border-radius: 3px; overflow: hidden; margin-bottom: 4px; }
-  .stat-bar { height: 100%; border-radius: 3px; background: var(--bleu); transition: width .4s; }
-  .stat-bar.over { background: var(--rouge); }
-  .stat-bar.exact { background: var(--vert); }
-  .stat-days-mini { display: flex; gap: 3px; margin-top: 6px; }
-  .stat-day-dot { width: 18px; height: 14px; border-radius: 3px; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
-  .stat-day-dot.p { background: #D1FAE5; color: #065F46; }
-  .stat-day-dot.a { background: #FEE2E2; color: #991B1B; }
-  .stripe-red { height: 3px; background: var(--rouge); border-radius: 2px; margin-top: 8px; }
-
-  .alert { padding: 12px 16px; border-radius: 6px; font-size: 13px; margin-bottom: 16px; }
-  .alert-info { background: #EEF2FB; color: var(--bleu-fonce); border-left: 3px solid var(--bleu); }
-  .alert-warning { background: #FFF7ED; color: #7C2D12; border-left: 3px solid #F97316; }
-  .mt-12 { margin-top: 12px; }
-  .mt-16 { margin-top: 16px; }
+  @media (max-width: 34rem) { #teachers-grid { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
 
-<header>
-  <div class="header-label">Ressources pédagogiques</div>
-  <h1>Organiseur<br>de récréation</h1>
-  <p class="subtitle">Répartition automatique des services de surveillance</p>
-  <div class="header-stripe"></div>
+<header class="outil-header">
+  <div class="container brandbar">
+    <a class="brand" href="../../index.html" aria-label="Retour à l'accueil Apps1D76">
+      <span class="back" aria-hidden="true">←</span>
+      <span><b>Apps1D<span>76</span></b><small>Mission Numérique Éducatif 76</small></span>
+    </a>
+    <div class="actions">
+      <button type="button" class="icon-btn" id="theme-toggle" aria-label="Activer le mode sombre">
+        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="container hero">
+    <h1>Organiseur <span class="accent">de récréation</span></h1>
+    <p>Répartition automatique des services d'accueil et de surveillance</p>
+  </div>
+  <div class="tricolore" aria-hidden="true"></div>
 </header>
 
-<main>
+<main class="container">
 
-  <!-- STEP 1 -->
-  <div class="step" id="step1">
-    <div class="step-header" onclick="toggleStep(1)">
-      <div class="step-num" id="num1">1</div>
-      <div class="step-title">Enseignants</div>
-      <div class="step-chevron open" id="chev1">▾</div>
-    </div>
-    <div class="step-body open" id="body1">
-      <div class="form-row cols-2">
+  <!-- ÉTAPE 1 -->
+  <section class="step">
+    <button type="button" class="step-header" aria-expanded="true" aria-controls="body1">
+      <span class="step-num">1</span>
+      <span class="step-title">Enseignants</span>
+      <svg class="step-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
+    <div class="step-body" id="body1">
+      <div class="form-row">
         <div>
           <label for="nb-teachers">Nombre d'enseignants</label>
           <input type="number" id="nb-teachers" min="1" max="30" value="8" oninput="generateTeacherInputs()">
         </div>
-        <div style="display:flex;align-items:flex-end;padding-bottom:2px;">
-          <div class="toggle-wrap">
-            <label class="toggle">
-              <input type="checkbox" id="mercredi-toggle" onchange="generateTeacherInputs()">
-              <span class="toggle-slider"></span>
-            </label>
-            <span class="toggle-label">Classe le mercredi matin</span>
-          </div>
-        </div>
+        <label class="toggle-wrap">
+          <span class="toggle">
+            <input type="checkbox" id="mercredi-toggle" onchange="generateTeacherInputs()">
+            <span class="toggle-slider"></span>
+          </span>
+          Classe le mercredi matin
+        </label>
       </div>
-      <p style="font-size:12px;color:var(--gris-secondaire);margin-bottom:8px;">Cliquez sur les jours pour indiquer la présence (vert = présent, rouge = absent).</p>
+      <p class="hint">Touchez les jours pour indiquer la présence (vert = présent, rouge barré = absent).</p>
       <div id="teachers-grid"></div>
     </div>
-  </div>
+  </section>
 
-  <!-- STEP 2 -->
-  <div class="step" id="step2">
-    <div class="step-header" onclick="toggleStep(2)">
-      <div class="step-num" id="num2">2</div>
-      <div class="step-title">Accueil à l'entrée</div>
-      <div class="step-chevron" id="chev2">▾</div>
-    </div>
+  <!-- ÉTAPE 2 -->
+  <section class="step">
+    <button type="button" class="step-header" aria-expanded="false" aria-controls="body2">
+      <span class="step-num">2</span>
+      <span class="step-title">Accueil à l'entrée</span>
+      <svg class="step-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
     <div class="step-body" id="body2">
       <div id="grille-rows"></div>
-      <button class="btn btn-secondary mt-12" onclick="addGrille()">+ Ajouter un horaire d'accueil</button>
+      <button type="button" class="btn btn-ghost mt-12" onclick="addGrille()">+ Ajouter un horaire d'accueil</button>
     </div>
-  </div>
+  </section>
 
-  <!-- STEP 3 -->
-  <div class="step" id="step3">
-    <div class="step-header" onclick="toggleStep(3)">
-      <div class="step-num" id="num3">3</div>
-      <div class="step-title">Récréations</div>
-      <div class="step-chevron" id="chev3">▾</div>
-    </div>
+  <!-- ÉTAPE 3 -->
+  <section class="step">
+    <button type="button" class="step-header" aria-expanded="false" aria-controls="body3">
+      <span class="step-num">3</span>
+      <span class="step-title">Récréations</span>
+      <svg class="step-chevron" viewBox="0 0 24 24" aria-hidden="true"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
     <div class="step-body" id="body3">
       <div class="services-section">
         <h3>🌅 Matin</h3>
         <div id="recs-matin"></div>
-        <button class="btn btn-secondary mt-12" onclick="addRec('matin')">+ Ajouter un service matin</button>
+        <button type="button" class="btn btn-ghost mt-12" onclick="addRec('matin')">+ Ajouter un service le matin</button>
       </div>
-      <div class="services-section" style="margin-top:24px;">
+      <div class="services-section">
         <h3>🌇 Après-midi</h3>
         <div id="recs-aprem"></div>
-        <button class="btn btn-secondary mt-12" onclick="addRec('aprem')">+ Ajouter un service après-midi</button>
+        <button type="button" class="btn btn-ghost mt-12" onclick="addRec('aprem')">+ Ajouter un service l'après-midi</button>
       </div>
     </div>
-  </div>
+  </section>
 
-  <button class="btn btn-generate" onclick="generate()">⚡ Répartition automatique</button>
+  <button type="button" class="btn btn-accent btn-block" onclick="generate()">⚡ Répartition automatique</button>
 
-  <div id="result"></div>
+  <div id="result" aria-live="polite"></div>
 </main>
+
+<footer class="footer">Académie de Normandie · Seine-Maritime (76) · Mission Numérique Éducatif 76</footer>
 
 <script>
 // ─── STATE ───────────────────────────────────────────────────────
@@ -255,16 +178,8 @@ let dragSource = null;
 const ALL_DAYS = ['L','M','Me','J','V'];
 const DAY_NAMES = { 'L':'Lundi','M':'Mardi','Me':'Mercredi','J':'Jeudi','V':'Vendredi' };
 
-// ─── STEP TOGGLE ─────────────────────────────────────────────────
-function toggleStep(n) {
-  const body = document.getElementById('body'+n);
-  const chev = document.getElementById('chev'+n);
-  body.classList.toggle('open', !body.classList.contains('open'));
-  chev.classList.toggle('open', !chev.classList.contains('open'));
-}
-
-// Échappe un texte saisi avant de l'insérer dans le HTML (prénoms)
-const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+// Échappe un texte saisi avant de l'insérer dans le HTML (prénoms) : fourni par accueil/outil.js
+const esc = Outil.esc;
 
 // ─── TEACHER CARDS ───────────────────────────────────────────────
 function generateTeacherInputs() {
@@ -302,14 +217,14 @@ function generateTeacherInputs() {
     activeDays.forEach(d => {
       const state = prevDays[d] !== undefined ? prevDays[d] : 'present';
       const cls = state === 'present' ? 'present' : 'absent';
-      daysHtml += `<button type="button" class="day-btn ${cls}" data-day="${d}" data-state="${state}" onclick="toggleDay(this)" title="${DAY_NAMES[d]}">${d}</button>`;
+      daysHtml += `<button type="button" class="day-btn ${cls}" data-day="${d}" data-state="${state}" onclick="toggleDay(this)" title="${DAY_NAMES[d]}" aria-label="${DAY_NAMES[d]}" aria-pressed="${state === 'present'}">${d}</button>`;
     });
     daysHtml += '</div>';
 
     card.innerHTML = `
       <div class="teacher-card-top">
-        <label>Enseignant ${alpha[i] || (i+1)}</label>
-        <input type="text" class="t-name" placeholder="Prénom" value="${esc(prev.name || '')}">
+        <label for="t-name-${i}">Enseignant ${alpha[i] || (i+1)}</label>
+        <input type="text" class="t-name" id="t-name-${i}" placeholder="Prénom" value="${esc(prev.name || '')}">
       </div>
 
       ${daysHtml}`;
@@ -323,6 +238,7 @@ function toggleDay(btn) {
   btn.dataset.state = next;
   btn.classList.toggle('present', next === 'present');
   btn.classList.toggle('absent', next === 'absent');
+  btn.setAttribute('aria-pressed', next === 'present');
 }
 
 // ─── GET TEACHERS ─────────────────────────────────────────────────
@@ -355,7 +271,7 @@ function addGrille(time='08:30', nb=2) {
   const row = document.createElement('div');
   row.className = 'service-row';
   row.id = 'grille-' + id;
-  row.innerHTML = `<input type="time" value="${time}" style="width:120px;"><span>→</span><input type="number" min="1" max="10" value="${nb}" style="width:60px;"><span>enseignant(s)</span><button class="btn-remove" onclick="this.closest('.service-row').remove()">✕</button>`;
+  row.innerHTML = `<input type="time" value="${time}" aria-label="Heure d'accueil"><span>→</span><input type="number" min="1" max="10" value="${nb}" aria-label="Nombre d'enseignants"><span>enseignant(s)</span><button type="button" class="btn-remove" onclick="this.closest('.service-row').remove()" aria-label="Supprimer cet horaire">✕</button>`;
   document.getElementById('grille-rows').appendChild(row);
 }
 
@@ -365,7 +281,7 @@ function addRec(period, start='', end='', nb=2) {
   const row = document.createElement('div');
   row.className = 'service-row';
   row.id = 'rec-' + id;
-  row.innerHTML = `<input type="time" value="${start}" style="width:120px;"><span>–</span><input type="time" value="${end}" style="width:120px;"><span>→</span><input type="number" min="1" max="10" value="${nb}" style="width:60px;"><span>enseignant(s)</span><button class="btn-remove" onclick="this.closest('.service-row').remove()">✕</button>`;
+  row.innerHTML = `<input type="time" value="${start}" aria-label="Début"><span>–</span><input type="time" value="${end}" aria-label="Fin"><span>→</span><input type="number" min="1" max="10" value="${nb}" aria-label="Nombre d'enseignants"><span>enseignant(s)</span><button type="button" class="btn-remove" onclick="this.closest('.service-row').remove()" aria-label="Supprimer ce service">✕</button>`;
   document.getElementById('recs-' + period).appendChild(row);
 }
 
@@ -549,8 +465,8 @@ function renderResult(slots, teachers, days, load, targets, grilles, recsMatin, 
 
   // Table
   const typeLabel = { grille: '🚪 Accueil', matin: '☀️ Récré matin', aprem: '🌤 Récré après-midi' };
-  let html = `<thead><tr><th>Créneau</th>`;
-  dayNames.forEach(d => html += `<th class="day-header">${d}</th>`);
+  let html = `<thead><tr><th scope="col">Créneau</th>`;
+  dayNames.forEach(d => html += `<th scope="col" class="day-header">${d}</th>`);
   html += `</tr></thead><tbody>`;
 
   slotLabels.forEach(sl => {
@@ -564,7 +480,7 @@ function renderResult(slots, teachers, days, load, targets, grilles, recsMatin, 
         html += `</div>`;
       } else {
         // Check if any teacher is absent this day (Me without after-midi slot)
-        html += `<div class="cell-drop" style="background:#f9f9f9;opacity:0.4;font-size:11px;color:#aaa;padding:6px;">—</div>`;
+        html += `<div class="cell-drop cell-empty">—</div>`;
       }
       html += `</td>`;
     });
@@ -575,15 +491,47 @@ function renderResult(slots, teachers, days, load, targets, grilles, recsMatin, 
   document.getElementById('result').innerHTML = `
     <div class="result-header">
       <h2>📋 Planning généré</h2>
-      <button class="btn btn-secondary" onclick="printPlanning()">🖨 Imprimer</button>
+      <div class="btn-row">
+        <button type="button" class="btn" onclick="exportWord()">📄 Exporter en Word</button>
+        <button type="button" class="btn btn-ghost" onclick="printPlanning()">🖨 Imprimer</button>
+      </div>
     </div>
     ${statsHtml}
-    <div class="planning-wrap"><table class="planning">${html}</table></div>
-    <p style="font-size:12px;color:var(--gris-secondaire);margin-top:12px;text-align:center;">💡 Les étiquettes sont déplaçables par glisser-déposer</p>`;
+    <div class="table-wrap"><table class="table planning">${html}</table></div>
+    <p class="drag-tip">💡 Les étiquettes sont déplaçables par glisser-déposer. L'export et l'impression reprennent le planning tel qu'il est affiché.</p>`;
 }
 
 function badgeHtml(t, day, label, type) {
   return `<span class="teacher-badge tc-${t.colorIdx}" draggable="true" data-tid="${t.id}" data-tname="${esc(t.name)}" data-tcolor="${t.colorIdx}" data-day="${day}" data-label="${label}" data-type="${type}" ondragstart="onDragStart(event)" ondragend="onDragEnd(event)" title="${esc(t.name)}">${esc(t.name)}</span>`;
+}
+
+// ─── EXPORT WORD ─────────────────────────────────────────────────
+// Couleurs des étiquettes (mêmes que les classes .tc-0 à .tc-11) : [fond, texte]
+const TC = [['#DBEAFE','#1D4ED8'],['#FCE7F3','#9D174D'],['#D1FAE5','#065F46'],['#FEF3C7','#92400E'],['#EDE9FE','#5B21B6'],['#FFE4E6','#9F1239'],
+            ['#CFFAFE','#164E63'],['#FEF9C3','#713F12'],['#F0FDF4','#14532D'],['#F5F3FF','#4C1D95'],['#FFF7ED','#7C2D12'],['#ECFDF5','#064E3B']];
+const TYPE_COULEUR = { grille: '#A94700', matin: '#000091', aprem: '#18753C' };
+
+// Le document reprend le tableau affiché, y compris les étiquettes déplacées à la main
+function exportWord() {
+  const table = document.querySelector('table.planning');
+  if (!table) { alert('Générez d\'abord le planning.'); return; }
+  const entetes = [...table.tHead.rows[0].cells].map(th => th.textContent.trim());
+  const lignes = [...table.tBodies[0].rows].map(tr => {
+    const lbl = tr.cells[0].querySelector('.slot-label');
+    const type = [...lbl.classList].find(c => c.startsWith('slot-type-')).slice(10);
+    const creneau = [{ texte: lbl.firstChild.textContent.trim(), couleur: TYPE_COULEUR[type] }, { texte: lbl.querySelector('strong').textContent, gras: true }];
+    return [creneau, ...[...tr.cells].slice(1).map(td => {
+      const noms = [...td.querySelectorAll('.teacher-badge')];
+      if (!noms.length) return { texte: '—', couleur: '#8A8A99' };
+      return noms.map(b => { const [fond, couleur] = TC[+b.dataset.tcolor % 12]; return { texte: ` ${b.dataset.tname} `, gras: true, fond, couleur }; });
+    })];
+  });
+  const date = new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+  Outil.word('planning-recreation.docx', [
+    { titre: 'Services de récréation' },
+    { texte: `Édité le ${date}`, discret: true },
+    { tableau: { entetes, lignes, largeurs: [1.3, ...entetes.slice(1).map(() => 1)] } }
+  ], { paysage: true });
 }
 
 // ─── PRINT ───────────────────────────────────────────────────────
@@ -599,18 +547,19 @@ function printPlanning() {
 <meta charset="UTF-8">
 <title>Planning de récréation</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Marianne:wght@400;700;800&display=swap');
+  @font-face { font-family: Marianne; src: url(https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/fonts/Marianne-Regular.woff2) format("woff2"); font-weight: 400; }
+  @font-face { font-family: Marianne; src: url(https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/fonts/Marianne-Bold.woff2) format("woff2"); font-weight: 700; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body { font-family: 'Marianne', Arial, sans-serif; background: white; color: #1a1a1a; padding: 24px; }
 
   .print-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 6px; }
-  .print-title { font-size: 22px; font-weight: 800; color: #1C3F87; }
+  .print-title { font-size: 22px; font-weight: 700; color: #000091; }
   .print-date { font-size: 11px; color: #6B7280; }
-  .stripe { height: 3px; background: #E1000F; margin-bottom: 18px; border-radius: 2px; }
+  .stripe { height: 4px; background: linear-gradient(90deg, #000091 0 33.3%, #fff 0 66.6%, #E1000F 0); margin-bottom: 18px; }
 
   table { width: 100%; border-collapse: collapse; font-size: 12px; }
   thead th {
-    background: #1C3F87 !important;
+    background: #000091 !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
     color: white !important;
@@ -626,16 +575,16 @@ function printPlanning() {
   tbody tr:last-child td { border-bottom: none; }
 
   .slot-label { font-size: 11px; font-weight: 700; }
-  .slot-type-grille { color: #7C4A00; }
-  .slot-type-matin  { color: #0C447C; }
-  .slot-type-aprem  { color: #1E7A4A; }
+  .slot-type-grille { color: #A94700; }
+  .slot-type-matin  { color: #000091; }
+  .slot-type-aprem  { color: #18753C; }
 
   .cell-drop { display: flex; flex-wrap: wrap; gap: 3px; align-items: center; min-height: 28px; }
 
   .teacher-badge {
     display: inline-block;
     padding: 3px 8px;
-    border-radius: 4px;
+    border-radius: 999px;
     font-size: 11px;
     font-weight: 700;
     -webkit-print-color-adjust: exact;
