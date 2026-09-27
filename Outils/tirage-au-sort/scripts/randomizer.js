@@ -257,7 +257,7 @@
                 finishDraw(finalName);
                 return;
             }
-            resultName.textContent = chooseRandom(names);
+            resultName.textContent = chooseRandom(names); // texte, jamais HTML : une liste importée peut contenir du code
             var delay = 38 + Math.pow(progress, 2.4) * 190;
             setTimeout(tick, delay);
         }
