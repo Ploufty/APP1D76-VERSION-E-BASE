@@ -13,7 +13,8 @@ const rel = f => f.slice(PUB.length + 1).replace(/\\/g, '/');
 const fichiers = [];
 (function parcourir(d) {
   for (const f of readdirSync(d)) {
-    if (f === '.git' || f === 'node_modules') continue;
+    // Dossiers techniques et fichiers système ignorés par git (jamais publiés)
+    if (f === '.git' || f === 'node_modules' || /^(\.ds_store|thumbs\.db|desktop\.ini)$/i.test(f)) continue;
     const p = join(d, f), st = lstatSync(p);
     if (st.isSymbolicLink()) bloquants.push(`${rel(p)} : lien symbolique publié.`);
     else if (st.isDirectory()) parcourir(p);

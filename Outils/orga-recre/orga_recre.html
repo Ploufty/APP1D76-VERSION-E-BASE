@@ -263,6 +263,9 @@ function toggleStep(n) {
   chev.classList.toggle('open', !chev.classList.contains('open'));
 }
 
+// Échappe un texte saisi avant de l'insérer dans le HTML (prénoms)
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+
 // ─── TEACHER CARDS ───────────────────────────────────────────────
 function generateTeacherInputs() {
   const n = parseInt(document.getElementById('nb-teachers').value) || 0;
@@ -306,7 +309,7 @@ function generateTeacherInputs() {
     card.innerHTML = `
       <div class="teacher-card-top">
         <label>Enseignant ${alpha[i] || (i+1)}</label>
-        <input type="text" class="t-name" placeholder="Prénom" value="${prev.name || ''}">
+        <input type="text" class="t-name" placeholder="Prénom" value="${esc(prev.name || '')}">
       </div>
 
       ${daysHtml}`;
@@ -438,7 +441,9 @@ function generate() {
   // Build slots
   const slots = [];
   grilles.forEach(g => {
-    days.forEach(d => slots.push({ day: d, label: g.time, type: 'grille', nb: g.nb, teachers: [] }));
+    // Accueil de l'après-midi (12 h ou plus) : pas de classe le mercredi après-midi
+    const gdays = g.time >= '12:00' ? days.filter(d => d !== 'Me') : days;
+    gdays.forEach(d => slots.push({ day: d, label: g.time, type: 'grille', nb: g.nb, teachers: [] }));
   });
   recsMatin.forEach(r => {
     days.forEach(d => slots.push({ day: d, label: r.start + (r.end ? '–'+r.end : ''), type: 'matin', nb: r.nb, teachers: [] }));
@@ -520,7 +525,7 @@ function renderResult(slots, teachers, days, load, targets, grilles, recsMatin, 
     miniDays += '</div>';
 
     statsHtml += `<div class="stat-card">
-      <div class="stat-name">${t.name}</div>
+      <div class="stat-name">${esc(t.name)}</div>
       <div class="stat-quotite">${presentDays.length}j/sem</div>
       <div class="stat-counts">
         <span class="stat-done">${done}</span>
@@ -535,12 +540,12 @@ function renderResult(slots, teachers, days, load, targets, grilles, recsMatin, 
 
   const warnings = [];
   teachers.forEach(t => {
-    if (load[t.id] > targets[t.id]) warnings.push(`${t.name} : ${load[t.id]} services assignés pour ${targets[t.id]} prévus (quotité ${t.quotite}%)`);
+    if (load[t.id] > targets[t.id]) warnings.push(`${esc(t.name)} : ${load[t.id]} services assignés pour ${targets[t.id]} prévus (${days.filter(d => t.days[d]).length} j/sem)`);
   });
   if (warnings.length) {
     statsHtml += `<div class="alert alert-warning">⚠️ Dépassement de quota : ${warnings.join(' · ')}</div>`;
   }
-  statsHtml += `<div class="alert alert-info">Total : <strong>${totalPosts} postes</strong> répartis sur ${days.length} jours — pondération par quotité et jours de présence.</div>`;
+  statsHtml += `<div class="alert alert-info">Total : <strong>${totalPosts} postes</strong> répartis sur ${days.length} jours — pondération par jours de présence.</div>`;
 
   // Table
   const typeLabel = { grille: '🚪 Accueil', matin: '☀️ Récré matin', aprem: '🌤 Récré après-midi' };
@@ -578,7 +583,7 @@ function renderResult(slots, teachers, days, load, targets, grilles, recsMatin, 
 }
 
 function badgeHtml(t, day, label, type) {
-  return `<span class="teacher-badge tc-${t.colorIdx}" draggable="true" data-tid="${t.id}" data-tname="${t.name}" data-tcolor="${t.colorIdx}" data-day="${day}" data-label="${label}" data-type="${type}" ondragstart="onDragStart(event)" ondragend="onDragEnd(event)" title="${t.name}">${t.name}</span>`;
+  return `<span class="teacher-badge tc-${t.colorIdx}" draggable="true" data-tid="${t.id}" data-tname="${esc(t.name)}" data-tcolor="${t.colorIdx}" data-day="${day}" data-label="${label}" data-type="${type}" ondragstart="onDragStart(event)" ondragend="onDragEnd(event)" title="${esc(t.name)}">${esc(t.name)}</span>`;
 }
 
 // ─── PRINT ───────────────────────────────────────────────────────
@@ -589,6 +594,7 @@ function printPlanning() {
   const dateStr = new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 
   const win = window.open('', '_blank');
+  if (!win) { alert('Le navigateur a bloqué la fenêtre d\'impression : autorisez les fenêtres pop-up pour ce site, puis réessayez.'); return; }
   win.document.write(`<!DOCTYPE html><html lang="fr"><head>
 <meta charset="UTF-8">
 <title>Planning de récréation</title>

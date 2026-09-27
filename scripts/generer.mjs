@@ -169,9 +169,11 @@ window.APPS1D = ${JSON.stringify({ categories }, null, 2).replace(/</g, '\\u003c
   html = html.replace(/(<meta http-equiv="Content-Security-Policy" content=")[^"]*(">)/, (_, a, b) => a + csp + b);
   ecrire('index.html', html);
 
-  // 4. Service worker : tout le dossier accueil/ (logo compris s'il existe) est gardé hors ligne
+  // 4. Service worker : tout le dossier accueil/ (logo compris s'il existe) est gardé hors ligne,
+  //    sauf les fichiers cachés ou système ignorés par git (.DS_Store, Thumbs.db…) : sinon le poste et GitHub divergent
+  const ignore = f => f.startsWith('.') || /^(thumbs\.db|desktop\.ini)$/i.test(f);
   const locaux = ['index.html', 'manifest.webmanifest', ...(function lister(d) {
-    return readdirSync(join(RACINE, d)).sort().flatMap(f => statSync(join(RACINE, d, f)).isDirectory() ? lister(`${d}/${f}`) : [`${d}/${f}`]);
+    return readdirSync(join(RACINE, d)).filter(f => !ignore(f)).sort().flatMap(f => statSync(join(RACINE, d, f)).isDirectory() ? lister(`${d}/${f}`) : [`${d}/${f}`]);
   })('accueil')];
   const empreinte = createHash('sha256');
   locaux.forEach(f => empreinte.update(readFileSync(join(RACINE, f))));
