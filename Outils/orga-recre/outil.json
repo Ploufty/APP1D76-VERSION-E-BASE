@@ -2,5 +2,7 @@
   "titre": "Organisateur de récréation",
   "description": "Qui surveille quand ? Un organiseur de planning simple, avec étiquettes déplaçables.",
   "icone": "⚡",
-  "categorie": "Direction d'école"
+  "categorie": "direction",
+  "page": "orga_recre.html",
+  "ordre": 1
 }

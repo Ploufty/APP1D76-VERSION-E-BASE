@@ -11,9 +11,9 @@ Durée : 10 minutes environ. Tout se fait dans le navigateur, sans rien installe
 - **Ou** utiliser le zip `Apps1D76-Clean.zip` fourni.
 
 **Décompresser** le zip (clic droit › *Extraire tout*). On obtient un dossier, par exemple `TEST-POUR-UI-Clean`.
-Ouvrir ce dossier : il doit contenir directement `index.html`, `style.css`, `Outils`, `scripts`…
+Ouvrir ce dossier : il doit contenir directement `index.html`, `accueil`, `Outils`, `scripts`…
 
-> ⚠ **Afficher les fichiers cachés**, car trois éléments importants commencent par un point : `.github`, `.gitlab` et `.gitignore`.
+> ⚠ **Afficher les fichiers cachés**, car trois éléments importants commencent par un point : `.github`, `.gitlab-ci.yml` et `.gitignore`.
 > - Windows : Explorateur › **Affichage › Afficher › Éléments masqués**
 > - Mac : dans le Finder, **Cmd + Maj + .** (point)
 
@@ -31,7 +31,7 @@ Ouvrir ce dossier : il doit contenir directement `index.html`, `style.css`, `Out
 2. Dans le dossier décompressé, **sélectionner tout son contenu** (Ctrl + A, ou Cmd + A sur Mac) et le **glisser** dans la page GitHub.
 
    > ⚠ Glisser **le contenu** du dossier, **pas le dossier lui-même**. Sinon tout se retrouve dans un sous-dossier, et la page d'accueil n'est pas trouvée : Pages affiche alors le README.
-3. Attendre la fin du chargement (≈ 70 fichiers).
+3. Attendre la fin du chargement (≈ 40 fichiers).
 4. En bas, message : `Import initial du projet`, puis **Commit changes**.
 
 ## Étape 4 — Vérifier que rien ne manque
@@ -39,9 +39,9 @@ Ouvrir ce dossier : il doit contenir directement `index.html`, `style.css`, `Out
 Sur la page d'accueil du dépôt, on doit voir **à la racine** :
 
 ```
-.github/   .gitlab/   Outils/   a-migrer/   icones/   scripts/
-.gitignore   .gitlab-ci.yml   AJOUTER-UN-OUTIL.md   CLAUDE.md   IMPORTER-DANS-UN-NOUVEAU-DEPOT.md
-README.md   index.html   manifest.webmanifest   outils.js   package.json   script.js   style.css   sw.js
+.github/   Outils/   a-migrer/   accueil/   scripts/
+.gitignore   .gitlab-ci.yml   CLAUDE.md   IMPORTER-DANS-UN-NOUVEAU-DEPOT.md   LICENSE
+README.md   index.html   manifest.webmanifest   package.json   sw.js
 ```
 
 **Point le plus important :** le fichier `.github/workflows/mise-a-jour.yml` doit exister. C'est lui qui met à jour la liste des outils.
@@ -72,7 +72,7 @@ Faire de même pour `.gitignore` si besoin.
 
 1. Ouvrir le dossier `Outils` › **Add file › Upload files** › glisser le dossier d'un outil (avec son `index.html`) › **Commit changes**.
 2. Attendre ≈ 1 minute : l'onglet **Actions** passe au vert, puis le nouvel outil apparaît dans « Autres outils ».
-3. Pour le ranger dans une catégorie, ajouter sa fiche `outil.json` : voir [AJOUTER-UN-OUTIL.md](AJOUTER-UN-OUTIL.md).
+3. Pour le ranger dans une catégorie, ajouter sa fiche `outil.json` : voir [README.md](README.md#ajouter-un-outil).
 
 ---
 

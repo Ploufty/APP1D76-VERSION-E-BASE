@@ -22,36 +22,33 @@ Le site est **100 % statique** (HTML, CSS, JavaScript). Il n'y a ni serveur, ni 
 ## 2. Organisation des fichiers
 
 ```
-index.html              La page d'accueil (structure HTML)
-style.css               Toute l'apparence (couleurs, thèmes, animations, responsive)
-script.js               Tout le fonctionnement (affichage des outils, menu, recherche, réglages, animations)
-outils.js               ⚙ GÉNÉRÉ : la liste des outils (ne jamais modifier à la main)
-sw.js                   Service worker : fonctionnement hors ligne (VERSION et CORE mis à jour automatiquement)
-manifest.webmanifest    Fiche de l'application installable (nom, couleurs, icônes)
-icones/                 Icônes de l'application et favicon
-
 Outils/                 ★ LES OUTILS : un dossier par outil
   categories.json       Liste et ordre des catégories
   tirage-au-sort/       Exemple d'outil : ses fichiers + sa fiche outil.json
+a-migrer/               Fiches des outils de l'ancien site, en attente de leurs fichiers (voir LISEZ-MOI.md)
 
-a-migrer/               Fiches des 8 outils de l'ancien site, en attente de leurs fichiers (voir LISEZ-MOI.md)
+index.html              La page d'accueil (structure HTML)
+accueil/                Tout ce que charge la page d'accueil
+  style.css             Toute l'apparence (couleurs, thèmes, animations, responsive)
+  script.js             Tout le fonctionnement (affichage des outils, menu, recherche, réglages, animations)
+  outils.js             ⚙ GÉNÉRÉ : la liste des outils (ne jamais modifier à la main)
+  icones/               Icônes de l'application et favicon
+sw.js                   Service worker : hors ligne (VERSION et CORE mis à jour automatiquement ; doit rester à la racine)
+manifest.webmanifest    Fiche de l'application installable (nom, couleurs, icônes)
 
 scripts/                Outils de maintenance (Node.js, sans dépendance)
-  catalogue.mjs         Lit Outils/, vérifie les fiches, construit la liste
-  generer.mjs           Écrit outils.js + met à jour la sécurité (CSP) et le hors ligne
-  ajouter-outil.mjs     Assistant en questions/réponses pour créer une fiche
+  generer.mjs           Lit Outils/ et vérifie les fiches (catalogue), écrit accueil/outils.js, met à jour la CSP et sw.js
+  ajouter.mjs           Assistant en questions/réponses pour créer une fiche
   securite.mjs          Contrôle de sécurité (secrets, fichiers sensibles, CSP…)
 
-.github/workflows/mise-a-jour.yml   GitHub : relance generer.mjs à chaque envoi sur main, master ou Clean
+.github/workflows/mise-a-jour.yml   GitHub : relance npm run generer à chaque envoi sur main, master ou Clean
 .gitlab-ci.yml                      Forge (GitLab) : génère puis publie sur GitLab Pages
-.gitlab/                            Modèles de ticket et de demande de fusion « Nouvel-outil »
-README.md                           Présentation courte
+README.md                           Présentation et tutoriel « Ajouter un outil » (pour les collègues)
 IMPORTER-DANS-UN-NOUVEAU-DEPOT.md   Tutoriel : créer un nouveau dépôt à partir du zip
-AJOUTER-UN-OUTIL.md                 Tutoriel pour les collègues (sans connaissances techniques)
 CLAUDE.md                           Ce guide (lu automatiquement par Claude Code)
 ```
 
-**Règle d'or :** on travaille dans `Outils/`. On ne touche à `index.html`, `style.css` et `script.js` que pour changer
+**Règle d'or :** on travaille dans `Outils/`. On ne touche à `index.html` et au dossier `accueil/` que pour changer
 le design ou le comportement de la page.
 
 ---
@@ -60,24 +57,24 @@ le design ou le comportement de la page.
 
 ```
 Outils/                     scripts/generer.mjs              index.html (dans le navigateur)
-├─ categories.json   ──┐                                      ├─ charge outils.js  → window.APPS1D
-├─ outil-a/outil.json ─┼──►  lit, vérifie, trie  ──►  outils.js    └─ charge script.js → dessine les cartes
+├─ categories.json   ──┐                                      ├─ charge accueil/outils.js → window.APPS1D
+├─ outil-a/outil.json ─┼──►  lit, vérifie, trie  ──►  accueil/outils.js └─ charge accueil/script.js → cartes
 └─ outil-b/outil.json ─┘     + met à jour CSP dans index.html
                              + met à jour VERSION/CORE dans sw.js
 ```
 
-1. **`scripts/catalogue.mjs`** parcourt `Outils/`. Chaque sous-dossier est un outil. Les dossiers qui commencent par `.` ou `_` sont ignorés.
+1. **`scripts/generer.mjs`** (partie catalogue, `construireCatalogue`) parcourt `Outils/`. Chaque sous-dossier est un outil. Les dossiers qui commencent par `.` ou `_` sont ignorés.
    - Si le dossier a une fiche `outil.json`, elle est lue et vérifiée.
    - Sinon, l'outil va dans la catégorie `autres`. Son titre et sa description sont lus dans les balises `<title>` et `<meta name="description">` de sa page.
-2. **`scripts/generer.mjs`** écrit `outils.js` (`window.APPS1D = { categories: [...] }`) et fait deux mises à jour :
+2. **`scripts/generer.mjs`** écrit ensuite `accueil/outils.js` (`window.APPS1D = { categories: [...] }`) et fait deux mises à jour :
    - l'empreinte SHA-256 du petit script intégré à `index.html` dans la balise **Content-Security-Policy** ;
-   - `VERSION` (empreinte du contenu) et `CORE` (fichiers à garder hors ligne) dans `sw.js`.
+   - `VERSION` (empreinte du contenu) et `CORE` (`index.html`, le manifeste et tout le dossier `accueil/`) dans `sw.js`.
 
    Le script n'écrit un fichier que si son contenu change. Le relancer sans rien modifier ne produit donc aucun changement.
-3. **`script.js`** lit `window.APPS1D`, génère les sections, les cartes et le menu, puis active les interactions.
+3. **`accueil/script.js`** lit `window.APPS1D`, génère les sections, les cartes et le menu, puis active les interactions.
    Tous les textes venant des fiches sont **échappés** (fonction `esc`) : une fiche ne peut pas injecter de HTML.
 4. **Automatismes :**
-   - sur GitHub, le workflow `mise-a-jour.yml` exécute `npm run generer` à chaque envoi sur `main`, `master` ou `Clean` et enregistre `outils.js` s'il a changé (commit « Mise à jour automatique… ») ;
+   - sur GitHub, le workflow `mise-a-jour.yml` exécute `npm run generer` à chaque envoi sur `main`, `master` ou `Clean` et enregistre les fichiers modifiés (commit « Mise à jour automatique… ») ;
    - sur la Forge, `.gitlab-ci.yml` fait la même chose puis publie.
 
 ### Format des fichiers de données
@@ -86,7 +83,7 @@ Outils/                     scripts/generer.mjs              index.html (dans le
 ```json
 [{ "id": "maths", "titre": "Mathématiques", "court": "Maths", "description": "Calcul et automatismes", "icone": "🔢", "couleur": "rouge" }]
 ```
-- `id` : minuscules, chiffres et tirets.
+- `id` : minuscules, chiffres et tirets. Dans une fiche, `categorie` accepte l'`id` ou le titre (« Direction d'école » est ramené à `direction`).
 - `court` : libellé affiché sur mobile.
 - `couleur` : `bleu`, `rouge`, `vert`, `orange`, `violet` ou `turquoise`.
 - La catégorie `autres` doit exister : elle reçoit les dossiers sans fiche.
@@ -97,7 +94,7 @@ Outils/                     scripts/generer.mjs              index.html (dans le
 { "titre": "Tirage au sort", "description": "Une phrase (160 caractères max).", "icone": "🎲", "categorie": "vie-de-classe" }
 ```
 Champs facultatifs :
-- `"page": "carnet.html"` : page d'entrée si ce n'est pas `index.html` ;
+- `"page": "carnet.html"` : page d'entrée si ce n'est pas `index.html` (inutile si le dossier n'a qu'une page `.html`) ;
 - `"ordre": 1` : position dans la catégorie (sinon ordre alphabétique) ;
 - `"url": "https://…"` : outil hébergé ailleurs, à la place de `page`.
 
@@ -119,8 +116,8 @@ Pour ne copier que ce qui sert : prendre les fichiers de l'application, sans les
 ### Ajouter une catégorie
 Ajouter un bloc dans `Outils/categories.json` (ou choisir « Nouvelle catégorie » dans `npm run ajouter`).
 Pour une **nouvelle couleur** :
-1. dans `style.css`, section 3, ajouter `.cat-xxx { --cat: …; --cat-soft: …; }` et sa variante `[data-theme="dark"] .cat-xxx` ;
-2. dans `scripts/catalogue.mjs`, ajouter `'xxx'` à `COULEURS`.
+1. dans `accueil/style.css`, section 3, ajouter `.cat-xxx { --cat: …; --cat-soft: …; }` et sa variante `[data-theme="dark"] .cat-xxx` ;
+2. dans `scripts/generer.mjs`, ajouter `'xxx'` à `COULEURS`.
 
 La couleur `--cat` doit avoir un **contraste d'au moins 4,5:1** sur le fond (blanc en clair, `#1c1c2b` en sombre).
 
@@ -131,10 +128,10 @@ Dans `index.html` :
 - le pied de page est `<footer>` ;
 - le nom et le sous-titre sont dans `.brand`.
 
-Pour le logo : déposer `logo.png` à la racine, décommenter la ligne `<img src="logo.png">` dans `index.html`, puis lancer `npm run generer` (le logo est alors ajouté au hors ligne).
+Pour le logo : déposer `logo.png` dans `accueil/`, décommenter la ligne `<img src="accueil/logo.png">` dans `index.html`, puis lancer `npm run generer` (le logo est alors ajouté au hors ligne).
 
 ### Changer les couleurs, la police ou l'aspect
-Tout est dans `style.css`, découpé en 11 sections numérotées :
+Tout est dans `accueil/style.css`, découpé en 11 sections numérotées :
 
 | Section | Contenu |
 |---|---|
@@ -153,7 +150,7 @@ Tout est dans `style.css`, découpé en 11 sections numérotées :
 Pour changer une couleur, modifier **la variable**, jamais les valeurs dispersées dans le fichier.
 
 ### Changer un comportement
-`script.js` est une seule fonction découpée en 7 blocs :
+`accueil/script.js` est une seule fonction découpée en 7 blocs :
 1. préférences d'affichage (enregistrées dans le navigateur, valeurs contrôlées par `nettoyer`) ;
 2. rendu des outils et du menu ;
 3. recherche (insensible aux accents) ;
@@ -175,7 +172,7 @@ Toutes les commandes demandent Node.js 18 ou plus, et **aucun `npm install`**.
 | Commande | Rôle |
 |---|---|
 | `npm run ajouter` | Assistant : crée ou modifie une fiche, puis met la page à jour |
-| `npm run generer` | Relit `Outils/`, écrit `outils.js`, met à jour la CSP et `sw.js`, puis lance le contrôle de sécurité |
+| `npm run generer` | Relit `Outils/`, écrit `accueil/outils.js`, met à jour la CSP et `sw.js`, puis lance le contrôle de sécurité |
 | `npm run verifier` | Vérifie les fiches sans rien écrire (code de sortie 1 en cas d'erreur) |
 | `npm run securite` | Contrôle de sécurité seul |
 | `npm run apercu` | `generer`, puis serveur local sur http://localhost:8080 (télécharge le petit serveur `http-server` au premier lancement) |
@@ -197,8 +194,8 @@ Pour tester l'installation et le hors ligne, il faut passer par `npm run apercu`
 ## 7. Publication
 
 - **GitHub Pages :** Settings › Pages › *Deploy from a branch* › **`main`** (ou `Clean` dans le dépôt de test) / (root). Pages publie la branche telle quelle, avec Jekyll, qui ignore les fichiers commençant par `.`.
-- **Forge (GitLab) :** `.gitlab-ci.yml` exécute `npm run generer`, copie les fichiers du site dans `public/` et publie. Sur les autres branches, il ne fait que vérifier.
-- **Hors ligne :** chaque changement de contenu modifie `VERSION` dans `sw.js`, et les navigateurs récupèrent alors la nouvelle version. `outils.js` et les pages passent d'abord par le réseau, pour qu'un nouvel outil apparaisse tout de suite.
+- **Forge (GitLab) :** `.gitlab-ci.yml` exécute `npm run generer`, copie `index.html`, `sw.js`, le manifeste, `accueil/` et `Outils/` dans `public/` et publie. Sur les autres branches, il ne fait que vérifier.
+- **Hors ligne :** chaque changement de contenu modifie `VERSION` dans `sw.js`, et les navigateurs récupèrent alors la nouvelle version. `accueil/outils.js` et les pages passent d'abord par le réseau, pour qu'un nouvel outil apparaisse tout de suite.
 
 ---
 
@@ -207,7 +204,7 @@ Pour tester l'installation et le hors ligne, il faut passer par `npm run apercu`
 | Symptôme | Cause et solution |
 |---|---|
 | Pages affiche le README | La source de Pages n'est pas la bonne branche, ou les fichiers ont été importés dans un sous-dossier. Voir la section 7 et `IMPORTER-DANS-UN-NOUVEAU-DEPOT.md`. |
-| Un outil n'apparaît pas | `outils.js` n'a pas été régénéré : lancer `npm run generer`, ou vérifier l'onglet Actions de GitHub. |
+| Un outil n'apparaît pas | `accueil/outils.js` n'a pas été régénéré : lancer `npm run generer`, ou vérifier l'onglet Actions de GitHub. |
 | « introuvable, mais X existe » | Erreur de majuscules dans `page` ou dans le nom du dossier. |
 | Page sans réglages ni thème après une modification | L'empreinte CSP n'est plus à jour : `npm run generer`. |
 | Police différente de Marianne | Le CDN jsDelivr est bloqué par le réseau. La police système prend le relais, c'est normal. |
@@ -220,7 +217,7 @@ Pour tester l'installation et le hors ligne, il faut passer par `npm run apercu`
 
 - **Langue :** interface, messages, commentaires et documentation en **français**. Commits en anglais, avec les lignes d'attribution demandées.
 - **Aucune dépendance npm.** Les scripts n'utilisent que Node.js et le site n'utilise que des fichiers statiques. Ne pas réintroduire d'étape de compilation : le principe est « ouvrir `index.html` = voir la page ».
-- **Ne jamais modifier `outils.js` à la main.** Après toute modification de `Outils/`, du script du `<head>` ou des fichiers de l'accueil, lancer `npm run generer` et commiter les fichiers qu'il a modifiés.
+- **Ne jamais modifier `accueil/outils.js` à la main.** Après toute modification de `Outils/`, du script du `<head>` ou des fichiers de l'accueil, lancer `npm run generer` et commiter les fichiers qu'il a modifiés.
 - **Style du code :** CSS par variables et sections numérotées ; JS en une seule fonction autonome, sans bibliothèque ; échapper tout texte injecté ; pas de gestionnaire d'événement dans le HTML (CSP).
 - **Accessibilité à maintenir :** contraste AA, zones tactiles d'au moins 44 px, focus visible, `aria-label` sur les boutons-icônes, respect de `prefers-reduced-motion` et de `[data-motion="reduce"]`.
 - **Vérifier avant d'envoyer :**
@@ -243,3 +240,4 @@ Pour tester l'installation et le hors ligne, il faut passer par `npm run apercu`
 | v3 | Compilation pour la Forge (abandonnée) |
 | v4 | « Un outil = un dossier dans `Outils/` » avec une fiche `outil.json`, et contrôle de sécurité |
 | **Clean** | Page directement à la racine sans compilation, `outils.js` généré automatiquement, zéro dépendance |
+| Simplification | Fichiers de l'accueil regroupés dans `accueil/`, `catalogue.mjs` fusionné dans `generer.mjs`, `AJOUTER-UN-OUTIL.md` fusionné dans `README.md`, workflow GitHub et `.gitlab-ci.yml` rétablis |

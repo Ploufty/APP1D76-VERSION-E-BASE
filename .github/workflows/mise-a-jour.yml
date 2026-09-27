@@ -1,0 +1,33 @@
+# Relit Outils/ et met à jour la page d'accueil (accueil/outils.js, CSP de index.html, sw.js)
+# à chaque envoi sur main, master ou Clean. En cas d'erreur, le message indique quoi corriger.
+name: Mettre à jour la page d'accueil
+
+on:
+  push:
+    branches: [main, master, Clean]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mise-a-jour-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  generer:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Générer et vérifier
+        run: npm run generer
+      - name: Enregistrer les fichiers mis à jour
+        run: |
+          if git diff --quiet; then echo "Déjà à jour."; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -am "Mise à jour automatique de la page d'accueil"
+          git push
