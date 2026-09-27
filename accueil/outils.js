@@ -3,6 +3,22 @@
 window.APPS1D = {
   "categories": [
     {
+      "id": "direction",
+      "titre": "Direction d'école",
+      "court": "Direction",
+      "description": "Organiser la vie de l'école",
+      "icone": "🏫",
+      "couleur": "orange",
+      "outils": [
+        {
+          "titre": "Organisateur de récréation",
+          "description": "Qui surveille quand ? Un organiseur de planning simple, avec étiquettes déplaçables.",
+          "icone": "⚡",
+          "lien": "./Outils/orga-recre/orga_recre.html"
+        }
+      ]
+    },
+    {
       "id": "vie-de-classe",
       "titre": "Vie de classe",
       "court": "Classe",

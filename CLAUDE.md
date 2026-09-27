@@ -25,7 +25,7 @@ Le site est **100 % statique** (HTML, CSS, JavaScript). Il n'y a ni serveur, ni 
 Outils/                 ★ LES OUTILS : un dossier par outil
   categories.json       Liste et ordre des catégories
   tirage-au-sort/       Exemple d'outil : ses fichiers + sa fiche outil.json
-a-migrer/               Fiches des 8 outils de l'ancien site, en attente de leurs fichiers (voir LISEZ-MOI.md)
+a-migrer/               Fiches des outils de l'ancien site, en attente de leurs fichiers (voir LISEZ-MOI.md)
 
 index.html              La page d'accueil (structure HTML)
 accueil/                Tout ce que charge la page d'accueil
@@ -83,7 +83,7 @@ Outils/                     scripts/generer.mjs              index.html (dans le
 ```json
 [{ "id": "maths", "titre": "Mathématiques", "court": "Maths", "description": "Calcul et automatismes", "icone": "🔢", "couleur": "rouge" }]
 ```
-- `id` : minuscules, chiffres et tirets.
+- `id` : minuscules, chiffres et tirets. Dans une fiche, `categorie` accepte l'`id` ou le titre (« Direction d'école » est ramené à `direction`).
 - `court` : libellé affiché sur mobile.
 - `couleur` : `bleu`, `rouge`, `vert`, `orange`, `violet` ou `turquoise`.
 - La catégorie `autres` doit exister : elle reçoit les dossiers sans fiche.
@@ -94,7 +94,7 @@ Outils/                     scripts/generer.mjs              index.html (dans le
 { "titre": "Tirage au sort", "description": "Une phrase (160 caractères max).", "icone": "🎲", "categorie": "vie-de-classe" }
 ```
 Champs facultatifs :
-- `"page": "carnet.html"` : page d'entrée si ce n'est pas `index.html` ;
+- `"page": "carnet.html"` : page d'entrée si ce n'est pas `index.html` (inutile si le dossier n'a qu'une page `.html`) ;
 - `"ordre": 1` : position dans la catégorie (sinon ordre alphabétique) ;
 - `"url": "https://…"` : outil hébergé ailleurs, à la place de `page`.
 

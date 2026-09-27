@@ -78,15 +78,17 @@ export function construireCatalogue() {
   const outils = [];
   for (const d of dossiers) {
     const ou = `Outils/${d}/`, cheminFiche = join(OUTILS, d, FICHE);
+    // Page d'entrée par défaut : index.html, ou la seule page .html du dossier s'il n'y en a qu'une
+    const pages = readdirSync(join(OUTILS, d)).filter(f => /\.html?$/i.test(f));
+    const pageParDefaut = !pages.includes('index.html') && pages.length === 1 ? pages[0] : 'index.html';
     let o;
     if (existsSync(cheminFiche)) {
       try { o = lireJSON(cheminFiche); } catch (e) { erreurs.push(e.message); continue; }
       if (typeof o !== 'object' || Array.isArray(o) || !o) { erreurs.push(`${ou}${FICHE} doit contenir { … }.`); continue; }
     } else {
       // Dossier glissé sans fiche : on lit la page et on range dans « Autres »
-      const page = trouver(join(OUTILS, d), 'index.html');
-      if (!page.ok) { erreurs.push(`${ou} : ni fiche ${FICHE} ni page index.html. Lancez « npm run ajouter » pour créer la fiche.`); continue; }
-      const infos = infosPage(join(OUTILS, d, 'index.html'));
+      if (!trouver(join(OUTILS, d), pageParDefaut).ok) { erreurs.push(`${ou} : ni fiche ${FICHE} ni page index.html. Lancez « npm run ajouter » pour créer la fiche.`); continue; }
+      const infos = infosPage(join(OUTILS, d, pageParDefaut));
       o = { titre: infos.titre || d, description: infos.description || 'Description à compléter.', icone: '🧩', categorie: CATEGORIE_PAR_DEFAUT };
       avertissements.push(`${ou} : pas de fiche ${FICHE}, l'outil est rangé dans « Autres outils » (npm run ajouter pour la créer).`);
     }
@@ -94,6 +96,9 @@ export function construireCatalogue() {
     // Champs obligatoires et formats
     for (const k of ['titre', 'description', 'icone', 'categorie']) if (!texte(o[k])) erreurs.push(`${ou}${FICHE} : champ « ${k} » manquant.`);
     if (texte(o.description) && o.description.length > DESCRIPTION_MAX) erreurs.push(`${ou}${FICHE} : description trop longue (${o.description.length} caractères, ${DESCRIPTION_MAX} max).`);
+    // Catégorie écrite par son titre (« Direction d'école ») au lieu de son id : on la retrouve
+    const cat = texte(o.categorie) && !ids.has(o.categorie) && cats.find(c => slug(String(c?.titre)) === slug(o.categorie) || slug(String(c?.id)) === slug(o.categorie));
+    if (cat) o.categorie = cat.id;
     if (texte(o.categorie) && !ids.has(o.categorie)) erreurs.push(`${ou}${FICHE} : catégorie « ${o.categorie} » inconnue. Choix : ${[...ids].join(', ')}.`);
     if (o.ordre !== undefined && !Number.isFinite(o.ordre)) erreurs.push(`${ou}${FICHE} : « ordre » doit être un nombre.`);
 
@@ -103,7 +108,7 @@ export function construireCatalogue() {
       if (typeof o.url !== 'string' || !/^https:\/\/[^\s"'<>]+$/.test(o.url)) erreurs.push(`${ou}${FICHE} : « url » doit commencer par https:// (adresse sécurisée).`);
       else lien = o.url;
     } else {
-      const page = o.page ?? 'index.html';
+      const page = o.page ?? pageParDefaut;
       if (typeof page !== 'string' || page.startsWith('/') || page.split(/[\\/]/).some(p => p === '..' || p === '') || /[?#]/.test(page)) {
         erreurs.push(`${ou}${FICHE} : « page » doit être un fichier du dossier (ex. index.html), sans « .. » ni « / » au début.`);
       } else {

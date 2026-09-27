@@ -30,7 +30,8 @@ scripts/         ← assistant, mise à jour, sécurité
      "categorie": "vie-de-classe"
    }
    ```
-   Catégories disponibles : voir `Outils/categories.json` (champ `id`).
+   Catégories disponibles : voir `Outils/categories.json` (champ `id`, ou son titre, ex. `"Direction d'école"`).
+   Si la page de l'outil ne s'appelle pas `index.html` et qu'elle est la seule page `.html` du dossier, elle est trouvée toute seule.
 4. **Commit changes**. Dans l'onglet **Actions**, la mise à jour tourne (≈ 20 s) : ✅ = page à jour.
    ❌ = cliquer dessus, le message indique quoi corriger.
 
