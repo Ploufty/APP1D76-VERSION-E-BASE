@@ -76,13 +76,15 @@
 
   <div class="btn-row">
     <button type="button" class="btn" id="exporter">📄 Exporter en Word</button>
-    <button type="button" class="btn btn-ghost" onclick="print()">🖨 Imprimer</button>
+    <button type="button" class="btn btn-ghost" id="imprimer">🖨 Imprimer</button>
   </div>
 </main>
 
 <footer class="footer">Académie de Normandie · Seine-Maritime (76) · Mission Numérique Éducatif 76</footer>
 
 <script>
+  // Pas de onclick="…" dans le HTML : les événements sont branchés ici
+  document.getElementById('imprimer').addEventListener('click', () => print());
   // Exemple d'export Word (voir accueil/outil.js pour le format des blocs)
   document.getElementById('exporter').addEventListener('click', () => {
     Outil.word('document.docx', [

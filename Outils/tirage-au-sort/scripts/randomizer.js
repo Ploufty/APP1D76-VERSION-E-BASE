@@ -165,7 +165,8 @@
             return;
         }
 
-        if (isTyping || tag === 'BUTTON') { return; }
+        // Liens (retour à l'accueil) et boutons gardent leur comportement normal au clavier
+        if (isTyping || tag === 'BUTTON' || tag === 'A') { return; }
 
         if (e.key === ' ' || e.key === 'Spacebar' || e.key === 'Enter') {
             var activeTabBtn = document.querySelector('.tabButton.active');

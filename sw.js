@@ -1,6 +1,6 @@
 /* Apps1D76 — service worker : fonctionnement hors ligne.
    VERSION et CORE sont mis à jour par « npm run generer » : les postes récupèrent la nouvelle version. */
-const VERSION = 'apps1d-09aa963969';
+const VERSION = 'apps1d-3ded14ddc2';
 const CORE = ["./","./index.html","./manifest.webmanifest","./accueil/icones/apple-touch-icon.png","./accueil/icones/icon-192.png","./accueil/icones/icon-512.png","./accueil/icones/icon-maskable-512.png","./accueil/icones/icon.svg","./accueil/outil.css","./accueil/outil.js","./accueil/outils.js","./accueil/script.js","./accueil/style.css","https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/fonts/Marianne-Regular.woff2","https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/fonts/Marianne-Bold.woff2"];
 const POLICES = 'https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@';
 
@@ -29,10 +29,12 @@ self.addEventListener('fetch', e => {
   const req = e.request;
   const origine = new URL(req.url).origin === location.origin;
   if (req.method !== 'GET' || !(origine || req.url.startsWith(POLICES))) return;
-  const frais = req.mode === 'navigate' || (origine && req.url.split(/[?#]/)[0].endsWith('/accueil/outils.js'));
+  const chemin = origine ? new URL(req.url).pathname : '';
+  const frais = req.mode === 'navigate' || chemin.endsWith('/accueil/outils.js') || chemin.includes('/Outils/');
   e.respondWith(frais
-    // Pages et liste des outils : réseau d'abord (toujours à jour), cache si hors ligne
-    ? fetch(req).then(res => put(req, res)).catch(async () => (await caches.match(req)) || (req.mode === 'navigate' ? horsLigne() : Response.error()))
+    // Pages, liste des outils et fichiers des outils : réseau d'abord (toujours à jour), cache si hors ligne.
+    // « no-cache » : le navigateur revérifie auprès du serveur au lieu de resservir sa copie (réponse 304 si rien n'a changé)
+    ? fetch(req, { cache: 'no-cache' }).then(res => put(req, res)).catch(async () => (await caches.match(req)) || (req.mode === 'navigate' ? horsLigne() : Response.error()))
     // Autres fichiers : cache immédiat, mise à jour en arrière-plan
     : caches.match(req).then(cached => {
         const reseau = fetch(req).then(res => put(req, res)).catch(() => cached || Response.error());

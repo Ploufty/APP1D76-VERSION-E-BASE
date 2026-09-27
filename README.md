@@ -8,7 +8,7 @@
 Outils/          ← UN DOSSIER PAR OUTIL : c'est le seul endroit où l'on travaille
   categories.json   les catégories (nom, couleur, icône, ordre)
   tirage-au-sort/   exemple : les fichiers de l'outil + sa fiche outil.json
-a-migrer/        ← fiches des outils de l'ancien site, en attente de leurs fichiers
+a-migrer/        ← outils en attente : fiches de l'ancien site, et nouveaux outils déposés pour Claude
 index.html       ← la page d'accueil
 accueil/         ← son apparence, son fonctionnement, ses icônes, la liste générée outils.js (ne pas modifier)
                    et l'UI commune des outils (outil.css, outil.js ; modèle dans Outils/_modele/)
@@ -37,6 +37,12 @@ scripts/         ← assistant, mise à jour, sécurité
    ❌ = cliquer dessus, le message indique quoi corriger.
 
 > Sans fiche, l'outil s'affiche quand même dans « Autres outils ».
+
+### En le confiant à Claude
+
+Déposer les fichiers bruts de l'outil dans `a-migrer/<nom>/` (**Add file › Upload files**), puis demander à Claude :
+« Nouvel outil dans a-migrer/<nom> : intègre-le ». Claude range l'outil, écrit sa fiche, lui applique l'UI commune,
+le vérifie et propose une demande de fusion (voir `a-migrer/LISEZ-MOI.md`).
 
 ### Sur son ordinateur (Node.js 18+)
 
