@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Organiseur — Services de récréation</title>
+<link href="https://fonts.googleapis.com/css2?family=Marianne:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bleu: #1C3F87;
+    --bleu-fonce: #0D2B6B;
+    --bleu-clair: #3A5FA8;
+    --rouge: #E1000F;
+    --blanc: #FFFFFF;
+    --gris-bg: #F0F2F5;
+    --gris-border: #D0D5DD;
+    --gris-texte: #3D3D3D;
+    --gris-secondaire: #6B7280;
+    --vert: #1E7A4A;
+    --vert-bg: #E8F5EE;
+    --shadow: 0 2px 8px rgba(28,63,135,0.10);
+    --shadow-lg: 0 8px 32px rgba(28,63,135,0.15);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Marianne', 'Segoe UI', Arial, sans-serif; background: var(--gris-bg); color: var(--gris-texte); min-height: 100vh; }
+
+  header { background: var(--bleu); color: white; padding: 28px 40px 24px; position: relative; overflow: hidden; }
+  header::before { content: ''; position: absolute; right: -60px; top: -60px; width: 280px; height: 280px; border-radius: 50%; background: rgba(255,255,255,0.05); }
+  header::after { content: ''; position: absolute; right: 60px; top: 40px; width: 160px; height: 160px; border-radius: 50%; background: rgba(255,255,255,0.04); }
+  .header-label { font-size: 11px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; opacity: 0.75; margin-bottom: 8px; }
+  header h1 { font-size: 2.2rem; font-weight: 800; line-height: 1.15; position: relative; z-index: 1; }
+  .header-stripe { height: 4px; background: var(--rouge); margin-top: 20px; }
+  header p.subtitle { font-size: 14px; opacity: 0.7; margin-top: 6px; }
+
+  main { max-width: 920px; margin: 0 auto; padding: 32px 20px 60px; }
+
+  .step { background: white; border-radius: 10px; box-shadow: var(--shadow); margin-bottom: 24px; overflow: hidden; }
+  .step-header { display: flex; align-items: center; gap: 14px; padding: 18px 24px; border-bottom: 0.5px solid var(--gris-border); cursor: pointer; user-select: none; }
+  .step-num { width: 30px; height: 30px; border-radius: 50%; background: var(--bleu); color: white; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; flex-shrink: 0; }
+  .step-num.done { background: var(--vert); }
+  .step-title { font-size: 15px; font-weight: 700; flex: 1; }
+  .step-chevron { font-size: 18px; color: var(--gris-secondaire); transition: transform .2s; }
+  .step-chevron.open { transform: rotate(180deg); }
+  .step-body { padding: 24px; display: none; }
+  .step-body.open { display: block; }
+
+  label { display: block; font-size: 13px; font-weight: 700; color: var(--bleu-fonce); margin-bottom: 6px; }
+  input[type=number], input[type=text], input[type=time], select { width: 100%; padding: 10px 14px; border: 1.5px solid var(--gris-border); border-radius: 6px; font-size: 14px; font-family: inherit; color: var(--gris-texte); background: white; transition: border .2s; outline: none; }
+  input:focus, select:focus { border-color: var(--bleu); }
+  .form-row { display: grid; gap: 16px; margin-bottom: 16px; }
+  .form-row.cols-2 { grid-template-columns: 1fr 1fr; }
+
+  /* TEACHER CARDS GRID */
+  #teachers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin-top: 16px; }
+
+  .teacher-card {
+    border: 1.5px solid var(--gris-border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    background: #FAFBFD;
+    transition: border-color .2s;
+  }
+  .teacher-card:focus-within { border-color: var(--bleu); }
+
+  .teacher-card-top { margin-bottom: 10px; }
+  .teacher-card-top label { font-size: 11px; color: var(--gris-secondaire); font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .teacher-card-top input[type=text] { padding: 7px 10px; font-size: 14px; font-weight: 700; border-radius: 5px; }
+
+
+  /* DAY TOGGLES */
+  .days-row { display: flex; gap: 4px; flex-wrap: wrap; }
+  .day-btn {
+    width: 28px; height: 24px;
+    border-radius: 4px;
+    border: 1.5px solid var(--gris-border);
+    font-size: 10px; font-weight: 700;
+    cursor: pointer; display: flex; align-items: center; justify-content: center;
+    transition: background .15s, border-color .15s, color .15s;
+    background: white; color: var(--gris-secondaire);
+    user-select: none;
+  }
+  .day-btn.present { background: #D1FAE5; border-color: #065F46; color: #065F46; }
+  .day-btn.absent  { background: #FEE2E2; border-color: #991B1B; color: #991B1B; }
+
+  /* SERVICES */
+  .services-section { margin-bottom: 20px; }
+  .services-section h3 { font-size: 13px; font-weight: 700; color: var(--bleu); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; }
+  .service-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
+  .service-row input[type=time] { width: 120px; }
+  .service-row span { font-size: 13px; color: var(--gris-secondaire); }
+  .service-row input[type=number] { width: 60px; }
+  .btn-remove { background: none; border: 1.5px solid var(--gris-border); border-radius: 6px; padding: 8px 10px; cursor: pointer; color: var(--rouge); font-size: 14px; transition: background .15s; }
+  .btn-remove:hover { background: #fef2f2; }
+
+  .btn { display: inline-flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 6px; font-size: 14px; font-family: inherit; font-weight: 700; cursor: pointer; transition: all .15s; border: none; }
+  .btn-secondary { background: white; color: var(--bleu); border: 1.5px solid var(--bleu); }
+  .btn-secondary:hover { background: #EEF2FB; }
+  .btn-primary { background: var(--bleu); color: white; }
+  .btn-primary:hover { background: var(--bleu-fonce); }
+  .btn-generate { background: var(--rouge); color: white; font-size: 15px; padding: 14px 32px; width: 100%; justify-content: center; margin-top: 8px; border-radius: 8px; }
+  .btn-generate:hover { background: #b8000c; }
+
+  .toggle-wrap { display: flex; align-items: center; gap: 14px; }
+  .toggle { position: relative; width: 46px; height: 26px; display: inline-block; }
+  .toggle input { opacity: 0; width: 0; height: 0; }
+  .toggle-slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background: var(--gris-border); border-radius: 26px; transition: .2s; }
+  .toggle-slider::before { content: ''; position: absolute; height: 20px; width: 20px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: .2s; }
+  .toggle input:checked + .toggle-slider { background: var(--bleu); }
+  .toggle input:checked + .toggle-slider::before { transform: translateX(20px); }
+  .toggle-label { font-size: 14px; font-weight: 500; }
+
+  /* RESULT */
+  #result { margin-top: 32px; }
+  .result-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+  .result-header h2 { font-size: 18px; font-weight: 800; color: var(--bleu-fonce); }
+  .planning-wrap { overflow-x: auto; }
+  table.planning { width: 100%; border-collapse: collapse; background: white; border-radius: 10px; overflow: hidden; box-shadow: var(--shadow); }
+  table.planning th { background: var(--bleu); color: white; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; padding: 12px 14px; text-align: left; }
+  table.planning th.day-header { text-align: center; }
+  table.planning td { padding: 10px 14px; border-bottom: 0.5px solid var(--gris-border); font-size: 13px; vertical-align: middle; }
+  table.planning tr:last-child td { border-bottom: none; }
+  table.planning tr:nth-child(even) td { background: #F7F8FB; }
+  .slot-label { font-weight: 700; font-size: 12px; color: var(--gris-secondaire); }
+  .slot-type-grille { color: #7C4A00; }
+  .slot-type-matin { color: #0C447C; }
+  .slot-type-aprem { color: #1E7A4A; }
+  .cell-drop { min-width: 90px; min-height: 36px; display: flex; flex-wrap: wrap; gap: 4px; align-items: center; padding: 4px; border-radius: 6px; transition: background .15s; }
+  .cell-drop.drag-over { background: #EEF2FB; outline: 2px dashed var(--bleu); }
+  .cell-absent { background: #FEF2F2; opacity: 0.5; font-size: 11px; color: #991B1B; padding: 4px 6px; border-radius: 4px; }
+
+  /* BADGES */
+  .teacher-badge { display: inline-flex; align-items: center; padding: 4px 10px; border-radius: 4px; font-size: 12px; font-weight: 700; cursor: grab; user-select: none; transition: transform .1s, box-shadow .1s; white-space: nowrap; }
+  .teacher-badge:active { cursor: grabbing; transform: scale(1.08); box-shadow: 0 4px 12px rgba(0,0,0,0.15); }
+  .teacher-badge.dragging { opacity: 0.4; }
+  .tc-0 { background: #DBEAFE; color: #1D4ED8; }
+  .tc-1 { background: #FCE7F3; color: #9D174D; }
+  .tc-2 { background: #D1FAE5; color: #065F46; }
+  .tc-3 { background: #FEF3C7; color: #92400E; }
+  .tc-4 { background: #EDE9FE; color: #5B21B6; }
+  .tc-5 { background: #FFE4E6; color: #9F1239; }
+  .tc-6 { background: #CFFAFE; color: #164E63; }
+  .tc-7 { background: #FEF9C3; color: #713F12; }
+  .tc-8 { background: #F0FDF4; color: #14532D; }
+  .tc-9 { background: #F5F3FF; color: #4C1D95; }
+  .tc-10 { background: #FFF7ED; color: #7C2D12; }
+  .tc-11 { background: #ECFDF5; color: #064E3B; }
+
+  /* STATS */
+  .stats-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 10px; margin-bottom: 16px; }
+  .stat-card { background: white; border-radius: 8px; border: 0.5px solid var(--gris-border); padding: 12px 14px; }
+  .stat-name { font-size: 13px; font-weight: 700; color: var(--bleu-fonce); margin-bottom: 2px; }
+  .stat-quotite { font-size: 11px; color: var(--gris-secondaire); margin-bottom: 6px; }
+  .stat-counts { display: flex; align-items: baseline; gap: 6px; margin-bottom: 4px; }
+  .stat-done { font-size: 22px; font-weight: 800; color: var(--bleu); }
+  .stat-target { font-size: 13px; color: var(--gris-secondaire); }
+  .stat-bar-wrap { height: 5px; background: #E5E7EB; border-radius: 3px; overflow: hidden; margin-bottom: 4px; }
+  .stat-bar { height: 100%; border-radius: 3px; background: var(--bleu); transition: width .4s; }
+  .stat-bar.over { background: var(--rouge); }
+  .stat-bar.exact { background: var(--vert); }
+  .stat-days-mini { display: flex; gap: 3px; margin-top: 6px; }
+  .stat-day-dot { width: 18px; height: 14px; border-radius: 3px; font-size: 9px; font-weight: 700; display: flex; align-items: center; justify-content: center; }
+  .stat-day-dot.p { background: #D1FAE5; color: #065F46; }
+  .stat-day-dot.a { background: #FEE2E2; color: #991B1B; }
+  .stripe-red { height: 3px; background: var(--rouge); border-radius: 2px; margin-top: 8px; }
+
+  .alert { padding: 12px 16px; border-radius: 6px; font-size: 13px; margin-bottom: 16px; }
+  .alert-info { background: #EEF2FB; color: var(--bleu-fonce); border-left: 3px solid var(--bleu); }
+  .alert-warning { background: #FFF7ED; color: #7C2D12; border-left: 3px solid #F97316; }
+  .mt-12 { margin-top: 12px; }
+  .mt-16 { margin-top: 16px; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-label">Ressources pédagogiques</div>
+  <h1>Organiseur<br>de récréation</h1>
+  <p class="subtitle">Répartition automatique des services de surveillance</p>
+  <div class="header-stripe"></div>
+</header>
+
+<main>
+
+  <!-- STEP 1 -->
+  <div class="step" id="step1">
+    <div class="step-header" onclick="toggleStep(1)">
+      <div class="step-num" id="num1">1</div>
+      <div class="step-title">Enseignants</div>
+      <div class="step-chevron open" id="chev1">▾</div>
+    </div>
+    <div class="step-body open" id="body1">
+      <div class="form-row cols-2">
+        <div>
+          <label for="nb-teachers">Nombre d'enseignants</label>
+          <input type="number" id="nb-teachers" min="1" max="30" value="8" oninput="generateTeacherInputs()">
+        </div>
+        <div style="display:flex;align-items:flex-end;padding-bottom:2px;">
+          <div class="toggle-wrap">
+            <label class="toggle">
+              <input type="checkbox" id="mercredi-toggle" onchange="generateTeacherInputs()">
+              <span class="toggle-slider"></span>
+            </label>
+            <span class="toggle-label">Classe le mercredi matin</span>
+          </div>
+        </div>
+      </div>
+      <p style="font-size:12px;color:var(--gris-secondaire);margin-bottom:8px;">Cliquez sur les jours pour indiquer la présence (vert = présent, rouge = absent).</p>
+      <div id="teachers-grid"></div>
+    </div>
+  </div>
+
+  <!-- STEP 2 -->
+  <div class="step" id="step2">
+    <div class="step-header" onclick="toggleStep(2)">
+      <div class="step-num" id="num2">2</div>
+      <div class="step-title">Accueil à l'entrée</div>
+      <div class="step-chevron" id="chev2">▾</div>
+    </div>
+    <div class="step-body" id="body2">
+      <div id="grille-rows"></div>
+      <button class="btn btn-secondary mt-12" onclick="addGrille()">+ Ajouter un horaire d'accueil</button>
+    </div>
+  </div>
+
+  <!-- STEP 3 -->
+  <div class="step" id="step3">
+    <div class="step-header" onclick="toggleStep(3)">
+      <div class="step-num" id="num3">3</div>
+      <div class="step-title">Récréations</div>
+      <div class="step-chevron" id="chev3">▾</div>
+    </div>
+    <div class="step-body" id="body3">
+      <div class="services-section">
+        <h3>🌅 Matin</h3>
+        <div id="recs-matin"></div>
+        <button class="btn btn-secondary mt-12" onclick="addRec('matin')">+ Ajouter un service matin</button>
+      </div>
+      <div class="services-section" style="margin-top:24px;">
+        <h3>🌇 Après-midi</h3>
+        <div id="recs-aprem"></div>
+        <button class="btn btn-secondary mt-12" onclick="addRec('aprem')">+ Ajouter un service après-midi</button>
+      </div>
+    </div>
+  </div>
+
+  <button class="btn btn-generate" onclick="generate()">⚡ Répartition automatique</button>
+
+  <div id="result"></div>
+</main>
+
+<script>
+// ─── STATE ───────────────────────────────────────────────────────
+let draggedBadge = null;
+let dragSource = null;
+const ALL_DAYS = ['L','M','Me','J','V'];
+const DAY_NAMES = { 'L':'Lundi','M':'Mardi','Me':'Mercredi','J':'Jeudi','V':'Vendredi' };
+
+// ─── STEP TOGGLE ─────────────────────────────────────────────────
+function toggleStep(n) {
+  const body = document.getElementById('body'+n);
+  const chev = document.getElementById('chev'+n);
+  body.classList.toggle('open', !body.classList.contains('open'));
+  chev.classList.toggle('open', !chev.classList.contains('open'));
+}
+
+// ─── TEACHER CARDS ───────────────────────────────────────────────
+function generateTeacherInputs() {
+  const n = parseInt(document.getElementById('nb-teachers').value) || 0;
+  const hasMercredi = document.getElementById('mercredi-toggle').checked;
+  const grid = document.getElementById('teachers-grid');
+
+  // Preserve existing data
+  const existing = {};
+  grid.querySelectorAll('.teacher-card').forEach(card => {
+    const idx = card.dataset.idx;
+    existing[idx] = {
+      name: card.querySelector('.t-name').value,
+
+      days: {}
+    };
+    card.querySelectorAll('.day-btn').forEach(btn => {
+      existing[idx].days[btn.dataset.day] = btn.dataset.state;
+    });
+  });
+
+  grid.innerHTML = '';
+  const alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const activeDays = hasMercredi ? ALL_DAYS : ALL_DAYS.filter(d => d !== 'Me');
+
+  for (let i = 0; i < n; i++) {
+    const prev = existing[i] || {};
+    const prevDays = prev.days || {};
+    const card = document.createElement('div');
+    card.className = 'teacher-card';
+    card.dataset.idx = i;
+
+    // Day buttons HTML
+    let daysHtml = '<div class="days-row">';
+    activeDays.forEach(d => {
+      const state = prevDays[d] !== undefined ? prevDays[d] : 'present';
+      const cls = state === 'present' ? 'present' : 'absent';
+      daysHtml += `<button type="button" class="day-btn ${cls}" data-day="${d}" data-state="${state}" onclick="toggleDay(this)" title="${DAY_NAMES[d]}">${d}</button>`;
+    });
+    daysHtml += '</div>';
+
+    card.innerHTML = `
+      <div class="teacher-card-top">
+        <label>Enseignant ${alpha[i] || (i+1)}</label>
+        <input type="text" class="t-name" placeholder="Prénom" value="${prev.name || ''}">
+      </div>
+
+      ${daysHtml}`;
+    grid.appendChild(card);
+  }
+}
+
+function toggleDay(btn) {
+  const current = btn.dataset.state;
+  const next = current === 'present' ? 'absent' : 'present';
+  btn.dataset.state = next;
+  btn.classList.toggle('present', next === 'present');
+  btn.classList.toggle('absent', next === 'absent');
+}
+
+// ─── GET TEACHERS ─────────────────────────────────────────────────
+function getTeachers() {
+  const alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  const n = parseInt(document.getElementById('nb-teachers').value) || 0;
+  const cards = document.querySelectorAll('.teacher-card');
+  const hasMercredi = document.getElementById('mercredi-toggle').checked;
+  const teachers = [];
+
+  for (let i = 0; i < n; i++) {
+    const card = cards[i];
+    if (!card) continue;
+    const name = card.querySelector('.t-name').value.trim() || (alpha[i] || String(i+1));
+    const days = {};
+    card.querySelectorAll('.day-btn').forEach(btn => {
+      days[btn.dataset.day] = btn.dataset.state === 'present';
+    });
+    // Mercredi absent by default if not active
+    if (!hasMercredi) days['Me'] = false;
+    teachers.push({ id: i, name, days, colorIdx: i % 12 });
+  }
+  return teachers;
+}
+
+// ─── GRILLES ─────────────────────────────────────────────────────
+let grilleCount = 0;
+function addGrille(time='08:30', nb=2) {
+  const id = ++grilleCount;
+  const row = document.createElement('div');
+  row.className = 'service-row';
+  row.id = 'grille-' + id;
+  row.innerHTML = `<input type="time" value="${time}" style="width:120px;"><span>→</span><input type="number" min="1" max="10" value="${nb}" style="width:60px;"><span>enseignant(s)</span><button class="btn-remove" onclick="this.closest('.service-row').remove()">✕</button>`;
+  document.getElementById('grille-rows').appendChild(row);
+}
+
+let recCount = 0;
+function addRec(period, start='', end='', nb=2) {
+  const id = ++recCount;
+  const row = document.createElement('div');
+  row.className = 'service-row';
+  row.id = 'rec-' + id;
+  row.innerHTML = `<input type="time" value="${start}" style="width:120px;"><span>–</span><input type="time" value="${end}" style="width:120px;"><span>→</span><input type="number" min="1" max="10" value="${nb}" style="width:60px;"><span>enseignant(s)</span><button class="btn-remove" onclick="this.closest('.service-row').remove()">✕</button>`;
+  document.getElementById('recs-' + period).appendChild(row);
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────
+generateTeacherInputs();
+addGrille('08:30', 2);
+addGrille('13:30', 2);
+addRec('matin', '10:00', '10:15', 2);
+addRec('matin', '10:15', '10:30', 2);
+addRec('aprem', '14:45', '15:00', 2);
+addRec('aprem', '15:00', '15:15', 2);
+
+// ─── PARSE ───────────────────────────────────────────────────────
+function parseGrilles() {
+  return [...document.querySelectorAll('#grille-rows .service-row')].map(r => {
+    const ins = r.querySelectorAll('input');
+    return { time: ins[0].value, nb: parseInt(ins[1].value) || 2 };
+  });
+}
+function parseRecs(period) {
+  return [...document.querySelectorAll('#recs-' + period + ' .service-row')].map(r => {
+    const ins = r.querySelectorAll('input');
+    return { start: ins[0].value, end: ins[1].value, nb: parseInt(ins[2].value) || 2, period };
+  });
+}
+
+function getDays() {
+  const hasMercredi = document.getElementById('mercredi-toggle').checked;
+  const days = ['L','M'];
+  if (hasMercredi) days.push('Me');
+  days.push('J','V');
+  return days;
+}
+
+// ─── COMPUTE TARGETS ─────────────────────────────────────────────
+// Total slots in week → each teacher's fair share weighted by quotite
+function computeTargets(teachers, slots) {
+  // Cible basée uniquement sur les jours de présence (pas la quotité).
+  // Chaque enseignant doit sa part des créneaux des jours où il est là.
+  const totalPosts = slots.reduce((s, sl) => s + sl.nb, 0);
+
+  // Capacité = nombre de jours présents (quotité informative seulement)
+  const totalCap = teachers.reduce((s, t) => {
+    return s + Object.values(t.days).filter(Boolean).length;
+  }, 0);
+
+  const targets = {};
+  teachers.forEach(t => {
+    const presentCount = Object.values(t.days).filter(Boolean).length;
+    targets[t.id] = totalCap > 0 ? Math.round((presentCount / totalCap) * totalPosts) : 0;
+  });
+
+  // Correction arrondi : la somme doit être égale à totalPosts
+  let diff = totalPosts - Object.values(targets).reduce((a,b)=>a+b,0);
+  const sortedByRemainder = [...teachers].sort((a,b) => targets[b.id] - targets[a.id]);
+  let i = 0;
+  while (diff > 0 && i < sortedByRemainder.length) { targets[sortedByRemainder[i++].id]++; diff--; }
+  while (diff < 0 && i < sortedByRemainder.length) { targets[sortedByRemainder[i++].id]--; diff++; }
+
+  return targets;
+}
+
+// ─── GENERATE ────────────────────────────────────────────────────
+function generate() {
+  const teachers = getTeachers();
+  if (!teachers.length) { alert('Veuillez renseigner au moins un enseignant.'); return; }
+
+  const days = getDays();
+  const grilles = parseGrilles();
+  const recsMatin = parseRecs('matin');
+  const recsAprem = parseRecs('aprem');
+
+  // Build slots
+  const slots = [];
+  grilles.forEach(g => {
+    days.forEach(d => slots.push({ day: d, label: g.time, type: 'grille', nb: g.nb, teachers: [] }));
+  });
+  recsMatin.forEach(r => {
+    days.forEach(d => slots.push({ day: d, label: r.start + (r.end ? '–'+r.end : ''), type: 'matin', nb: r.nb, teachers: [] }));
+  });
+  recsAprem.forEach(r => {
+    const fdays = r.period === 'aprem' ? days.filter(d => d !== 'Me') : days;
+    fdays.forEach(d => slots.push({ day: d, label: r.start + (r.end ? '–'+r.end : ''), type: 'aprem', nb: r.nb, teachers: [] }));
+  });
+
+  // Compute targets based on quotite + presence
+  const targets = computeTargets(teachers, slots);
+
+  // Load counters : total semaine + par jour
+  const load = {};
+  const loadDay = {};
+  teachers.forEach(t => {
+    load[t.id] = 0;
+    loadDay[t.id] = {};
+    days.forEach(d => loadDay[t.id][d] = 0);
+  });
+
+  // Plafond journalier = ceil(cible_semaine / nb_jours_presents)
+  const dayCap = {};
+  teachers.forEach(t => {
+    const presentCount = days.filter(d => t.days[d]).length;
+    dayCap[t.id] = presentCount > 0 ? Math.ceil(targets[t.id] / presentCount) : 0;
+  });
+
+  // Deux passes : sous plafond d'abord, relache si insuffisant
+  slots.forEach(slot => {
+    const dayKey = slot.day;
+    const present = teachers.filter(t => t.days[dayKey] === true);
+
+    let eligible = present.filter(t => loadDay[t.id][dayKey] < dayCap[t.id]);
+    if (eligible.length < slot.nb) eligible = present;
+
+    eligible.sort((a, b) => {
+      const defA = targets[a.id] - load[a.id];
+      const defB = targets[b.id] - load[b.id];
+      if (defB !== defA) return defB - defA;
+      return loadDay[a.id][dayKey] - loadDay[b.id][dayKey];
+    });
+
+    const assigned = eligible.slice(0, slot.nb);
+    slot.teachers = assigned;
+    assigned.forEach(t => {
+      load[t.id]++;
+      loadDay[t.id][dayKey]++;
+    });
+  });
+
+  renderResult(slots, teachers, days, load, targets, grilles, recsMatin, recsAprem);
+}
+
+// ─── RENDER ──────────────────────────────────────────────────────
+function renderResult(slots, teachers, days, load, targets, grilles, recsMatin, recsAprem) {
+  const slotLabels = [];
+  grilles.forEach(g => { const l={label:g.time,type:'grille'}; if(!slotLabels.find(s=>s.label===l.label&&s.type===l.type)) slotLabels.push(l); });
+  recsMatin.forEach(r => { const lbl=r.start+(r.end?'–'+r.end:''),l={label:lbl,type:'matin'}; if(!slotLabels.find(s=>s.label===l.label&&s.type===l.type)) slotLabels.push(l); });
+  recsAprem.forEach(r => { const lbl=r.start+(r.end?'–'+r.end:''),l={label:lbl,type:'aprem'}; if(!slotLabels.find(s=>s.label===l.label&&s.type===l.type)) slotLabels.push(l); });
+
+  const totalPosts = Object.values(targets).reduce((a,b)=>a+b,0);
+  const dayNames = days.map(d => DAY_NAMES[d] || d);
+
+  // Stats cards
+  let statsHtml = '<div class="stats-grid">';
+  teachers.forEach(t => {
+    const tgt = targets[t.id] || 0;
+    const done = load[t.id] || 0;
+    const pct = tgt > 0 ? Math.min(Math.round(done/tgt*100), 100) : (done > 0 ? 100 : 0);
+    const barClass = done > tgt ? 'over' : (done === tgt && tgt > 0 ? 'exact' : '');
+    const presentDays = days.filter(d => t.days[d]);
+
+    let miniDays = '<div class="stat-days-mini">';
+    days.forEach(d => {
+      const p = t.days[d] ? 'p' : 'a';
+      miniDays += `<div class="stat-day-dot ${p}" title="${DAY_NAMES[d]}">${d}</div>`;
+    });
+    miniDays += '</div>';
+
+    statsHtml += `<div class="stat-card">
+      <div class="stat-name">${t.name}</div>
+      <div class="stat-quotite">${presentDays.length}j/sem</div>
+      <div class="stat-counts">
+        <span class="stat-done">${done}</span>
+        <span class="stat-target">/ ${tgt} serv.</span>
+      </div>
+      <div class="stat-bar-wrap"><div class="stat-bar ${barClass}" style="width:${pct}%"></div></div>
+      ${miniDays}
+      <div class="stripe-red"></div>
+    </div>`;
+  });
+  statsHtml += '</div>';
+
+  const warnings = [];
+  teachers.forEach(t => {
+    if (load[t.id] > targets[t.id]) warnings.push(`${t.name} : ${load[t.id]} services assignés pour ${targets[t.id]} prévus (quotité ${t.quotite}%)`);
+  });
+  if (warnings.length) {
+    statsHtml += `<div class="alert alert-warning">⚠️ Dépassement de quota : ${warnings.join(' · ')}</div>`;
+  }
+  statsHtml += `<div class="alert alert-info">Total : <strong>${totalPosts} postes</strong> répartis sur ${days.length} jours — pondération par quotité et jours de présence.</div>`;
+
+  // Table
+  const typeLabel = { grille: '🚪 Accueil', matin: '☀️ Récré matin', aprem: '🌤 Récré après-midi' };
+  let html = `<thead><tr><th>Créneau</th>`;
+  dayNames.forEach(d => html += `<th class="day-header">${d}</th>`);
+  html += `</tr></thead><tbody>`;
+
+  slotLabels.forEach(sl => {
+    html += `<tr><td><div class="slot-label slot-type-${sl.type}">${typeLabel[sl.type]}<br><strong>${sl.label}</strong></div></td>`;
+    days.forEach((day, di) => {
+      const slot = slots.find(s => s.day === day && s.label === sl.label && s.type === sl.type);
+      html += `<td>`;
+      if (slot) {
+        html += `<div class="cell-drop" data-day="${day}" data-label="${sl.label}" data-type="${sl.type}" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">`;
+        slot.teachers.forEach(t => html += badgeHtml(t, day, sl.label, sl.type));
+        html += `</div>`;
+      } else {
+        // Check if any teacher is absent this day (Me without after-midi slot)
+        html += `<div class="cell-drop" style="background:#f9f9f9;opacity:0.4;font-size:11px;color:#aaa;padding:6px;">—</div>`;
+      }
+      html += `</td>`;
+    });
+    html += `</tr>`;
+  });
+  html += `</tbody>`;
+
+  document.getElementById('result').innerHTML = `
+    <div class="result-header">
+      <h2>📋 Planning généré</h2>
+      <button class="btn btn-secondary" onclick="printPlanning()">🖨 Imprimer</button>
+    </div>
+    ${statsHtml}
+    <div class="planning-wrap"><table class="planning">${html}</table></div>
+    <p style="font-size:12px;color:var(--gris-secondaire);margin-top:12px;text-align:center;">💡 Les étiquettes sont déplaçables par glisser-déposer</p>`;
+}
+
+function badgeHtml(t, day, label, type) {
+  return `<span class="teacher-badge tc-${t.colorIdx}" draggable="true" data-tid="${t.id}" data-tname="${t.name}" data-tcolor="${t.colorIdx}" data-day="${day}" data-label="${label}" data-type="${type}" ondragstart="onDragStart(event)" ondragend="onDragEnd(event)" title="${t.name}">${t.name}</span>`;
+}
+
+// ─── PRINT ───────────────────────────────────────────────────────
+function printPlanning() {
+  const table = document.querySelector('table.planning');
+  if (!table) { alert('Générez d\'abord le planning.'); return; }
+
+  const dateStr = new Date().toLocaleDateString('fr-FR', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+
+  const win = window.open('', '_blank');
+  win.document.write(`<!DOCTYPE html><html lang="fr"><head>
+<meta charset="UTF-8">
+<title>Planning de récréation</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Marianne:wght@400;700;800&display=swap');
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Marianne', Arial, sans-serif; background: white; color: #1a1a1a; padding: 24px; }
+
+  .print-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 6px; }
+  .print-title { font-size: 22px; font-weight: 800; color: #1C3F87; }
+  .print-date { font-size: 11px; color: #6B7280; }
+  .stripe { height: 3px; background: #E1000F; margin-bottom: 18px; border-radius: 2px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  thead th {
+    background: #1C3F87 !important;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    color: white !important;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 9px 10px;
+    text-align: left;
+  }
+  thead th.day-header { text-align: center; }
+  tbody td { padding: 8px 10px; border-bottom: 0.5px solid #D0D5DD; vertical-align: middle; }
+  tbody tr:nth-child(even) td { background: #F7F8FB; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  tbody tr:last-child td { border-bottom: none; }
+
+  .slot-label { font-size: 11px; font-weight: 700; }
+  .slot-type-grille { color: #7C4A00; }
+  .slot-type-matin  { color: #0C447C; }
+  .slot-type-aprem  { color: #1E7A4A; }
+
+  .cell-drop { display: flex; flex-wrap: wrap; gap: 3px; align-items: center; min-height: 28px; }
+
+  .teacher-badge {
+    display: inline-block;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .tc-0  { background: #DBEAFE; color: #1D4ED8; }
+  .tc-1  { background: #FCE7F3; color: #9D174D; }
+  .tc-2  { background: #D1FAE5; color: #065F46; }
+  .tc-3  { background: #FEF3C7; color: #92400E; }
+  .tc-4  { background: #EDE9FE; color: #5B21B6; }
+  .tc-5  { background: #FFE4E6; color: #9F1239; }
+  .tc-6  { background: #CFFAFE; color: #164E63; }
+  .tc-7  { background: #FEF9C3; color: #713F12; }
+  .tc-8  { background: #F0FDF4; color: #14532D; }
+  .tc-9  { background: #F5F3FF; color: #4C1D95; }
+  .tc-10 { background: #FFF7ED; color: #7C2D12; }
+  .tc-11 { background: #ECFDF5; color: #064E3B; }
+
+  @page { size: landscape; margin: 1.5cm; }
+</style>
+</head><body>
+<div class="print-header">
+  <div class="print-title">Services de récréation</div>
+  <div class="print-date">Édité le ${dateStr}</div>
+</div>
+<div class="stripe"></div>
+${table.outerHTML}
+</body></html>`);
+  win.document.close();
+  win.focus();
+  setTimeout(() => { win.print(); win.close(); }, 400);
+}
+
+// ─── DRAG & DROP ─────────────────────────────────────────────────
+function onDragStart(e) {
+  draggedBadge = e.target;
+  dragSource = e.target.closest('.cell-drop');
+  e.target.classList.add('dragging');
+  e.dataTransfer.effectAllowed = 'move';
+  e.dataTransfer.setData('text/plain', e.target.dataset.tid);
+}
+function onDragEnd(e) {
+  e.target.classList.remove('dragging');
+  document.querySelectorAll('.cell-drop').forEach(c => c.classList.remove('drag-over'));
+}
+function onDragOver(e) {
+  e.preventDefault();
+  e.dataTransfer.dropEffect = 'move';
+  e.currentTarget.classList.add('drag-over');
+}
+function onDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
+function onDrop(e) {
+  e.preventDefault();
+  const target = e.currentTarget;
+  target.classList.remove('drag-over');
+  if (!draggedBadge || target === dragSource) return;
+
+  const existing = [...target.querySelectorAll('.teacher-badge')].map(b => b.dataset.tid);
+  if (existing.includes(draggedBadge.dataset.tid)) return;
+
+  const { tid, tname, tcolor } = draggedBadge.dataset;
+  const tday = target.dataset.day;
+  const tlabel = target.dataset.label;
+  const ttype = target.dataset.type;
+
+  draggedBadge.remove();
+
+  const nb = document.createElement('span');
+  nb.className = `teacher-badge tc-${tcolor}`;
+  nb.draggable = true;
+  Object.assign(nb.dataset, { tid, tname, tcolor, day: tday, label: tlabel, type: ttype });
+  nb.title = tname;
+  nb.textContent = tname;
+  nb.ondragstart = onDragStart;
+  nb.ondragend = onDragEnd;
+  target.appendChild(nb);
+}
+</script>
+</body>
+</html>
