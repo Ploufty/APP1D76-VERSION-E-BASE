@@ -8,4 +8,5 @@ mais pas ses fichiers. Pour migrer un outil :
 2. Déplacer le dossier complet dans `Outils/`.
 3. Envoyer sur GitHub (ou `npm run generer`) : l'outil apparaît sur l'accueil.
 
-Ce dossier n'est jamais publié. Supprimez-le quand tout est migré.
+Ce dossier n'apparaît pas sur l'accueil et n'est pas publié sur la Forge, mais **GitHub Pages publie toute la branche** :
+ne jamais y déposer de données d'élèves. Supprimez-le quand tout est migré.
