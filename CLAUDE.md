@@ -25,7 +25,7 @@ Le site est **100 % statique** (HTML, CSS, JavaScript). Il n'y a ni serveur, ni 
 Outils/                 ★ LES OUTILS : un dossier par outil
   categories.json       Liste et ordre des catégories
   tirage-au-sort/       Exemple d'outil : ses fichiers + sa fiche outil.json
-a-migrer/               Fiches des outils de l'ancien site, en attente de leurs fichiers (voir LISEZ-MOI.md)
+a-migrer/               Outils en attente : fiches de l'ancien site et nouveaux outils déposés pour Claude
 
 index.html              La page d'accueil (structure HTML)
 accueil/                Tout ce que charge la page d'accueil
@@ -108,6 +108,18 @@ Champs facultatifs :
 3. Ouvrir `index.html` pour vérifier, puis envoyer (commit et push).
 
 Pour ne copier que ce qui sert : prendre les fichiers de l'application, sans les `README.md`, notes de développement ni `node_modules`.
+
+### Intégrer un outil confié à Claude
+La personne dépose les fichiers bruts dans `a-migrer/<nom>/` (sur GitHub : **Add file › Upload files**) puis écrit
+« Nouvel outil dans a-migrer/<nom> : intègre-le », avec parfois des indications (public, catégorie, nom souhaité).
+Claude fait alors tout, sans poser de question sauf blocage réel :
+1. **Branche** partant de `main` à jour.
+2. **Dossier** : déplacer vers `Outils/<nom-sans-espace-ni-accent>/`. Retirer ce qui ne sert pas à l'outil (`README.md`, notes, `node_modules`, `.zip`, fichiers de sauvegarde). Si une fiche préparée existe déjà dans `a-migrer/`, reprendre ses valeurs.
+3. **Lire l'outil** pour le comprendre : page d'entrée, ce qu'il fait, pour qui.
+4. **Fiche `outil.json`** : titre court et parlant ; description d'une phrase (160 caractères max) qui dit ce qu'on fait avec l'outil ; un emoji ; la catégorie la plus juste parmi `Outils/categories.json` (en créer une seulement si aucune ne convient) ; `page` si ce n'est pas `index.html` ; `ordre` si utile.
+5. **Contrôler l'outil** : chemins relatifs et majuscules exactes, pas de ressource en `http://`, pas de données d'élèves ni de secret, fonctionne hors connexion si possible. Corriger les petits défauts sans changer le fonctionnement ; signaler les gros.
+6. **`npm run generer`** (« Aucun problème bloquant »), puis test dans le navigateur : la carte, la recherche, l'ouverture de l'outil, aucune erreur dans la console.
+7. **Commit, push, demande de fusion** vers `main`, avec un résumé : catégorie choisie, description et corrections faites.
 
 ### Retirer ou déplacer un outil
 - **Retirer :** supprimer son dossier, puis `npm run generer`.
