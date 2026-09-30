@@ -29,6 +29,7 @@ Outils/                 ★ LES OUTILS : un dossier par outil
 a-migrer/               Outils en attente : fiches de l'ancien site et nouveaux outils déposés pour Claude
 
 index.html              La page d'accueil (structure HTML)
+accessibilite.html      Déclaration d'accessibilité (lien « Accessibilité : non conforme » en pied de chaque page)
 accueil/                Tout ce que charge la page d'accueil
   style.css             Toute l'apparence (couleurs, thèmes, animations, responsive)
   script.js             Tout le fonctionnement (affichage des outils, menu, recherche, réglages, animations)
@@ -72,7 +73,7 @@ Outils/                     scripts/generer.mjs              index.html (dans le
    - Sinon, l'outil va dans la catégorie `autres`. Son titre et sa description sont lus dans les balises `<title>` et `<meta name="description">` de sa page.
 2. **`scripts/generer.mjs`** écrit ensuite `accueil/outils.js` (`window.APPS1D = { categories: [...] }`) et fait deux mises à jour :
    - l'empreinte SHA-256 du petit script intégré à `index.html` dans la balise **Content-Security-Policy** ;
-   - `VERSION` (empreinte du contenu) et `CORE` (`index.html`, le manifeste et tout le dossier `accueil/`) dans `sw.js`.
+   - `VERSION` (empreinte du contenu) et `CORE` (`index.html`, `accessibilite.html`, le manifeste et tout le dossier `accueil/`) dans `sw.js`.
 
    Le script n'écrit un fichier que si son contenu change. Le relancer sans rien modifier ne produit donc aucun changement.
 3. **`accueil/script.js`** lit `window.APPS1D`, génère les sections, les cartes et le menu, puis active les interactions.
@@ -223,7 +224,7 @@ Pour tester l'installation et le hors ligne, il faut passer par `npm run apercu`
 ## 7. Publication
 
 - **GitHub Pages :** Settings › Pages › *Deploy from a branch* › **`main`** (ou `Clean` dans le dépôt de test) / (root). Pages publie la branche telle quelle, avec Jekyll, qui ignore les fichiers commençant par `.`.
-- **Forge (GitLab) :** `.gitlab-ci.yml` exécute `npm run generer`, copie `index.html`, `sw.js`, le manifeste, `accueil/` et `Outils/` dans `public/` et publie. Sur les autres branches, il ne fait que vérifier.
+- **Forge (GitLab) :** `.gitlab-ci.yml` exécute `npm run generer`, copie `index.html`, `accessibilite.html`, `sw.js`, le manifeste, `accueil/` et `Outils/` dans `public/` et publie. Sur les autres branches, il ne fait que vérifier.
 - **Hors ligne :** chaque changement de contenu modifie `VERSION` dans `sw.js`, et les navigateurs récupèrent alors la nouvelle version. `accueil/outils.js` et les pages passent d'abord par le réseau, pour qu'un nouvel outil apparaisse tout de suite.
 
 ---

@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<!-- Déclaration d'accessibilité d'Apps1D76. À mettre à jour à chaque audit, nouvel outil ou défaut connu (voir ACCESSIBILITE.md). -->
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Déclaration d'accessibilité - Apps1D76</title>
+<meta name="description" content="Déclaration d'accessibilité du site Apps1D76 de la Mission Numérique Éducatif 76.">
+<meta name="theme-color" content="#000091">
+<link rel="icon" href="accueil/icones/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="accueil/outil.css">
+<script src="accueil/outil.js"></script>
+<style>
+  .declaration { max-width: 48rem; line-height: 1.6; }
+  .declaration h2 { margin: 2rem 0 .75rem; padding-bottom: .4rem; font-size: 1.3rem; border-bottom: 2px solid var(--blue); }
+  .declaration h3 { margin: 1.25rem 0 .5rem; font-size: 1.05rem; }
+  .declaration p { margin-bottom: .75rem; }
+  .declaration ul { margin: 0 0 .75rem 1.5rem; }
+  .declaration li { margin-bottom: .35rem; }
+  .declaration address { font-style: normal; margin-top: .35rem; }
+  .etat { display: inline-block; padding: .35rem .8rem; border-radius: .4rem; font-weight: 700; background: var(--orange-soft); border: 2px solid var(--orange); }
+</style>
+</head>
+<body>
+<a class="skip" href="#contenu">Aller au contenu</a>
+
+<header class="outil-header">
+  <div class="container brandbar">
+    <a class="brand" href="index.html" aria-label="Retour à l'accueil Apps1D76">
+      <span class="back" aria-hidden="true">←</span>
+      <span><b>Apps1D<span>76</span></b><small>Mission Numérique Éducatif 76</small></span>
+    </a>
+    <div class="actions">
+      <button type="button" class="icon-btn" id="theme-toggle" aria-label="Activer le mode sombre">
+        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="container hero">
+    <h1>Déclaration <span class="accent">d'accessibilité</span></h1>
+    <p>Site Apps1D76 et outils qu'il présente</p>
+  </div>
+  <div class="tricolore" aria-hidden="true"></div>
+</header>
+
+<main class="container declaration" id="contenu" tabindex="-1">
+  <p>
+    La Mission Numérique Éducatif 76 (DSDEN de la Seine-Maritime, académie de Normandie) s'engage à rendre ses services
+    numériques accessibles, conformément à l'article 47 de la loi n° 2005-102 du 11 février 2005.
+  </p>
+  <p>Cette déclaration d'accessibilité s'applique au site <strong>Apps1D76</strong> et aux outils qu'il présente.</p>
+
+  <section aria-labelledby="t-etat">
+    <h2 id="t-etat">État de conformité</h2>
+    <p><span class="etat">Non conforme</span></p>
+    <p>
+      Le site Apps1D76 est <strong>non conforme</strong> au référentiel général d'amélioration de l'accessibilité
+      (RGAA), version 4.1.2, car <strong>aucun audit</strong> n'a encore été réalisé.
+    </p>
+    <p>
+      Le site et ses outils sont toutefois conçus en suivant les règles du RGAA (démarche de meilleur effort) :
+      voir les mesures ci-dessous.
+    </p>
+  </section>
+
+  <section aria-labelledby="t-mesures">
+    <h2 id="t-mesures">Mesures prises</h2>
+    <ul>
+      <li>Langue de la page déclarée, titres hiérarchisés, zones d'en-tête, de navigation, de contenu et de pied de page.</li>
+      <li>Lien d'évitement vers le contenu et focus visible sur tous les éléments interactifs.</li>
+      <li>Utilisation possible au clavier.</li>
+      <li>Contrastes de couleurs de niveau AA, en mode clair et en mode sombre.</li>
+      <li>Réglages d'affichage : mode sombre, contraste renforcé, taille du texte, animations réduites
+        (le réglage du système « réduire les animations » est aussi respecté).</li>
+      <li>Affichage adapté du téléphone (320 px) au TBI.</li>
+      <li>Zones cliquables d'au moins 44 × 44 pixels.</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="t-non">
+    <h2 id="t-non">Contenus non accessibles</h2>
+    <p>
+      Aucun défaut n'est connu à ce jour. En l'absence d'audit, des défauts non repérés peuvent toutefois exister,
+      en particulier dans les outils ajoutés récemment. Merci de nous les signaler (voir « Retour d'information et contact »).
+    </p>
+  </section>
+
+  <section aria-labelledby="t-etab">
+    <h2 id="t-etab">Établissement de cette déclaration</h2>
+    <p>Cette déclaration a été établie le <time datetime="2026-09-30">30 septembre 2026</time>.</p>
+    <h3>Technologies utilisées</h3>
+    <ul>
+      <li>HTML</li>
+      <li>CSS</li>
+      <li>JavaScript</li>
+    </ul>
+    <h3>Environnement de test</h3>
+    <p>
+      À compléter après les premiers tests : navigateurs et versions, aides techniques (par exemple NVDA avec Firefox),
+      outils de vérification (par exemple WAVE ou axe).
+    </p>
+    <h3>Pages concernées</h3>
+    <ul>
+      <li><a href="index.html">Accueil</a></li>
+      <li>Déclaration d'accessibilité (cette page)</li>
+      <li>Chaque outil présenté sur l'accueil</li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="t-contact">
+    <h2 id="t-contact">Retour d'information et contact</h2>
+    <p>
+      Si vous n'arrivez pas à accéder à un contenu ou à un service, vous pouvez contacter la Mission Numérique Éducatif 76
+      pour être orienté vers une alternative accessible ou obtenir le contenu sous une autre forme.
+    </p>
+    <p><strong>Adresse de contact :</strong> à définir.</p>
+  </section>
+
+  <section aria-labelledby="t-schema">
+    <h2 id="t-schema">Schéma pluriannuel et plan d'action</h2>
+    <p>
+      Le site relève du ministère de l'Éducation nationale, dont le schéma pluriannuel de mise en accessibilité
+      et le plan d'action annuel sont publiés en ligne :
+    </p>
+    <ul>
+      <li><a href="https://conformite.education.fr/schema_directeur.html">Schéma pluriannuel d'accessibilité numérique du ministère</a></li>
+      <li><a href="https://conformite.education.fr/plan_action.html">Plan d'action annuel de mise en accessibilité</a></li>
+      <li><a href="https://www.ac-normandie.fr/declaration-d-accessibilite-122110">Déclaration d'accessibilité de l'académie de Normandie</a></li>
+    </ul>
+  </section>
+
+  <section aria-labelledby="t-recours">
+    <h2 id="t-recours">Voies de recours</h2>
+    <p>
+      Si vous avez signalé un défaut d'accessibilité qui vous empêche d'accéder à un contenu ou à un service
+      et que vous n'avez pas obtenu de réponse satisfaisante, vous pouvez :
+    </p>
+    <ul>
+      <li>écrire un message au <a href="https://formulaire.defenseurdesdroits.fr/">Défenseur des droits</a> ;</li>
+      <li>contacter <a href="https://www.defenseurdesdroits.fr/saisir/delegues">le délégué du Défenseur des droits de votre région</a> ;</li>
+      <li>envoyer un courrier par la poste (gratuit, ne pas mettre de timbre) :
+        <address>Défenseur des droits<br>Libre réponse 71120<br>75342 Paris CEDEX 07</address>
+      </li>
+    </ul>
+  </section>
+</main>
+
+<footer class="footer">Académie de Normandie · Seine-Maritime (76) · Mission Numérique Éducatif 76 · Accessibilité : non conforme</footer>
+</body>
+</html>

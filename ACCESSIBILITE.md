@@ -13,7 +13,7 @@
 | **Déclaration d'accessibilité** (loi 2005-102 art. 47, décret 2019-768) | Une page par site, modèle en section 5 |
 | **Mention en bas de chaque page** | « Accessibilité : non conforme » tant qu'aucun audit n'est fait, avec un lien vers la déclaration |
 | **Moyen de contact** | Une adresse mail ou un formulaire **réels** (pas « les canaux habituels ») |
-| **Schéma pluriannuel** (3 ans) et plan d'action annuel | Normalement porté par la DSDEN / l'académie : demander le lien et le citer |
+| **Schéma pluriannuel** (3 ans) et plan d'action annuel | Celui du ministère de l'Éducation nationale ([schéma](https://conformite.education.fr/schema_directeur.html), [plan d'action](https://conformite.education.fr/plan_action.html)) : pas de schéma propre trouvé pour l'académie de Normandie |
 
 Les trois seuls états légaux sont : **totalement conforme** (100 % des critères), **partiellement conforme** (au moins 50 %),
 **non conforme** (moins de 50 % **ou aucun audit**). Sans audit, il faut donc écrire « non conforme », même si le site est bien fait.
@@ -105,14 +105,20 @@ Pour un vrai audit : grille officielle et méthode sur <https://accessibilite.nu
 | Focus visible, zones de 44 px, contrastes AA des catégories | `accueil/style.css`, `accueil/outil.css` |
 | Textes échappés, aucun gestionnaire d'événement dans le HTML | `esc`, `Outil.esc`, CSP |
 
-À faire : une page `accessibilite.html` (section 5), la mention en pied de page de l'accueil et de `Outils/_modele/`,
-puis la liste de contrôle ci-dessus sur chaque outil existant (`tirage-au-sort`, `orga-recre`) et sur ceux de `a-migrer/`.
+| Déclaration d'accessibilité (état : non conforme, adresse de contact **à définir**) | `accessibilite.html` |
+| Mention « Accessibilité : non conforme » en pied de page, avec lien vers la déclaration | accueil, `Outils/_modele/`, chaque outil |
+
+À faire :
+- choisir l'adresse de contact et la mettre dans `accessibilite.html` (section « Retour d'information et contact ») ;
+- faire les tests de la section 3 et remplir « Environnement de test » et « Contenus non accessibles » dans `accessibilite.html` ;
+- passer la liste de contrôle sur chaque outil existant et sur ceux de `a-migrer/` ;
+- tout nouvel outil garde le lien d'évitement et le pied de page du modèle.
 
 ---
 
 ## 5. Modèle de déclaration d'accessibilité
 
-À recopier dans une page du site en remplaçant les `[…]`. Ne mettre **que** ce qui a été vraiment fait.
+Version en ligne : `accessibilite.html`. Pour un autre site, recopier ce modèle en remplaçant les `[…]`. Ne mettre **que** ce qui a été vraiment fait.
 
 > **Déclaration d'accessibilité**
 >
@@ -133,7 +139,8 @@ puis la liste de contrôle ci-dessus sur chaque outil existant (`tirage-au-sort`
 > **Retour d'information et contact** : si vous n'arrivez pas à accéder à un contenu ou à un service,
 > écrivez à [adresse mail réelle] pour être orienté vers une alternative accessible.
 >
-> **Schéma pluriannuel** : [lien vers le schéma de l'académie de Normandie / de la DSDEN].
+> **Schéma pluriannuel** : celui du ministère (<https://conformite.education.fr/schema_directeur.html>)
+> et son plan d'action annuel (<https://conformite.education.fr/plan_action.html>).
 >
 > **Voies de recours** : si, après nous avoir signalé un défaut, vous n'avez pas obtenu de réponse satisfaisante, vous pouvez :
 > - écrire au Défenseur des droits (<https://formulaire.defenseurdesdroits.fr/>) ;
