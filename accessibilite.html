@@ -11,14 +11,45 @@
 <link rel="stylesheet" href="accueil/outil.css">
 <script src="accueil/outil.js"></script>
 <style>
-  .declaration { max-width: 48rem; line-height: 1.6; }
-  .declaration h2 { margin: 2rem 0 .75rem; padding-bottom: .4rem; font-size: 1.3rem; border-bottom: 2px solid var(--blue); }
-  .declaration h3 { margin: 1.25rem 0 .5rem; font-size: 1.05rem; }
-  .declaration p { margin-bottom: .75rem; }
-  .declaration ul { margin: 0 0 .75rem 1.5rem; }
-  .declaration li { margin-bottom: .35rem; }
-  .declaration address { font-style: normal; margin-top: .35rem; }
-  .etat { display: inline-block; padding: .35rem .8rem; border-radius: .4rem; font-weight: 700; background: var(--orange-soft); border: 2px solid var(--orange); }
+  /* Mise en page de la déclaration : sommaire à gauche (grand écran), sections en cartes */
+  .page { display: grid; gap: 1.5rem; align-items: start; }
+  @media (min-width: 60rem) { .page { grid-template-columns: 14rem 1fr; } .sommaire { position: sticky; top: 1rem; } }
+  .sommaire { padding: 1rem; }
+  .sommaire h2 { font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; color: var(--muted); margin-bottom: .5rem; }
+  .sommaire ol { list-style: none; display: grid; gap: .15rem; }
+  .sommaire a { display: flex; align-items: center; min-height: 2.75rem; padding: .25rem .75rem; border-radius: .6rem; color: var(--text); text-decoration: none; font-size: .92rem; }
+  .sommaire a:hover { background: var(--blue-soft); color: var(--blue); }
+
+  .resume { display: grid; gap: 1.25rem; border-top: 4px solid var(--orange); }
+  .etat { display: flex; align-items: center; gap: 1rem; flex-wrap: wrap; }
+  .etat-badge { display: inline-flex; align-items: center; gap: .5rem; padding: .45rem 1rem; border-radius: 999px; font-weight: 700; background: var(--orange-soft); color: var(--text); border: 2px solid var(--orange); }
+  .etat-badge::before { content: ""; width: .7rem; height: .7rem; border-radius: 50%; background: var(--orange); }
+  .etat p { margin: 0; color: var(--muted); }
+  .faits { display: grid; grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr)); gap: .75rem; }
+  .fait { padding: .8rem 1rem; border-radius: .8rem; background: var(--surface-2); border: 1px solid var(--border); }
+  .fait dt { font-size: .8rem; color: var(--muted); }
+  .fait dd { font-weight: 700; }
+
+  .bloc h2 { display: flex; align-items: center; gap: .75rem; font-size: 1.2rem; margin-bottom: 1rem; }
+  .bloc h2 .ico { display: grid; place-items: center; width: 2.4rem; height: 2.4rem; flex: none; border-radius: .7rem; background: var(--blue-soft); font-size: 1.15rem; }
+  .bloc h3 { font-size: 1rem; margin: 1.1rem 0 .4rem; }
+  .bloc p, .bloc ul { margin-bottom: .75rem; line-height: 1.6; }
+  .bloc > :last-child { margin-bottom: 0; }
+  .bloc ul { padding-left: 1.25rem; }
+  .bloc li { margin-bottom: .3rem; }
+  .coches { list-style: none; padding: 0 !important; display: grid; gap: .6rem; }
+  @media (min-width: 40rem) { .coches { grid-template-columns: 1fr 1fr; } }
+  .coches li { display: flex; gap: .6rem; margin: 0; padding: .7rem .9rem; border-radius: .7rem; background: var(--surface-2); }
+  .coches li::before { content: "✓"; flex: none; display: grid; place-items: center; width: 1.5rem; height: 1.5rem; border-radius: 50%; background: var(--green); color: var(--on-accent); font-weight: 700; font-size: .85rem; }
+  [data-theme="dark"] .coches li::before { color: #11111b; }
+  .puces { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; padding: 0 !important; }
+  .puces li { margin: 0; padding: .3rem .8rem; border-radius: 999px; border: 1px solid var(--border); font-size: .9rem; }
+  .etapes { list-style: none; padding: 0 !important; counter-reset: e; display: grid; gap: .75rem; }
+  .etapes li { counter-increment: e; display: flex; gap: .8rem; margin: 0; }
+  .etapes li::before { content: counter(e); flex: none; display: grid; place-items: center; width: 2rem; height: 2rem; border-radius: 50%; background: var(--blue); color: var(--on-accent); font-weight: 700; }
+  address { font-style: normal; margin-top: .4rem; padding: .7rem .9rem; border-left: 4px solid var(--blue); background: var(--surface-2); border-radius: 0 .6rem .6rem 0; }
+  .a-definir { display: inline-block; padding: .1rem .6rem; border-radius: .4rem; background: var(--orange-soft); border: 1px dashed var(--orange); font-weight: 700; }
+  .bloc, .resume { scroll-margin-top: 1rem; }
 </style>
 </head>
 <body>
@@ -39,111 +70,126 @@
   </div>
   <div class="container hero">
     <h1>Déclaration <span class="accent">d'accessibilité</span></h1>
-    <p>Site Apps1D76 et outils qu'il présente</p>
+    <p>Ce que nous faisons pour rendre Apps1D76 utilisable par tous, et comment nous signaler un problème.</p>
   </div>
   <div class="tricolore" aria-hidden="true"></div>
 </header>
 
-<main class="container declaration" id="contenu" tabindex="-1">
-  <p>
-    La Mission Numérique Éducatif 76 (DSDEN de la Seine-Maritime, académie de Normandie) s'engage à rendre ses services
-    numériques accessibles, conformément à l'article 47 de la loi n° 2005-102 du 11 février 2005.
-  </p>
-  <p>Cette déclaration d'accessibilité s'applique au site <strong>Apps1D76</strong> et aux outils qu'il présente.</p>
+<main class="container" id="contenu" tabindex="-1">
+<div class="page">
+  <nav class="card sommaire" aria-labelledby="t-sommaire">
+    <h2 id="t-sommaire">Sommaire</h2>
+    <ol>
+      <li><a href="#t-etat">État de conformité</a></li>
+      <li><a href="#t-mesures">Mesures prises</a></li>
+      <li><a href="#t-non">Contenus non accessibles</a></li>
+      <li><a href="#t-etab">Établissement</a></li>
+      <li><a href="#t-contact">Contact</a></li>
+      <li><a href="#t-schema">Schéma pluriannuel</a></li>
+      <li><a href="#t-recours">Voies de recours</a></li>
+    </ol>
+  </nav>
 
-  <section aria-labelledby="t-etat">
-    <h2 id="t-etat">État de conformité</h2>
-    <p><span class="etat">Non conforme</span></p>
-    <p>
-      Le site Apps1D76 est <strong>non conforme</strong> au référentiel général d'amélioration de l'accessibilité
-      (RGAA), version 4.1.2, car <strong>aucun audit</strong> n'a encore été réalisé.
-    </p>
-    <p>
-      Le site et ses outils sont toutefois conçus en suivant les règles du RGAA (démarche de meilleur effort) :
-      voir les mesures ci-dessous.
-    </p>
-  </section>
+  <div>
+    <section class="card resume bloc" aria-labelledby="t-etat">
+      <h2 id="t-etat"><span class="ico" aria-hidden="true">⚖️</span>État de conformité</h2>
+      <div class="etat">
+        <span class="etat-badge">Non conforme</span>
+        <p>Aucun audit n'a encore été réalisé.</p>
+      </div>
+      <p>
+        La Mission Numérique Éducatif 76 (DSDEN de la Seine-Maritime, académie de Normandie) s'engage à rendre ses services
+        numériques accessibles, conformément à l'article 47 de la loi n° 2005-102 du 11 février 2005.
+        Cette déclaration s'applique au site <strong>Apps1D76</strong> et aux outils qu'il présente.
+      </p>
+      <p>
+        Le site est <strong>non conforme</strong> au référentiel général d'amélioration de l'accessibilité (RGAA) version 4.1.2,
+        car il n'a pas été audité. Il est toutefois conçu en suivant les règles du RGAA (démarche de meilleur effort).
+      </p>
+      <dl class="faits">
+        <div class="fait"><dt>Référentiel</dt><dd>RGAA 4.1.2</dd></div>
+        <div class="fait"><dt>Déclaration établie le</dt><dd><time datetime="2026-09-30">30 septembre 2026</time></dd></div>
+        <div class="fait"><dt>Contact</dt><dd>À définir</dd></div>
+      </dl>
+    </section>
 
-  <section aria-labelledby="t-mesures">
-    <h2 id="t-mesures">Mesures prises</h2>
-    <ul>
-      <li>Langue de la page déclarée, titres hiérarchisés, zones d'en-tête, de navigation, de contenu et de pied de page.</li>
-      <li>Lien d'évitement vers le contenu et focus visible sur tous les éléments interactifs.</li>
-      <li>Utilisation possible au clavier.</li>
-      <li>Contrastes de couleurs de niveau AA, en mode clair et en mode sombre.</li>
-      <li>Réglages d'affichage : mode sombre, contraste renforcé, taille du texte, animations réduites
-        (le réglage du système « réduire les animations » est aussi respecté).</li>
-      <li>Affichage adapté du téléphone (320 px) au TBI.</li>
-      <li>Zones cliquables d'au moins 44 × 44 pixels.</li>
-    </ul>
-  </section>
+    <section class="card bloc" aria-labelledby="t-mesures">
+      <h2 id="t-mesures"><span class="ico" aria-hidden="true">🛠️</span>Mesures prises</h2>
+      <ul class="coches">
+        <li>Langue déclarée, titres hiérarchisés, zones d'en-tête, de contenu et de pied de page</li>
+        <li>Lien d'évitement vers le contenu et focus toujours visible</li>
+        <li>Utilisation possible au clavier seul</li>
+        <li>Contrastes de niveau AA, en mode clair et en mode sombre</li>
+        <li>Panneau « Affichage » : thème, contraste renforcé, taille du texte, animations</li>
+        <li>Réglage système « réduire les animations » respecté</li>
+        <li>Affichage adapté du téléphone (320 px) au TBI</li>
+        <li>Zones cliquables d'au moins 44 × 44 pixels</li>
+      </ul>
+    </section>
 
-  <section aria-labelledby="t-non">
-    <h2 id="t-non">Contenus non accessibles</h2>
-    <p>
-      Aucun défaut n'est connu à ce jour. En l'absence d'audit, des défauts non repérés peuvent toutefois exister,
-      en particulier dans les outils ajoutés récemment. Merci de nous les signaler (voir « Retour d'information et contact »).
-    </p>
-  </section>
+    <section class="card bloc" aria-labelledby="t-non">
+      <h2 id="t-non"><span class="ico" aria-hidden="true">⚠️</span>Contenus non accessibles</h2>
+      <p>
+        Aucun défaut n'est connu à ce jour. En l'absence d'audit, des défauts non repérés peuvent toutefois exister,
+        en particulier dans les outils ajoutés récemment. Merci de nous les signaler (voir <a href="#t-contact">Contact</a>).
+      </p>
+    </section>
 
-  <section aria-labelledby="t-etab">
-    <h2 id="t-etab">Établissement de cette déclaration</h2>
-    <p>Cette déclaration a été établie le <time datetime="2026-09-30">30 septembre 2026</time>.</p>
-    <h3>Technologies utilisées</h3>
-    <ul>
-      <li>HTML</li>
-      <li>CSS</li>
-      <li>JavaScript</li>
-    </ul>
-    <h3>Environnement de test</h3>
-    <p>
-      À compléter après les premiers tests : navigateurs et versions, aides techniques (par exemple NVDA avec Firefox),
-      outils de vérification (par exemple WAVE ou axe).
-    </p>
-    <h3>Pages concernées</h3>
-    <ul>
-      <li><a href="index.html">Accueil</a></li>
-      <li>Déclaration d'accessibilité (cette page)</li>
-      <li>Chaque outil présenté sur l'accueil</li>
-    </ul>
-  </section>
+    <section class="card bloc" aria-labelledby="t-etab">
+      <h2 id="t-etab"><span class="ico" aria-hidden="true">📋</span>Établissement de cette déclaration</h2>
+      <p>Cette déclaration a été établie le <time datetime="2026-09-30">30 septembre 2026</time>.</p>
+      <h3>Technologies utilisées</h3>
+      <ul class="puces"><li>HTML</li><li>CSS</li><li>JavaScript</li></ul>
+      <h3>Environnement de test</h3>
+      <p>
+        <span class="a-definir">À compléter</span> après les premiers tests : navigateurs et versions, aides techniques
+        (par exemple NVDA avec Firefox), outils de vérification (par exemple WAVE ou axe).
+      </p>
+      <h3>Pages concernées</h3>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li>Déclaration d'accessibilité (cette page)</li>
+        <li>Chaque outil présenté sur l'accueil</li>
+      </ul>
+    </section>
 
-  <section aria-labelledby="t-contact">
-    <h2 id="t-contact">Retour d'information et contact</h2>
-    <p>
-      Si vous n'arrivez pas à accéder à un contenu ou à un service, vous pouvez contacter la Mission Numérique Éducatif 76
-      pour être orienté vers une alternative accessible ou obtenir le contenu sous une autre forme.
-    </p>
-    <p><strong>Adresse de contact :</strong> à définir.</p>
-  </section>
+    <section class="card bloc" aria-labelledby="t-contact">
+      <h2 id="t-contact"><span class="ico" aria-hidden="true">✉️</span>Retour d'information et contact</h2>
+      <p>
+        Si vous n'arrivez pas à accéder à un contenu ou à un service, contactez la Mission Numérique Éducatif 76
+        pour être orienté vers une alternative accessible ou obtenir le contenu sous une autre forme.
+      </p>
+      <p><strong>Adresse de contact :</strong> <span class="a-definir">à définir</span></p>
+    </section>
 
-  <section aria-labelledby="t-schema">
-    <h2 id="t-schema">Schéma pluriannuel et plan d'action</h2>
-    <p>
-      Le site relève du ministère de l'Éducation nationale, dont le schéma pluriannuel de mise en accessibilité
-      et le plan d'action annuel sont publiés en ligne :
-    </p>
-    <ul>
-      <li><a href="https://conformite.education.fr/schema_directeur.html">Schéma pluriannuel d'accessibilité numérique du ministère</a></li>
-      <li><a href="https://conformite.education.fr/plan_action.html">Plan d'action annuel de mise en accessibilité</a></li>
-      <li><a href="https://www.ac-normandie.fr/declaration-d-accessibilite-122110">Déclaration d'accessibilité de l'académie de Normandie</a></li>
-    </ul>
-  </section>
+    <section class="card bloc" aria-labelledby="t-schema">
+      <h2 id="t-schema"><span class="ico" aria-hidden="true">🗓️</span>Schéma pluriannuel et plan d'action</h2>
+      <p>
+        Le site relève du ministère de l'Éducation nationale, dont le schéma pluriannuel de mise en accessibilité
+        et le plan d'action annuel sont publiés en ligne :
+      </p>
+      <ul>
+        <li><a href="https://conformite.education.fr/schema_directeur.html">Schéma pluriannuel d'accessibilité numérique du ministère</a></li>
+        <li><a href="https://conformite.education.fr/plan_action.html">Plan d'action annuel de mise en accessibilité</a></li>
+        <li><a href="https://www.ac-normandie.fr/declaration-d-accessibilite-122110">Déclaration d'accessibilité de l'académie de Normandie</a></li>
+      </ul>
+    </section>
 
-  <section aria-labelledby="t-recours">
-    <h2 id="t-recours">Voies de recours</h2>
-    <p>
-      Si vous avez signalé un défaut d'accessibilité qui vous empêche d'accéder à un contenu ou à un service
-      et que vous n'avez pas obtenu de réponse satisfaisante, vous pouvez :
-    </p>
-    <ul>
-      <li>écrire un message au <a href="https://formulaire.defenseurdesdroits.fr/">Défenseur des droits</a> ;</li>
-      <li>contacter <a href="https://www.defenseurdesdroits.fr/saisir/delegues">le délégué du Défenseur des droits de votre région</a> ;</li>
-      <li>envoyer un courrier par la poste (gratuit, ne pas mettre de timbre) :
-        <address>Défenseur des droits<br>Libre réponse 71120<br>75342 Paris CEDEX 07</address>
-      </li>
-    </ul>
-  </section>
+    <section class="card bloc" aria-labelledby="t-recours">
+      <h2 id="t-recours"><span class="ico" aria-hidden="true">🏛️</span>Voies de recours</h2>
+      <p>
+        Si vous avez signalé un défaut d'accessibilité qui vous empêche d'accéder à un contenu ou à un service
+        et que vous n'avez pas obtenu de réponse satisfaisante, vous pouvez :
+      </p>
+      <ol class="etapes">
+        <li><span>écrire un message au <a href="https://formulaire.defenseurdesdroits.fr/">Défenseur des droits</a> ;</span></li>
+        <li><span>contacter <a href="https://www.defenseurdesdroits.fr/saisir/delegues">le délégué du Défenseur des droits de votre région</a> ;</span></li>
+        <li><span>envoyer un courrier par la poste (gratuit, ne pas mettre de timbre) :
+          <address>Défenseur des droits<br>Libre réponse 71120<br>75342 Paris CEDEX 07</address></span></li>
+      </ol>
+    </section>
+  </div>
+</div>
 </main>
 
 <footer class="footer">Académie de Normandie · Seine-Maritime (76) · Mission Numérique Éducatif 76 · Accessibilité : non conforme</footer>

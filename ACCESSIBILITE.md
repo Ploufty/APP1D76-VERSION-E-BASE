@@ -101,7 +101,7 @@ Pour un vrai audit : grille officielle et méthode sur <https://accessibilite.nu
 | Point | Où |
 |---|---|
 | `lang="fr"`, lien d'évitement, `<nav>`, `<main>`, `role="status"` sur la recherche | `index.html` |
-| Thème sombre, contraste renforcé, texte agrandi, animations réduites, partagés avec les outils | `accueil/script.js`, `accueil/outil.js` |
+| Panneau « Affichage » (thème, contraste renforcé, taille du texte, animations) sur l'accueil **et** dans chaque outil, réglages partagés | `accueil/script.js`, `accueil/outil.js` |
 | Focus visible, zones de 44 px, contrastes AA des catégories | `accueil/style.css`, `accueil/outil.css` |
 | Textes échappés, aucun gestionnaire d'événement dans le HTML | `esc`, `Outil.esc`, CSP |
 

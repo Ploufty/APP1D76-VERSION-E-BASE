@@ -36,7 +36,7 @@ accueil/                Tout ce que charge la page d'accueil
   outils.js             ⚙ GÉNÉRÉ : la liste des outils (ne jamais modifier à la main)
   icones/               Icônes de l'application et favicon
   outil.css             UI DE RÉFÉRENCE DES OUTILS : thème, en-tête, étapes, formulaires, boutons, tableaux, alertes
-  outil.js              Script commun des outils : réglages partagés, bouton de thème, étapes, export Word (Outil.word)
+  outil.js              Script commun des outils : réglages partagés, bouton de thème, panneau « Affichage », étapes, export Word (Outil.word)
 sw.js                   Service worker : hors ligne (VERSION et CORE mis à jour automatiquement ; doit rester à la racine)
 manifest.webmanifest    Fiche de l'application installable (nom, couleurs, icônes)
 
@@ -133,7 +133,8 @@ Deux niveaux de design :
 - **UI de référence des outils = `accueil/outil.css` + `accueil/outil.js`** : même esprit (Marianne, bleu-blanc-rouge, mêmes couleurs),
   en plus simple, avec les réglages d'affichage **partagés** avec l'accueil (thème, contraste, taille du texte, animations).
 
-Pour un outil : partir de `Outils/_modele/index.html` (en-tête avec retour à l'accueil et bouton de thème, pied de page), puis
+Pour un outil : partir de `Outils/_modele/index.html` (lien d'évitement, en-tête avec retour à l'accueil et bouton de thème — `outil.js` y ajoute
+le bouton « Affichage » et son panneau —, pied de page avec le lien vers la déclaration d'accessibilité), puis
 ajouter les styles propres à l'outil dans sa page en réutilisant les variables (`--blue`, `--surface`, `--border`, `--muted`, `--green`…).
 Composants : `.card`, `.step` (étape repliable), `.form-row`, `.toggle-wrap`, `.btn` / `.btn-ghost` / `.btn-accent` / `.btn-block` / `.btn-remove`,
 `.table-wrap` + `.table`, `.alert-info` / `-warning` / `-error`, `.hint`. En JS : `Outil.esc`, `Outil.telecharger`, `Outil.word` (export .docx sans dépendance).
