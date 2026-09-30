@@ -48,6 +48,7 @@ scripts/                Outils de maintenance (Node.js, sans dépendance)
 .gitlab-ci.yml                      Forge (GitLab) : génère puis publie sur GitLab Pages
 README.md                           Présentation et tutoriel « Ajouter un outil » (pour les collègues)
 IMPORTER-DANS-UN-NOUVEAU-DEPOT.md   Tutoriel : créer un nouveau dépôt à partir du zip
+ACCESSIBILITE.md                    Cahier des charges accessibilité (RGAA) et modèle de déclaration
 CLAUDE.md                           Ce guide (lu automatiquement par Claude Code)
 ```
 
@@ -247,7 +248,7 @@ Pour tester l'installation et le hors ligne, il faut passer par `npm run apercu`
 - **Aucune dépendance npm.** Les scripts n'utilisent que Node.js et le site n'utilise que des fichiers statiques. Ne pas réintroduire d'étape de compilation : le principe est « ouvrir `index.html` = voir la page ».
 - **Ne jamais modifier `accueil/outils.js` à la main.** Après toute modification de `Outils/`, du script du `<head>` ou des fichiers de l'accueil, lancer `npm run generer` et commiter les fichiers qu'il a modifiés.
 - **Style du code :** CSS par variables et sections numérotées ; JS en une seule fonction autonome, sans bibliothèque ; échapper tout texte injecté ; pas de gestionnaire d'événement dans le HTML (CSP).
-- **Accessibilité à maintenir :** contraste AA, zones tactiles d'au moins 44 px, focus visible, `aria-label` sur les boutons-icônes, respect de `prefers-reduced-motion` et de `[data-motion="reduce"]`.
+- **Accessibilité à maintenir :** contraste AA, zones tactiles d'au moins 44 px, focus visible, `aria-label` sur les boutons-icônes, respect de `prefers-reduced-motion` et de `[data-motion="reduce"]`. Liste de contrôle RGAA complète et modèle de déclaration : `ACCESSIBILITE.md` (à appliquer à chaque outil intégré).
 - **Vérifier avant d'envoyer :**
   1. `node --check` sur chaque fichier JS modifié ;
   2. `npm run generer`, qui doit afficher « Aucun problème bloquant » ;
