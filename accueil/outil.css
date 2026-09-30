@@ -58,6 +58,8 @@ button, input, select, textarea { font: inherit; color: inherit; }
 button { cursor: pointer; }
 a { color: var(--blue); }
 :focus-visible { outline: 3px solid var(--blue); outline-offset: 3px; border-radius: 6px; }
+.skip { position: absolute; left: 1rem; top: -4rem; z-index: 100; padding: .5rem 1rem; border-radius: 6px; background: var(--blue); color: var(--on-accent); }
+.skip:focus { top: 1rem; }
 .sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 .container {
   width: 100%; max-width: var(--largeur); margin: 0 auto;
@@ -89,6 +91,40 @@ a { color: var(--blue); }
 .hero p { color: var(--muted); margin-top: .4rem; }
 .tricolore { height: 4px; background: linear-gradient(90deg, var(--blue) 0 33.3%, #fff 0 66.6%, var(--red) 0); }
 [data-theme="dark"] .tricolore { background: linear-gradient(90deg, var(--blue) 0 33.3%, #eeeef6 0 66.6%, var(--red) 0); }
+/* Panneau « Affichage » (ajouté par outil.js à côté du bouton de thème ; mêmes réglages que l'accueil) */
+.btn-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+dialog {
+  margin: auto; width: min(28rem, calc(100% - 2rem)); max-height: calc(100dvh - 2rem); overflow: auto;
+  color: var(--text); background: var(--surface); border: 1px solid var(--border); border-radius: 1.25rem;
+  box-shadow: 0 30px 80px -20px rgba(0, 0, 40, .45);
+}
+dialog[open] { animation: pop .45s var(--spring); }
+dialog::backdrop { background: rgba(10, 10, 40, .45); backdrop-filter: blur(3px); }
+@keyframes pop { from { opacity: 0; transform: translateY(1rem) scale(.95); } }
+.settings { display: grid; gap: 1.25rem; padding: 1.5rem; }
+.settings-head { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
+.settings h2 { font-size: 1.2rem; color: var(--blue); }
+.settings fieldset { border: 0; padding: 0; margin: 0; }
+.settings legend { margin-bottom: .5rem; font-size: .9rem; font-weight: 700; }
+.seg { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: .25rem; padding: .25rem; border-radius: .9rem; background: var(--bg); border: 1px solid var(--border); }
+.seg label { position: relative; margin: 0; }
+.seg input, .switch input { position: absolute; opacity: 0; }
+.seg span {
+  display: grid; place-items: center; min-height: 2.75rem; padding: .35rem .5rem; text-align: center; line-height: 1.15;
+  font-size: .88rem; font-weight: 700; border-radius: .7rem; cursor: pointer; transition: background-color .25s, color .25s;
+}
+.seg .t115 { font-size: 1rem; } .seg .t130 { font-size: 1.12rem; }
+.seg span:hover { background: var(--blue-soft); }
+.seg input:checked + span { background: var(--blue); color: var(--on-accent); }
+.seg input:focus-visible + span, .switch input:focus-visible + span::before { outline: 3px solid var(--blue); outline-offset: 2px; }
+.switch { display: flex; align-items: center; min-height: 2.75rem; margin: 0; font-weight: 700; font-size: .95rem; cursor: pointer; }
+.switch span { display: flex; align-items: center; gap: .75rem; }
+.switch span::before {
+  content: ""; flex: none; width: 2.75rem; height: 1.6rem; border-radius: 999px; background: var(--border);
+  background-image: radial-gradient(circle at 0.8rem 50%, #fff .6rem, transparent .62rem); transition: background-color .25s, background-position .3s var(--spring);
+}
+.switch input:checked + span::before { background-color: var(--blue); background-position: 1.15rem 0; }
+.settings-foot { display: flex; justify-content: flex-end; gap: .5rem; flex-wrap: wrap; }
 
 /* ---------- 5. CARTES ET ÉTAPES REPLIABLES ---------- */
 .card, .step {
@@ -181,6 +217,6 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px
   .btn-row, .btn-row .btn { width: 100%; }
 }
 @media print {
-  .outil-header .brandbar, .footer, .btn, .icon-btn { display: none !important; }
+  .outil-header .brandbar, .footer, .btn, .icon-btn, dialog { display: none !important; }
   body { background: #fff; color: #000; }
 }

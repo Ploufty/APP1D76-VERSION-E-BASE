@@ -6,7 +6,7 @@ pages:
   script:
     - npm run generer
     - mkdir public
-    - cp -r index.html sw.js manifest.webmanifest accueil Outils public/
+    - cp -r index.html accessibilite.html sw.js manifest.webmanifest accueil Outils public/
   artifacts:
     paths: [public]
   rules:
