@@ -206,6 +206,7 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px
 .alert-warning { background: var(--orange-soft); border-left: 4px solid var(--orange); }
 .alert-error { background: var(--red-soft); border-left: 4px solid var(--red); }
 .footer { padding: 1.25rem 1rem; text-align: center; font-size: .85rem; color: var(--muted); background: var(--surface); border-top: 1px solid var(--border); }
+.footer p + p { margin-top: .35rem; }
 
 /* ---------- 10. ANIMATIONS RÉDUITES ---------- */
 [data-motion="reduce"] *, [data-motion="reduce"] *::before, [data-motion="reduce"] *::after { animation: none !important; transition: none !important; }

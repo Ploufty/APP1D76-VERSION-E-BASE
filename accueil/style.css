@@ -236,6 +236,7 @@ svg { flex: none; }
 @keyframes pulse { 50% { transform: scale(1.7); opacity: .35; } }
 
 .footer { padding: 1.5rem max(1.5rem, env(safe-area-inset-right)) max(1.5rem, env(safe-area-inset-bottom)); text-align: center; font-size: .88rem; color: var(--muted); border-top: 1px solid var(--border); background: var(--surface-alpha); }
+.footer p + p { margin-top: .35rem; }
 
 /* ---------- 9. PARAMÈTRES D'AFFICHAGE ---------- */
 dialog {
