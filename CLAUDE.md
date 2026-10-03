@@ -29,13 +29,14 @@ Outils/                 ★ LES OUTILS : un dossier par outil
 a-migrer/               Outils en attente : fiches de l'ancien site et nouveaux outils déposés pour Claude
 
 index.html              La page d'accueil (structure HTML)
+accessibilite.html      Déclaration d'accessibilité (lien « Accessibilité : non conforme » en pied de chaque page)
 accueil/                Tout ce que charge la page d'accueil
   style.css             Toute l'apparence (couleurs, thèmes, animations, responsive)
   script.js             Tout le fonctionnement (affichage des outils, menu, recherche, réglages, animations)
   outils.js             ⚙ GÉNÉRÉ : la liste des outils (ne jamais modifier à la main)
   icones/               Icônes de l'application et favicon
   outil.css             UI DE RÉFÉRENCE DES OUTILS : thème, en-tête, étapes, formulaires, boutons, tableaux, alertes
-  outil.js              Script commun des outils : réglages partagés, bouton de thème, étapes, export Word (Outil.word)
+  outil.js              Script commun des outils : réglages partagés, bouton de thème, panneau « Affichage », étapes, export Word (Outil.word)
 sw.js                   Service worker : hors ligne (VERSION et CORE mis à jour automatiquement ; doit rester à la racine)
 manifest.webmanifest    Fiche de l'application installable (nom, couleurs, icônes)
 
@@ -48,6 +49,7 @@ scripts/                Outils de maintenance (Node.js, sans dépendance)
 .gitlab-ci.yml                      Forge (GitLab) : génère puis publie sur GitLab Pages
 README.md                           Présentation et tutoriel « Ajouter un outil » (pour les collègues)
 IMPORTER-DANS-UN-NOUVEAU-DEPOT.md   Tutoriel : créer un nouveau dépôt à partir du zip
+ACCESSIBILITE.md                    Cahier des charges accessibilité (RGAA) et modèle de déclaration
 CLAUDE.md                           Ce guide (lu automatiquement par Claude Code)
 ```
 
@@ -71,7 +73,7 @@ Outils/                     scripts/generer.mjs              index.html (dans le
    - Sinon, l'outil va dans la catégorie `autres`. Son titre et sa description sont lus dans les balises `<title>` et `<meta name="description">` de sa page.
 2. **`scripts/generer.mjs`** écrit ensuite `accueil/outils.js` (`window.APPS1D = { categories: [...] }`) et fait deux mises à jour :
    - l'empreinte SHA-256 du petit script intégré à `index.html` dans la balise **Content-Security-Policy** ;
-   - `VERSION` (empreinte de l'accueil **et des fichiers des outils**, fins de ligne Windows et Linux confondues) et `CORE` (`index.html`, le manifeste et tout le dossier `accueil/`) dans `sw.js`.
+   - `VERSION` (empreinte de l'accueil **et des fichiers des outils**, fins de ligne Windows et Linux confondues) et `CORE` (`index.html`, `accessibilite.html`, le manifeste et tout le dossier `accueil/`) dans `sw.js`.
 
    Le script n'écrit un fichier que si son contenu change. Le relancer sans rien modifier ne produit donc aucun changement.
 3. **`accueil/script.js`** lit `window.APPS1D`, génère les sections, les cartes et le menu, puis active les interactions.
@@ -131,7 +133,8 @@ Deux niveaux de design :
 - **UI de référence des outils = `accueil/outil.css` + `accueil/outil.js`** : même esprit (Marianne, bleu-blanc-rouge, mêmes couleurs),
   en plus simple, avec les réglages d'affichage **partagés** avec l'accueil (thème, contraste, taille du texte, animations).
 
-Pour un outil : partir de `Outils/_modele/index.html` (en-tête avec retour à l'accueil et bouton de thème, pied de page), puis
+Pour un outil : partir de `Outils/_modele/index.html` (lien d'évitement, en-tête avec retour à l'accueil et bouton de thème — `outil.js` y ajoute
+le bouton « Affichage » et son panneau —, pied de page avec le lien vers la déclaration d'accessibilité), puis
 ajouter les styles propres à l'outil dans sa page en réutilisant les variables (`--blue`, `--surface`, `--border`, `--muted`, `--green`…).
 Composants : `.card`, `.step` (étape repliable), `.form-row`, `.toggle-wrap`, `.btn` / `.btn-ghost` / `.btn-accent` / `.btn-block` / `.btn-remove`,
 `.table-wrap` + `.table`, `.alert-info` / `-warning` / `-error`, `.hint`. En JS : `Outil.esc`, `Outil.telecharger`, `Outil.word` (export .docx sans dépendance).
@@ -224,7 +227,7 @@ Pour tester l'installation et le hors ligne, il faut passer par `npm run apercu`
 ## 7. Publication
 
 - **GitHub Pages :** Settings › Pages › *Deploy from a branch* › **`main`** (ou `Clean` dans le dépôt de test) / (root). Pages publie la branche telle quelle, avec Jekyll, qui ignore les fichiers commençant par `.`.
-- **Forge (GitLab) :** `.gitlab-ci.yml` exécute `npm run generer`, copie `index.html`, `sw.js`, le manifeste, `accueil/` et `Outils/` dans `public/` et publie. Sur les autres branches, il ne fait que vérifier.
+- **Forge (GitLab) :** `.gitlab-ci.yml` exécute `npm run generer`, copie `index.html`, `accessibilite.html`, `sw.js`, le manifeste, `accueil/` et `Outils/` dans `public/` et publie. Sur les autres branches, il ne fait que vérifier.
 - **Hors ligne :** chaque changement de contenu (accueil ou outils) modifie `VERSION` dans `sw.js`, et les navigateurs récupèrent alors la nouvelle version. `accueil/outils.js`, les pages et tous les fichiers de `Outils/` passent d'abord par le réseau (le cache ne sert que hors connexion), pour qu'un outil ajouté ou modifié soit à jour tout de suite.
 
 ---
@@ -249,7 +252,7 @@ Pour tester l'installation et le hors ligne, il faut passer par `npm run apercu`
 - **Aucune dépendance npm.** Les scripts n'utilisent que Node.js et le site n'utilise que des fichiers statiques. Ne pas réintroduire d'étape de compilation : le principe est « ouvrir `index.html` = voir la page ».
 - **Ne jamais modifier `accueil/outils.js` à la main.** Après toute modification de `Outils/`, du script du `<head>` ou des fichiers de l'accueil, lancer `npm run generer` et commiter les fichiers qu'il a modifiés.
 - **Style du code :** CSS par variables et sections numérotées ; JS en une seule fonction autonome, sans bibliothèque ; échapper tout texte injecté ; pas de gestionnaire d'événement dans le HTML (CSP).
-- **Accessibilité à maintenir :** contraste AA, zones tactiles d'au moins 44 px, focus visible, `aria-label` sur les boutons-icônes, respect de `prefers-reduced-motion` et de `[data-motion="reduce"]`.
+- **Accessibilité à maintenir :** contraste AA, zones tactiles d'au moins 44 px, focus visible, `aria-label` sur les boutons-icônes, respect de `prefers-reduced-motion` et de `[data-motion="reduce"]`. Liste de contrôle RGAA complète et modèle de déclaration : `ACCESSIBILITE.md` (à appliquer à chaque outil intégré).
 - **Vérifier avant d'envoyer :**
   1. `node --check` sur chaque fichier JS modifié ;
   2. `npm run generer`, qui doit afficher « Aucun problème bloquant » ;

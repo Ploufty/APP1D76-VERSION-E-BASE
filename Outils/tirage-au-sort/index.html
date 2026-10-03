@@ -14,6 +14,7 @@
 <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
+<a class="skip" href="#contenu">Aller au contenu</a>
 
 <header class="outil-header">
   <div class="container brandbar">
@@ -35,7 +36,7 @@
   <div class="tricolore" aria-hidden="true"></div>
 </header>
 
-<main class="container">
+<main class="container" id="contenu" tabindex="-1">
   <div id="app" aria-label="Tirage au sort">
     <div id="confettiLayer" aria-hidden="true"></div>
     <div id="notifBanner" class="notifBanner" role="status" aria-live="polite"></div>
@@ -170,7 +171,10 @@
   </div>
 </main>
 
-<footer class="footer">Académie de Normandie · Seine-Maritime (76) · Un outil de la <a href="https://prim76.ac-normandie.fr/numerique" target="_blank" rel="noopener">Mission numérique 76</a> développé par Etienne Liaudet</footer>
+<footer class="footer">
+  <p>Retrouver la Mission Numérique 76 sur <a href="https://prim76.ac-normandie.fr/numerique">Prim76</a></p>
+  <p>Académie de Normandie · Seine-Maritime (76) · Un outil de la Mission Numérique Éducatif 76 développé par Etienne Liaudet · <a href="../../accessibilite.html">Accessibilité : non conforme</a></p>
+</footer>
 
 <script src="scripts/randomizer.js"></script>
 </body>

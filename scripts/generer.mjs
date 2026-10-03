@@ -169,13 +169,13 @@ window.APPS1D = ${JSON.stringify({ categories }, null, 2).replace(/</g, '\\u003c
   html = html.replace(/(<meta http-equiv="Content-Security-Policy" content=")[^"]*(">)/, (_, a, b) => a + csp + b);
   ecrire('index.html', html);
 
-  // 4. Service worker : tout le dossier accueil/ (logo compris s'il existe) est gardé hors ligne,
+  // 4. Service worker : les pages de la racine et tout le dossier accueil/ (logo compris s'il existe) est gardé hors ligne,
   //    sauf les fichiers cachés ou système ignorés par git (.DS_Store, Thumbs.db…) : sinon le poste et GitHub divergent.
   //    La version tient aussi compte des fichiers des outils : un outil modifié est rechargé partout.
   const ignore = f => f.startsWith('.') || /^(thumbs\.db|desktop\.ini)$/i.test(f);
   const lister = d => readdirSync(join(RACINE, d)).filter(f => !ignore(f)).sort()
     .flatMap(f => statSync(join(RACINE, d, f)).isDirectory() ? lister(`${d}/${f}`) : [`${d}/${f}`]);
-  const locaux = ['index.html', 'manifest.webmanifest', ...lister('accueil')];
+  const locaux = ['index.html', 'accessibilite.html', 'manifest.webmanifest', ...lister('accueil')];
   const empreinte = createHash('sha256');
   // Fins de ligne ramenées à \n : un poste Windows (CRLF) et GitHub (LF) calculent la même version
   const contenu = f => { const b = readFileSync(join(RACINE, f)); return /\.(html?|css|js|mjs|json|svg|txt|md|webmanifest)$/i.test(f) ? b.toString('utf8').replace(/\r\n/g, '\n') : b; };

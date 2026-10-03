@@ -1,7 +1,7 @@
 /* Apps1D76 — service worker : fonctionnement hors ligne.
    VERSION et CORE sont mis à jour par « npm run generer » : les postes récupèrent la nouvelle version. */
-const VERSION = 'apps1d-a0381f6261';
-const CORE = ["./","./index.html","./manifest.webmanifest","./accueil/icones/apple-touch-icon.png","./accueil/icones/icon-192.png","./accueil/icones/icon-512.png","./accueil/icones/icon-maskable-512.png","./accueil/icones/icon.svg","./accueil/outil.css","./accueil/outil.js","./accueil/outils.js","./accueil/script.js","./accueil/style.css","https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/fonts/Marianne-Regular.woff2","https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/fonts/Marianne-Bold.woff2"];
+const VERSION = 'apps1d-7459a772c9';
+const CORE = ["./","./index.html","./accessibilite.html","./manifest.webmanifest","./accueil/icones/apple-touch-icon.png","./accueil/icones/icon-192.png","./accueil/icones/icon-512.png","./accueil/icones/icon-maskable-512.png","./accueil/icones/icon.svg","./accueil/outil.css","./accueil/outil.js","./accueil/outils.js","./accueil/script.js","./accueil/style.css","https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/fonts/Marianne-Regular.woff2","https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/fonts/Marianne-Bold.woff2"];
 const POLICES = 'https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@';
 
 self.addEventListener('install', e => {
