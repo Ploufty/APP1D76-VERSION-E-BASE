@@ -73,7 +73,7 @@ Outils/                     scripts/generer.mjs              index.html (dans le
    - Sinon, l'outil va dans la catégorie `autres`. Son titre et sa description sont lus dans les balises `<title>` et `<meta name="description">` de sa page.
 2. **`scripts/generer.mjs`** écrit ensuite `accueil/outils.js` (`window.APPS1D = { categories: [...] }`) et fait deux mises à jour :
    - l'empreinte SHA-256 du petit script intégré à `index.html` dans la balise **Content-Security-Policy** ;
-   - `VERSION` (empreinte du contenu) et `CORE` (`index.html`, `accessibilite.html`, le manifeste et tout le dossier `accueil/`) dans `sw.js`.
+   - `VERSION` (empreinte de l'accueil **et des fichiers des outils**, fins de ligne Windows et Linux confondues) et `CORE` (`index.html`, `accessibilite.html`, le manifeste et tout le dossier `accueil/`) dans `sw.js`.
 
    Le script n'écrit un fichier que si son contenu change. Le relancer sans rien modifier ne produit donc aucun changement.
 3. **`accueil/script.js`** lit `window.APPS1D`, génère les sections, les cartes et le menu, puis active les interactions.
@@ -138,7 +138,9 @@ le bouton « Affichage » et son panneau —, pied de page avec le lien vers la 
 ajouter les styles propres à l'outil dans sa page en réutilisant les variables (`--blue`, `--surface`, `--border`, `--muted`, `--green`…).
 Composants : `.card`, `.step` (étape repliable), `.form-row`, `.toggle-wrap`, `.btn` / `.btn-ghost` / `.btn-accent` / `.btn-block` / `.btn-remove`,
 `.table-wrap` + `.table`, `.alert-info` / `-warning` / `-error`, `.hint`. En JS : `Outil.esc`, `Outil.telecharger`, `Outil.word` (export .docx sans dépendance).
-Exemple complet : `Outils/orga-recre/`. Modifier `outil.css` change tous les outils : vérifier chacun après modification.
+Pas de `onclick="…"` dans le HTML des outils non plus : brancher les événements en JavaScript (`addEventListener`).
+Exemples complets : `Outils/orga-recre/` (étapes, tableau, export Word) et `Outils/tirage-au-sort/` (outil plein écran avec sa propre feuille `css/style.css`).
+Modifier `outil.css` change tous les outils : vérifier chacun après modification.
 
 ### Retirer ou déplacer un outil
 - **Retirer :** supprimer son dossier, puis `npm run generer`.
@@ -226,7 +228,7 @@ Pour tester l'installation et le hors ligne, il faut passer par `npm run apercu`
 
 - **GitHub Pages :** Settings › Pages › *Deploy from a branch* › **`main`** (ou `Clean` dans le dépôt de test) / (root). Pages publie la branche telle quelle, avec Jekyll, qui ignore les fichiers commençant par `.`.
 - **Forge (GitLab) :** `.gitlab-ci.yml` exécute `npm run generer`, copie `index.html`, `accessibilite.html`, `sw.js`, le manifeste, `accueil/` et `Outils/` dans `public/` et publie. Sur les autres branches, il ne fait que vérifier.
-- **Hors ligne :** chaque changement de contenu modifie `VERSION` dans `sw.js`, et les navigateurs récupèrent alors la nouvelle version. `accueil/outils.js` et les pages passent d'abord par le réseau, pour qu'un nouvel outil apparaisse tout de suite.
+- **Hors ligne :** chaque changement de contenu (accueil ou outils) modifie `VERSION` dans `sw.js`, et les navigateurs récupèrent alors la nouvelle version. `accueil/outils.js`, les pages et tous les fichiers de `Outils/` passent d'abord par le réseau (le cache ne sert que hors connexion), pour qu'un outil ajouté ou modifié soit à jour tout de suite.
 
 ---
 
@@ -257,7 +259,7 @@ Pour tester l'installation et le hors ligne, il faut passer par `npm run apercu`
   3. ouvrir `index.html` en double-clic et via `npm run apercu` : cartes, menu, recherche, thème, panneau, ouverture d'un outil, aucune erreur dans la console ;
   4. tester les largeurs 320, 390, 768, 1280 et 1920 px, sans défilement horizontal ;
   5. en cas de modification visuelle, vérifier les modes clair, sombre, contraste renforcé et texte à 130 %.
-- **Branches :** `Clean` est la branche de référence. Les branches `claude/*` sont l'historique des versions précédentes (v1 à v4).
+- **Branches :** `main` est la branche de référence, celle que publie Pages (`Clean` n'existe que dans l'ancien dépôt de test). Les branches `claude/*` sont des branches de travail fusionnées dans `main` par demande de fusion.
 - **Fonctionnalités écartées volontairement :** compilation et minification (v3/v4, jugées trop complexes pour l'équipe), police Marianne stockée dans le dépôt (licence réservée à l'administration).
 
 ---
@@ -273,3 +275,4 @@ Pour tester l'installation et le hors ligne, il faut passer par `npm run apercu`
 | **Clean** | Page directement à la racine sans compilation, `outils.js` généré automatiquement, zéro dépendance |
 | Simplification | Fichiers de l'accueil regroupés dans `accueil/`, `catalogue.mjs` fusionné dans `generer.mjs`, `AJOUTER-UN-OUTIL.md` fusionné dans `README.md`, workflow GitHub et `.gitlab-ci.yml` rétablis |
 | UI des outils | UI de référence commune aux outils (`accueil/outil.css`, `accueil/outil.js`, modèle `Outils/_modele/`), réglages partagés avec l'accueil, export Word |
+| Relecture | Tirage au sort passé à l'UI de référence, étiquettes de l'organisateur déplaçables au doigt et au clavier, plus aucun `onclick` dans les outils, fichiers des outils toujours à jour hors ligne, branche de référence `main` |

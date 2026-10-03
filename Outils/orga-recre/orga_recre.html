@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Organiseur — Services de récréation</title>
+<title>Organisateur de récréation</title>
 <meta name="description" content="Répartition automatique des services d'accueil et de récréation entre les enseignants, exportable en Word.">
 <meta name="theme-color" content="#000091">
 <link rel="icon" href="../../accueil/icones/icon.svg" type="image/svg+xml">
@@ -53,6 +53,9 @@
   .teacher-badge { display: inline-flex; align-items: center; padding: .25rem .6rem; border-radius: 999px; font-size: .8rem; font-weight: 700; cursor: grab; user-select: none; white-space: nowrap; transition: transform .1s, box-shadow .1s; }
   .teacher-badge:active { cursor: grabbing; transform: scale(1.08); box-shadow: 0 4px 12px rgba(0,0,0,.15); }
   .teacher-badge.dragging { opacity: .4; }
+  .teacher-badge.selected { outline: 3px solid var(--blue); outline-offset: 2px; transform: scale(1.08); }
+  .planning.placing .cell-drop:not(.cell-empty) { outline: 2px dashed var(--border); cursor: pointer; }
+  .planning.placing .cell-drop:not(.cell-empty):hover { background: var(--blue-soft); }
   .tc-0 { background: #DBEAFE; color: #1D4ED8; }  .tc-1 { background: #FCE7F3; color: #9D174D; }
   .tc-2 { background: #D1FAE5; color: #065F46; }  .tc-3 { background: #FEF3C7; color: #92400E; }
   .tc-4 { background: #EDE9FE; color: #5B21B6; }  .tc-5 { background: #FFE4E6; color: #9F1239; }
@@ -98,7 +101,7 @@
     </div>
   </div>
   <div class="container hero">
-    <h1>Organiseur <span class="accent">de récréation</span></h1>
+    <h1>Organisateur <span class="accent">de récréation</span></h1>
     <p>Répartition automatique des services d'accueil et de surveillance</p>
   </div>
   <div class="tricolore" aria-hidden="true"></div>
@@ -117,11 +120,11 @@
       <div class="form-row">
         <div>
           <label for="nb-teachers">Nombre d'enseignants</label>
-          <input type="number" id="nb-teachers" min="1" max="30" value="8" oninput="generateTeacherInputs()">
+          <input type="number" id="nb-teachers" min="1" max="30" value="8">
         </div>
         <label class="toggle-wrap">
           <span class="toggle">
-            <input type="checkbox" id="mercredi-toggle" onchange="generateTeacherInputs()">
+            <input type="checkbox" id="mercredi-toggle">
             <span class="toggle-slider"></span>
           </span>
           Classe le mercredi matin
@@ -141,7 +144,7 @@
     </button>
     <div class="step-body" id="body2">
       <div id="grille-rows"></div>
-      <button type="button" class="btn btn-ghost mt-12" onclick="addGrille()">+ Ajouter un horaire d'accueil</button>
+      <button type="button" class="btn btn-ghost mt-12" id="add-grille">+ Ajouter un horaire d'accueil</button>
     </div>
   </section>
 
@@ -156,17 +159,17 @@
       <div class="services-section">
         <h3>🌅 Matin</h3>
         <div id="recs-matin"></div>
-        <button type="button" class="btn btn-ghost mt-12" onclick="addRec('matin')">+ Ajouter un service le matin</button>
+        <button type="button" class="btn btn-ghost mt-12 add-rec" data-period="matin">+ Ajouter un service le matin</button>
       </div>
       <div class="services-section">
         <h3>🌇 Après-midi</h3>
         <div id="recs-aprem"></div>
-        <button type="button" class="btn btn-ghost mt-12" onclick="addRec('aprem')">+ Ajouter un service l'après-midi</button>
+        <button type="button" class="btn btn-ghost mt-12 add-rec" data-period="aprem">+ Ajouter un service l'après-midi</button>
       </div>
     </div>
   </section>
 
-  <button type="button" class="btn btn-accent btn-block" onclick="generate()">⚡ Répartition automatique</button>
+  <button type="button" class="btn btn-accent btn-block" id="generer">⚡ Répartition automatique</button>
 
   <div id="result" aria-live="polite"></div>
 </main>
@@ -179,7 +182,6 @@
 <script>
 // ─── STATE ───────────────────────────────────────────────────────
 let draggedBadge = null;
-let dragSource = null;
 const ALL_DAYS = ['L','M','Me','J','V'];
 const DAY_NAMES = { 'L':'Lundi','M':'Mardi','Me':'Mercredi','J':'Jeudi','V':'Vendredi' };
 
@@ -222,7 +224,7 @@ function generateTeacherInputs() {
     activeDays.forEach(d => {
       const state = prevDays[d] !== undefined ? prevDays[d] : 'present';
       const cls = state === 'present' ? 'present' : 'absent';
-      daysHtml += `<button type="button" class="day-btn ${cls}" data-day="${d}" data-state="${state}" onclick="toggleDay(this)" title="${DAY_NAMES[d]}" aria-label="${DAY_NAMES[d]}" aria-pressed="${state === 'present'}">${d}</button>`;
+      daysHtml += `<button type="button" class="day-btn ${cls}" data-day="${d}" data-state="${state}" title="${DAY_NAMES[d]}" aria-label="${DAY_NAMES[d]}" aria-pressed="${state === 'present'}">${d}</button>`;
     });
     daysHtml += '</div>';
 
@@ -276,7 +278,7 @@ function addGrille(time='08:30', nb=2) {
   const row = document.createElement('div');
   row.className = 'service-row';
   row.id = 'grille-' + id;
-  row.innerHTML = `<input type="time" value="${time}" aria-label="Heure d'accueil"><span>→</span><input type="number" min="1" max="10" value="${nb}" aria-label="Nombre d'enseignants"><span>enseignant(s)</span><button type="button" class="btn-remove" onclick="this.closest('.service-row').remove()" aria-label="Supprimer cet horaire">✕</button>`;
+  row.innerHTML = `<input type="time" value="${time}" aria-label="Heure d'accueil"><span>→</span><input type="number" min="1" max="10" value="${nb}" aria-label="Nombre d'enseignants"><span>enseignant(s)</span><button type="button" class="btn-remove" aria-label="Supprimer cet horaire">✕</button>`;
   document.getElementById('grille-rows').appendChild(row);
 }
 
@@ -286,7 +288,7 @@ function addRec(period, start='', end='', nb=2) {
   const row = document.createElement('div');
   row.className = 'service-row';
   row.id = 'rec-' + id;
-  row.innerHTML = `<input type="time" value="${start}" aria-label="Début"><span>–</span><input type="time" value="${end}" aria-label="Fin"><span>→</span><input type="number" min="1" max="10" value="${nb}" aria-label="Nombre d'enseignants"><span>enseignant(s)</span><button type="button" class="btn-remove" onclick="this.closest('.service-row').remove()" aria-label="Supprimer ce service">✕</button>`;
+  row.innerHTML = `<input type="time" value="${start}" aria-label="Début"><span>–</span><input type="time" value="${end}" aria-label="Fin"><span>→</span><input type="number" min="1" max="10" value="${nb}" aria-label="Nombre d'enseignants"><span>enseignant(s)</span><button type="button" class="btn-remove" aria-label="Supprimer ce service">✕</button>`;
   document.getElementById('recs-' + period).appendChild(row);
 }
 
@@ -322,13 +324,12 @@ function getDays() {
 }
 
 // ─── COMPUTE TARGETS ─────────────────────────────────────────────
-// Total slots in week → each teacher's fair share weighted by quotite
+// Part de chaque enseignant dans le total des services, selon ses jours de présence
 function computeTargets(teachers, slots) {
-  // Cible basée uniquement sur les jours de présence (pas la quotité).
   // Chaque enseignant doit sa part des créneaux des jours où il est là.
   const totalPosts = slots.reduce((s, sl) => s + sl.nb, 0);
 
-  // Capacité = nombre de jours présents (quotité informative seulement)
+  // Capacité = nombre de jours de présence
   const totalCap = teachers.reduce((s, t) => {
     return s + Object.values(t.days).filter(Boolean).length;
   }, 0);
@@ -341,10 +342,10 @@ function computeTargets(teachers, slots) {
 
   // Correction arrondi : la somme doit être égale à totalPosts
   let diff = totalPosts - Object.values(targets).reduce((a,b)=>a+b,0);
-  const sortedByRemainder = [...teachers].sort((a,b) => targets[b.id] - targets[a.id]);
+  const parCible = [...teachers].sort((a,b) => targets[b.id] - targets[a.id]);
   let i = 0;
-  while (diff > 0 && i < sortedByRemainder.length) { targets[sortedByRemainder[i++].id]++; diff--; }
-  while (diff < 0 && i < sortedByRemainder.length) { targets[sortedByRemainder[i++].id]--; diff++; }
+  while (diff > 0 && i < parCible.length) { targets[parCible[i++].id]++; diff--; }
+  while (diff < 0 && i < parCible.length) { targets[parCible[i++].id]--; diff++; }
 
   return targets;
 }
@@ -370,11 +371,11 @@ function generate() {
     days.forEach(d => slots.push({ day: d, label: r.start + (r.end ? '–'+r.end : ''), type: 'matin', nb: r.nb, teachers: [] }));
   });
   recsAprem.forEach(r => {
-    const fdays = r.period === 'aprem' ? days.filter(d => d !== 'Me') : days;
-    fdays.forEach(d => slots.push({ day: d, label: r.start + (r.end ? '–'+r.end : ''), type: 'aprem', nb: r.nb, teachers: [] }));
+    // Pas de classe le mercredi après-midi
+    days.filter(d => d !== 'Me').forEach(d => slots.push({ day: d, label: r.start + (r.end ? '–'+r.end : ''), type: 'aprem', nb: r.nb, teachers: [] }));
   });
 
-  // Compute targets based on quotite + presence
+  // Cibles selon les jours de présence
   const targets = computeTargets(teachers, slots);
 
   // Load counters : total semaine + par jour
@@ -421,6 +422,7 @@ function generate() {
 
 // ─── RENDER ──────────────────────────────────────────────────────
 function renderResult(slots, teachers, days, load, targets, grilles, recsMatin, recsAprem) {
+  select(null); // l'étiquette choisie appartenait à l'ancien planning
   const slotLabels = [];
   grilles.forEach(g => { const l={label:g.time,type:'grille'}; if(!slotLabels.find(s=>s.label===l.label&&s.type===l.type)) slotLabels.push(l); });
   recsMatin.forEach(r => { const lbl=r.start+(r.end?'–'+r.end:''),l={label:lbl,type:'matin'}; if(!slotLabels.find(s=>s.label===l.label&&s.type===l.type)) slotLabels.push(l); });
@@ -454,7 +456,6 @@ function renderResult(slots, teachers, days, load, targets, grilles, recsMatin, 
       </div>
       <div class="stat-bar-wrap"><div class="stat-bar ${barClass}" style="width:${pct}%"></div></div>
       ${miniDays}
-      <div class="stripe-red"></div>
     </div>`;
   });
   statsHtml += '</div>';
@@ -480,11 +481,11 @@ function renderResult(slots, teachers, days, load, targets, grilles, recsMatin, 
       const slot = slots.find(s => s.day === day && s.label === sl.label && s.type === sl.type);
       html += `<td>`;
       if (slot) {
-        html += `<div class="cell-drop" data-day="${day}" data-label="${sl.label}" data-type="${sl.type}" ondragover="onDragOver(event)" ondragleave="onDragLeave(event)" ondrop="onDrop(event)">`;
+        html += `<div class="cell-drop" tabindex="0" role="button" aria-label="Placer ici : ${DAY_NAMES[day]}, ${typeLabel[sl.type].replace(/^\S+\s/, '')} ${sl.label}" data-day="${day}" data-label="${sl.label}" data-type="${sl.type}">`;
         slot.teachers.forEach(t => html += badgeHtml(t, day, sl.label, sl.type));
         html += `</div>`;
       } else {
-        // Check if any teacher is absent this day (Me without after-midi slot)
+        // Pas de créneau ce jour-là (mercredi après-midi)
         html += `<div class="cell-drop cell-empty">—</div>`;
       }
       html += `</td>`;
@@ -497,17 +498,17 @@ function renderResult(slots, teachers, days, load, targets, grilles, recsMatin, 
     <div class="result-header">
       <h2>📋 Planning généré</h2>
       <div class="btn-row">
-        <button type="button" class="btn" onclick="exportWord()">📄 Exporter en Word</button>
-        <button type="button" class="btn btn-ghost" onclick="printPlanning()">🖨 Imprimer</button>
+        <button type="button" class="btn" id="export-word">📄 Exporter en Word</button>
+        <button type="button" class="btn btn-ghost" id="imprimer">🖨 Imprimer</button>
       </div>
     </div>
     ${statsHtml}
     <div class="table-wrap"><table class="table planning">${html}</table></div>
-    <p class="drag-tip">💡 Les étiquettes sont déplaçables par glisser-déposer. L'export et l'impression reprennent le planning tel qu'il est affiché.</p>`;
+    <p class="drag-tip">💡 Pour déplacer une étiquette : glissez-la avec la souris, ou touchez-la puis touchez la case de destination (au clavier : Entrée sur l'étiquette, puis sur la case). L'export et l'impression reprennent le planning tel qu'il est affiché.</p>`;
 }
 
 function badgeHtml(t, day, label, type) {
-  return `<span class="teacher-badge tc-${t.colorIdx}" draggable="true" data-tid="${t.id}" data-tname="${esc(t.name)}" data-tcolor="${t.colorIdx}" data-day="${day}" data-label="${label}" data-type="${type}" ondragstart="onDragStart(event)" ondragend="onDragEnd(event)" title="${esc(t.name)}">${esc(t.name)}</span>`;
+  return `<span class="teacher-badge tc-${t.colorIdx}" draggable="true" tabindex="0" role="button" aria-pressed="false" data-tid="${t.id}" data-tname="${esc(t.name)}" data-tcolor="${t.colorIdx}" data-day="${day}" data-label="${label}" data-type="${type}" title="${esc(t.name)}">${esc(t.name)}</span>`;
 }
 
 // ─── EXPORT WORD ─────────────────────────────────────────────────
@@ -623,50 +624,78 @@ ${table.outerHTML}
   setTimeout(() => { win.print(); win.close(); }, 400);
 }
 
-// ─── DRAG & DROP ─────────────────────────────────────────────────
-function onDragStart(e) {
-  draggedBadge = e.target;
-  dragSource = e.target.closest('.cell-drop');
-  e.target.classList.add('dragging');
+// ─── DÉPLACER LES ÉTIQUETTES ─────────────────────────────────────
+// À la souris : glisser-déposer. Au doigt (tablette, TBI) ou au clavier : toucher l'étiquette, puis la case.
+let selected = null;
+function select(badge) {
+  if (selected) { selected.classList.remove('selected'); selected.setAttribute('aria-pressed', 'false'); }
+  selected = badge && badge !== selected ? badge : null;
+  if (selected) { selected.classList.add('selected'); selected.setAttribute('aria-pressed', 'true'); }
+  document.querySelector('table.planning')?.classList.toggle('placing', !!selected);
+}
+function moveBadge(badge, target) {
+  if (!badge || !target || target.classList.contains('cell-empty') || badge.parentElement === target) return;
+  // Un enseignant ne peut pas être deux fois sur le même créneau
+  if ([...target.querySelectorAll('.teacher-badge')].some(b => b.dataset.tid === badge.dataset.tid)) return;
+  Object.assign(badge.dataset, { day: target.dataset.day, label: target.dataset.label, type: target.dataset.type });
+  target.appendChild(badge);
+}
+
+const result = document.getElementById('result');
+result.addEventListener('dragstart', e => {
+  const badge = e.target.closest?.('.teacher-badge');
+  if (!badge) return;
+  select(null);
+  draggedBadge = badge;
+  badge.classList.add('dragging');
   e.dataTransfer.effectAllowed = 'move';
-  e.dataTransfer.setData('text/plain', e.target.dataset.tid);
-}
-function onDragEnd(e) {
-  e.target.classList.remove('dragging');
+  e.dataTransfer.setData('text/plain', badge.dataset.tid);
+});
+result.addEventListener('dragend', e => {
+  e.target.closest?.('.teacher-badge')?.classList.remove('dragging');
+  draggedBadge = null;
   document.querySelectorAll('.cell-drop').forEach(c => c.classList.remove('drag-over'));
-}
-function onDragOver(e) {
+});
+result.addEventListener('dragover', e => {
+  const cell = e.target.closest('.cell-drop:not(.cell-empty)');
+  if (!cell || !draggedBadge) return;
   e.preventDefault();
   e.dataTransfer.dropEffect = 'move';
-  e.currentTarget.classList.add('drag-over');
-}
-function onDragLeave(e) { e.currentTarget.classList.remove('drag-over'); }
-function onDrop(e) {
+  cell.classList.add('drag-over');
+});
+result.addEventListener('dragleave', e => {
+  const cell = e.target.closest('.cell-drop');
+  if (cell && !cell.contains(e.relatedTarget)) cell.classList.remove('drag-over');
+});
+result.addEventListener('drop', e => {
+  const cell = e.target.closest('.cell-drop:not(.cell-empty)');
+  if (!cell) return;
   e.preventDefault();
-  const target = e.currentTarget;
-  target.classList.remove('drag-over');
-  if (!draggedBadge || target === dragSource) return;
+  cell.classList.remove('drag-over');
+  moveBadge(draggedBadge, cell);
+});
+result.addEventListener('click', e => {
+  if (e.target.closest('#export-word')) return exportWord();
+  if (e.target.closest('#imprimer')) return printPlanning();
+  const badge = e.target.closest('.teacher-badge');
+  const cell = e.target.closest('.cell-drop:not(.cell-empty)');
+  // Une étiquette choisie + une autre case : on déplace ; sinon on (dé)sélectionne l'étiquette touchée
+  if (selected && cell && cell !== selected.parentElement) { moveBadge(selected, cell); select(null); }
+  else if (badge) select(badge);
+});
+result.addEventListener('keydown', e => {
+  if ((e.key === 'Enter' || e.key === ' ') && e.target.matches('.teacher-badge, .cell-drop')) { e.preventDefault(); e.target.click(); }
+  else if (e.key === 'Escape') select(null);
+});
 
-  const existing = [...target.querySelectorAll('.teacher-badge')].map(b => b.dataset.tid);
-  if (existing.includes(draggedBadge.dataset.tid)) return;
-
-  const { tid, tname, tcolor } = draggedBadge.dataset;
-  const tday = target.dataset.day;
-  const tlabel = target.dataset.label;
-  const ttype = target.dataset.type;
-
-  draggedBadge.remove();
-
-  const nb = document.createElement('span');
-  nb.className = `teacher-badge tc-${tcolor}`;
-  nb.draggable = true;
-  Object.assign(nb.dataset, { tid, tname, tcolor, day: tday, label: tlabel, type: ttype });
-  nb.title = tname;
-  nb.textContent = tname;
-  nb.ondragstart = onDragStart;
-  nb.ondragend = onDragEnd;
-  target.appendChild(nb);
-}
+// ─── ÉVÉNEMENTS DES RÉGLAGES ─────────────────────────────────────
+document.getElementById('nb-teachers').addEventListener('input', generateTeacherInputs);
+document.getElementById('mercredi-toggle').addEventListener('change', generateTeacherInputs);
+document.getElementById('teachers-grid').addEventListener('click', e => { const b = e.target.closest('.day-btn'); if (b) toggleDay(b); });
+document.getElementById('add-grille').addEventListener('click', () => addGrille());
+document.querySelectorAll('.add-rec').forEach(b => b.addEventListener('click', () => addRec(b.dataset.period)));
+document.querySelector('main').addEventListener('click', e => e.target.closest('.service-row .btn-remove')?.closest('.service-row').remove());
+document.getElementById('generer').addEventListener('click', generate);
 </script>
 </body>
 </html>

@@ -7,10 +7,10 @@ Durée : 10 minutes environ. Tout se fait dans le navigateur, sans rien installe
 
 ## Étape 1 — Récupérer le zip
 
-- **Depuis GitHub :** ouvrir le dépôt, choisir la branche **`Clean`** (bouton des branches en haut à gauche), puis **Code › Download ZIP**.
-- **Ou** utiliser le zip `Apps1D76-Clean.zip` fourni.
+- **Depuis GitHub :** ouvrir le dépôt, choisir la branche **`main`** (bouton des branches en haut à gauche), puis **Code › Download ZIP**.
+- **Ou** utiliser le zip du projet qui vous a été fourni.
 
-**Décompresser** le zip (clic droit › *Extraire tout*). On obtient un dossier, par exemple `TEST-POUR-UI-Clean`.
+**Décompresser** le zip (clic droit › *Extraire tout*). On obtient un dossier, par exemple `apps1d76-main`.
 Ouvrir ce dossier : il doit contenir directement `index.html`, `accueil`, `Outils`, `scripts`…
 
 > ⚠ **Afficher les fichiers cachés**, car trois éléments importants commencent par un point : `.github`, `.gitlab-ci.yml` et `.gitignore`.
@@ -31,7 +31,7 @@ Ouvrir ce dossier : il doit contenir directement `index.html`, `accueil`, `Outil
 2. Dans le dossier décompressé, **sélectionner tout son contenu** (Ctrl + A, ou Cmd + A sur Mac) et le **glisser** dans la page GitHub.
 
    > ⚠ Glisser **le contenu** du dossier, **pas le dossier lui-même**. Sinon tout se retrouve dans un sous-dossier, et la page d'accueil n'est pas trouvée : Pages affiche alors le README.
-3. Attendre la fin du chargement (≈ 40 fichiers).
+3. Attendre la fin du chargement (une cinquantaine de fichiers).
 4. En bas, message : `Import initial du projet`, puis **Commit changes**.
 
 ## Étape 4 — Vérifier que rien ne manque
@@ -63,7 +63,7 @@ Faire de même pour `.gitignore` si besoin.
 
 ## Étape 6 — Vérifier que tout fonctionne
 
-- **La page :** ouvrir l'adresse ci-dessus. On doit voir la page d'accueil avec la carte « Tirage au sort ». En cas de doute, recharger avec **Ctrl + F5**.
+- **La page :** ouvrir l'adresse ci-dessus. On doit voir la page d'accueil avec les cartes « Organisateur de récréation » et « Tirage au sort ». En cas de doute, recharger avec **Ctrl + F5**.
 - **L'automatisme :** onglet **Actions**. La ligne « Mettre à jour la page d'accueil » doit être ✅ verte.
   - Si l'onglet affiche un bouton du type *I understand my workflows, go ahead and enable them*, cliquer dessus.
   - Ensuite, choisir le workflow › **Run workflow**.
@@ -81,7 +81,7 @@ Faire de même pour `.gitignore` si besoin.
 Pour les personnes à l'aise avec un terminal. Après avoir créé le dépôt vide (étape 2) :
 
 ```bash
-cd chemin/vers/TEST-POUR-UI-Clean      # le dossier décompressé
+cd chemin/vers/apps1d76-main          # le dossier décompressé
 git init -b main
 git add -A
 git commit -m "Import initial du projet"
