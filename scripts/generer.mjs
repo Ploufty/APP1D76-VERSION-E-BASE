@@ -2,7 +2,8 @@
 //   1. Catalogue : parcourt Outils/, lit et vérifie chaque fiche outil.json
 //   2. accueil/outils.js : liste des outils rangés par catégorie (lue par la page)
 //   3. index.html : empreinte du script intégré dans la politique de sécurité (CSP)
-//   4. sw.js : version et liste des fichiers pour le hors ligne
+//   4. plan-du-site.html : liste des outils, entre <!-- outils:debut --> et <!-- outils:fin -->
+//   5. sw.js : version et liste des fichiers pour le hors ligne
 // « npm run verifier » vérifie seulement, sans rien écrire.
 // Le catalogue est aussi utilisé par l'assistant (ajouter.mjs) et le contrôle de sécurité (securite.mjs).
 import { readFileSync, writeFileSync, existsSync, statSync, readdirSync, lstatSync } from 'node:fs';
@@ -169,13 +170,21 @@ window.LABERUN76 = ${JSON.stringify({ categories }, null, 2).replace(/</g, '\\u0
   html = html.replace(/(<meta http-equiv="Content-Security-Policy" content=")[^"]*(">)/, (_, a, b) => a + csp + b);
   ecrire('index.html', html);
 
-  // 4. Service worker : les pages de la racine et tout le dossier accueil/ (logo compris s'il existe) est gardé hors ligne,
+  // 4. Plan du site : liste des outils par catégorie (textes échappés, comme sur l'accueil)
+  const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  const liste = categories.map(c => `    <h3>${esc(c.icone)} ${esc(c.titre)}</h3>\n    <ul>\n`
+    + c.outils.map(o => `      <li><a href="${esc(o.lien)}">${esc(o.titre)}</a> : ${esc(o.description)}</li>\n`).join('') + '    </ul>\n').join('');
+  ecrire('plan-du-site.html', lire('plan-du-site.html')
+    .replace(/(<!-- outils:debut[^>]*-->\n)[\s\S]*?(    <!-- outils:fin -->)/, (_, a, b) => a + liste + b));
+
+  // 5. Service worker : les pages de la racine et tout le dossier accueil/ (logo compris s'il existe) est gardé hors ligne,
   //    sauf les fichiers cachés ou système ignorés par git (.DS_Store, Thumbs.db…) : sinon le poste et la Forge divergent.
   //    La version tient aussi compte des fichiers des outils : un outil modifié est rechargé partout.
   const ignore = f => f.startsWith('.') || /^(thumbs\.db|desktop\.ini)$/i.test(f);
   const lister = d => readdirSync(join(RACINE, d)).filter(f => !ignore(f)).sort()
     .flatMap(f => statSync(join(RACINE, d, f)).isDirectory() ? lister(`${d}/${f}`) : [`${d}/${f}`]);
-  const locaux = ['index.html', 'accessibilite.html', 'manifest.webmanifest', ...lister('accueil')];
+  const PAGES = ['index.html', 'plan-du-site.html', 'mentions-legales.html', 'contact.html', 'accessibilite.html'];
+  const locaux = [...PAGES, 'manifest.webmanifest', ...lister('accueil')];
   const empreinte = createHash('sha256');
   // Fins de ligne ramenées à \n : un poste Windows (CRLF) et la Forge (LF) calculent la même version
   const contenu = f => { const b = readFileSync(join(RACINE, f)); return /\.(html?|css|js|mjs|json|svg|txt|md|webmanifest)$/i.test(f) ? b.toString('utf8').replace(/\r\n/g, '\n') : b; };

@@ -33,6 +33,9 @@ Outils/                 ★ LES OUTILS : un dossier par outil
 a-migrer/               Outils en attente : fiches de l'ancien site et nouveaux outils déposés pour Claude
 
 index.html              La page d'accueil (structure HTML)
+plan-du-site.html       Plan du site (liste des outils mise à jour par npm run generer)
+mentions-legales.html   Mentions légales (éditeur, hébergement, licences, données personnelles)
+contact.html            Contact
 accessibilite.html      Déclaration d'accessibilité (lien « Accessibilité : non conforme » en pied de chaque page)
 accueil/                Tout ce que charge la page d'accueil
   style.css             Toute l'apparence (couleurs, thèmes, animations, responsive)
@@ -177,6 +180,10 @@ Pour le logo : déposer `logo.png` dans `accueil/`, décommenter la ligne `<img 
 - **Logo** : `accueil/icones/icon.svg` (carré bleu canard, « 76 » blanc, bulle et trait orange), affiché à côté du nom dans les en-têtes.
   Les PNG (`apple-touch-icon`, `icon-192`, `icon-512`, `icon-maskable-512`) se régénèrent à partir de ce SVG
   (la version « maskable » a un fond plein et son contenu réduit à 80 %).
+- **Pied de page** : même bandeau sur toutes les pages (`.pied-liens`) : Plan du site, Mentions légales, Contact,
+  Accessibilité : non conforme, et « Paramètres d'accessibilité » (bouton `data-affichage` qui ouvre le panneau Affichage,
+  caché sans JavaScript). Lien de la page courante en `aria-current="page"`. Pour un nouvel outil : recopier le pied de page
+  de `Outils/_modele/index.html` (liens en `../../`).
 - **Filet** : `.filet`, trait bleu canard → orange sous l'en-tête (remplace l'ancienne bande tricolore).
 
 ### Changer les couleurs, la police ou l'aspect
@@ -242,7 +249,7 @@ Pour tester l'installation et le hors ligne, il faut passer par `npm run apercu`
 
 ## 7. Publication
 
-- **Forge (GitLab Pages) :** sur `main`, `.gitlab-ci.yml` exécute `npm run generer`, copie `index.html`, `accessibilite.html`, `sw.js`, le manifeste, `accueil/` et `Outils/` (sans `Outils/_modele/` ni `categories.json`) dans `public/` et publie. Ni `a-migrer/`, ni `scripts/`, ni la documentation ne sont mis en ligne.
+- **Forge (GitLab Pages) :** sur `main`, `.gitlab-ci.yml` exécute `npm run generer`, copie `index.html`, les pages de la racine (plan du site, mentions légales, contact, accessibilité), `sw.js`, le manifeste, `accueil/` et `Outils/` (sans `Outils/_modele/` ni `categories.json`) dans `public/` et publie. Ni `a-migrer/`, ni `scripts/`, ni la documentation ne sont mis en ligne.
 - **Autres branches et demandes de fusion :** `npm run verifier` et `npm run securite`, sans publier. Un seul pipeline par envoi quand une demande de fusion est ouverte.
 - **Mise en place :** `PUBLIER-SUR-LA-FORGE.md` (import du projet, exécuteurs, adresse sans « domaine unique », visibilité de Pages).
 - **Chemins :** le site est servi dans un sous-dossier (`/laberun76/`). Tous les liens sont relatifs (`./`, `../../`) : ne jamais écrire de lien qui commence par `/`.
@@ -298,3 +305,18 @@ Pour tester l'installation et le hors ligne, il faut passer par `npm run apercu`
 | Relecture | Tirage au sort passé à l'UI de référence, étiquettes de l'organisateur déplaçables au doigt et au clavier, plus aucun `onclick` dans les outils, fichiers des outils toujours à jour hors ligne, branche de référence `main` |
 | **LabERUN76** | Renommage d'Apps1D76 en LabERUN76, publication sur la Forge uniquement (workflow GitHub retiré, tutoriels réécrits), revue du code (organisateur, tirage au sort) |
 | Identité propre | Palette « bleu canard & orange », police Atkinson Hyperlegible, nouveau logo ; fin du bleu-blanc-rouge et de Marianne |
+| Pied de page | Bandeau commun (plan du site, mentions légales, contact, accessibilité, paramètres d'accessibilité) et pages correspondantes |
+
+---
+
+## 11. À faire et rappels
+
+À rappeler à la personne qui maintient le projet à la prochaine occasion (puis retirer la ligne une fois fait) :
+
+- [ ] **Refaire le logo** (demandé le 18/11/2026) : l'actuel (`accueil/icones/icon.svg`, « 76 » sur carré bleu canard) est provisoire.
+  Régénérer ensuite les PNG d'icônes (voir « Identité visuelle »).
+- [ ] **Compléter les informations manquantes** (repérées par « à compléter » / « à définir » sur le site) :
+  adresse électronique de contact (`contact.html`, `accessibilite.html`), adresse postale de l'éditeur
+  et directrice ou directeur de la publication (`mentions-legales.html`), coordonnées de l'hébergeur.
+- [ ] **Adresse définitive du site** : remplacer l'adresse provisoire dans `README.md`, `CLAUDE.md`, `PUBLIER-SUR-LA-FORGE.md`,
+  `ACCESSIBILITE.md` et `.gitlab-ci.yml`.

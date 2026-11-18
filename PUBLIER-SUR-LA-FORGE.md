@@ -34,7 +34,8 @@ Dans le groupe **missionnumerique76** : **Nouveau projet** (*New project*), puis
 ```
 Outils/   a-migrer/   accueil/   scripts/
 .gitignore   .gitlab-ci.yml   ACCESSIBILITE.md   CLAUDE.md   LICENSE   PUBLIER-SUR-LA-FORGE.md   README.md
-accessibilite.html   index.html   manifest.webmanifest   package.json   sw.js
+accessibilite.html   contact.html   index.html   manifest.webmanifest   mentions-legales.html   package.json
+plan-du-site.html   sw.js
 ```
 
 **Point le plus important :** `.gitlab-ci.yml` doit être à la racine. C'est lui qui construit et publie le site.

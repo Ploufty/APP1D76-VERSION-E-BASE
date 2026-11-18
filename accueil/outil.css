@@ -211,6 +211,27 @@ input:focus-visible, select:focus-visible, textarea:focus-visible { outline: 3px
 .footer { padding: 1.25rem 1rem; text-align: center; font-size: .85rem; color: var(--muted); background: var(--surface); border-top: 1px solid var(--border); }
 .footer p + p { margin-top: .35rem; }
 
+/* Bandeau de liens du pied de page (même code dans accueil/style.css et accueil/outil.css) */
+.pied-liens ul { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: .25rem 1.75rem; margin: 0 0 .9rem; padding: 0; }
+.pied-liens a, .pied-liens button {
+  display: inline-flex; align-items: center; gap: .45rem; min-height: 2.75rem; padding: 0 .25rem;
+  font: inherit; font-size: 1rem; color: var(--primary); text-decoration: none; background: none; border: 0; cursor: pointer;
+}
+.pied-liens a:hover, .pied-liens button:hover, .pied-liens [aria-current="page"] { text-decoration: underline; text-underline-offset: .25em; }
+.pied-liens [aria-current="page"] { font-weight: 700; }
+.pied-liens svg { width: 1.05em; height: 1.05em; flex: none; fill: none; stroke: var(--accent); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* Pages de texte : <main class="container prose"> avec des .card (plan du site, mentions légales, contact…) */
+.prose .card h2 { font-size: 1.25rem; color: var(--primary); margin-bottom: .6rem; }
+.prose .card h3 { font-size: 1.05rem; margin: 1rem 0 .4rem; }
+.prose .card p + p { margin-top: .5rem; }
+.prose .card ul { padding-left: 1.25rem; }
+.prose .card li + li { margin-top: .4rem; }
+.prose .card a { text-underline-offset: .2em; }
+
+/* Information à compléter (pages en cours de rédaction) */
+.a-definir { display: inline-block; padding: .1rem .6rem; border-radius: .5rem; background: var(--orange-soft); border: 1px dashed var(--orange); font-weight: 700; color: var(--text); }
+
 /* ---------- 10. ANIMATIONS RÉDUITES ---------- */
 [data-motion="reduce"] *, [data-motion="reduce"] *::before, [data-motion="reduce"] *::after { animation: none !important; transition: none !important; }
 

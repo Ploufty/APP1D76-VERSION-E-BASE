@@ -85,6 +85,8 @@
     });
     form.querySelector('[data-reset]').addEventListener('click', () => { prefs = { ...DEF }; save(); appliquer(); synchro(); });
     dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); }); // clic sur le fond = fermer
+    // Lien « Paramètres d'accessibilité » du pied de page : ouvre le même panneau
+    d.querySelectorAll('[data-affichage]').forEach(b => { b.hidden = false; b.addEventListener('click', () => { synchro(); dlg.showModal(); }); });
   });
   // Étape repliable : <button class="step-header" aria-expanded="true|false"> suivi de son .step-body
   d.addEventListener('click', e => {
