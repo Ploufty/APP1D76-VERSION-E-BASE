@@ -1,4 +1,4 @@
-# Accessibilité (RGAA) : cahier des charges des outils Apps1D76
+# Accessibilité (RGAA) : cahier des charges des outils LabERUN76
 
 > But : que chaque outil (et la page d'accueil) respecte au mieux le **RGAA 4.1.2**
 > (Référentiel général d'amélioration de l'accessibilité), obligatoire pour les sites de l'administration.
@@ -8,7 +8,7 @@
 
 ## 1. Ce que la loi demande
 
-| Obligation | En pratique pour Apps1D76 |
+| Obligation | En pratique pour LabERUN76 |
 |---|---|
 | **Déclaration d'accessibilité** (loi 2005-102 art. 47, décret 2019-768) | Une page par site, modèle en section 5 |
 | **Mention en bas de chaque page** | « Accessibilité : non conforme » tant qu'aucun audit n'est fait, avec un lien vers la déclaration |
@@ -124,9 +124,9 @@ Version en ligne : `accessibilite.html`. Pour un autre site, recopier ce modèle
 >
 > La Mission Numérique Éducatif 76 (DSDEN de Seine-Maritime) s'engage à rendre ses services numériques accessibles,
 > conformément à l'article 47 de la loi n° 2005-102 du 11 février 2005.
-> Cette déclaration s'applique au site **Apps1D76** ([adresse du site]) et aux outils du dossier `Outils/`.
+> Cette déclaration s'applique au site **LabERUN76** (<https://missionnumerique76.forge.apps.education.fr/laberun76>, adresse provisoire) et aux outils du dossier `Outils/`.
 >
-> **État de conformité** : le site Apps1D76 est **non conforme** au RGAA 4.1.2, en l'absence d'audit.
+> **État de conformité** : le site LabERUN76 est **non conforme** au RGAA 4.1.2, en l'absence d'audit.
 > Il a été conçu en suivant les règles du RGAA (démarche de meilleur effort).
 >
 > **Contenus non accessibles** : [liste des défauts connus, outil par outil, ou « aucun défaut connu à ce jour, mais non audité »].

@@ -1,18 +1,32 @@
-# Forge (GitLab) : génère la page puis la publie sur GitLab Pages (branche par défaut).
-# Sur les autres branches : vérification seulement.
-image: node:20-alpine
+# LabERUN76 — publication sur la Forge (GitLab Pages)
+#   branche par défaut (main) : relit Outils/, régénère la page, contrôle la sécurité, puis publie public/
+#   autres branches et demandes de fusion : mêmes vérifications, sans publier
+# Adresse provisoire : https://missionnumerique76.forge.apps.education.fr/laberun76
+# Aucune dépendance npm : seule l'image Node.js est nécessaire.
+image: node:22-alpine
+
+workflow:
+  rules:
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event"
+    - if: $CI_COMMIT_BRANCH && $CI_OPEN_MERGE_REQUESTS
+      when: never                      # pas de double pipeline quand une demande de fusion est ouverte
+    - if: $CI_COMMIT_BRANCH
 
 pages:
+  stage: deploy
   script:
-    - npm run generer
+    - npm run generer                  # outils.js, CSP de index.html, sw.js + contrôle de sécurité
     - mkdir public
+    # Seuls les fichiers du site sont publiés (pas a-migrer/, scripts/, documentation…)
     - cp -r index.html accessibilite.html sw.js manifest.webmanifest accueil Outils public/
+    - rm -rf public/Outils/_modele public/Outils/categories.json
   artifacts:
     paths: [public]
   rules:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
 verifier:
+  stage: test
   script:
     - npm run verifier
     - npm run securite

@@ -7,7 +7,7 @@
 <meta name="description" content="Répartition automatique des services d'accueil et de récréation entre les enseignants, exportable en Word.">
 <meta name="theme-color" content="#000091">
 <link rel="icon" href="../../accueil/icones/icon.svg" type="image/svg+xml">
-<!-- UI de référence des outils Apps1D76 -->
+<!-- UI de référence des outils LabERUN76 -->
 <link rel="stylesheet" href="../../accueil/outil.css">
 <script src="../../accueil/outil.js"></script>
 <style>
@@ -89,9 +89,9 @@
 
 <header class="outil-header">
   <div class="container brandbar">
-    <a class="brand" href="../../index.html" aria-label="Retour à l'accueil Apps1D76">
+    <a class="brand" href="../../index.html" aria-label="Retour à l'accueil LabERUN76">
       <span class="back" aria-hidden="true">←</span>
-      <span><b>Apps1D<span>76</span></b><small>Mission Numérique Éducatif 76</small></span>
+      <span><b>LabERUN<span>76</span></b><small>Mission Numérique Éducatif 76</small></span>
     </a>
     <div class="actions">
       <button type="button" class="icon-btn" id="theme-toggle" aria-label="Activer le mode sombre">
@@ -180,7 +180,7 @@
 </footer>
 
 <script>
-// ─── STATE ───────────────────────────────────────────────────────
+// ─── ÉTAT ────────────────────────────────────────────────────────
 let draggedBadge = null;
 const ALL_DAYS = ['L','M','Me','J','V'];
 const DAY_NAMES = { 'L':'Lundi','M':'Mardi','Me':'Mercredi','J':'Jeudi','V':'Vendredi' };
@@ -188,21 +188,21 @@ const DAY_NAMES = { 'L':'Lundi','M':'Mardi','Me':'Mercredi','J':'Jeudi','V':'Ven
 // Échappe un texte saisi avant de l'insérer dans le HTML (prénoms) : fourni par accueil/outil.js
 const esc = Outil.esc;
 
-// ─── TEACHER CARDS ───────────────────────────────────────────────
+// Nombre d'enseignants saisi, borné à 1–30 (comme le champ) : une saisie de 1000 ne crée pas 1000 cartes
+const MAX_ENSEIGNANTS = 30;
+const nbEnseignants = () => Math.min(MAX_ENSEIGNANTS, Math.max(0, parseInt(document.getElementById('nb-teachers').value, 10) || 0));
+
+// ─── CARTES ENSEIGNANTS ──────────────────────────────────────────
 function generateTeacherInputs() {
-  const n = parseInt(document.getElementById('nb-teachers').value) || 0;
+  const n = nbEnseignants();
   const hasMercredi = document.getElementById('mercredi-toggle').checked;
   const grid = document.getElementById('teachers-grid');
 
-  // Preserve existing data
+  // Conserve les prénoms et jours déjà saisis
   const existing = {};
   grid.querySelectorAll('.teacher-card').forEach(card => {
     const idx = card.dataset.idx;
-    existing[idx] = {
-      name: card.querySelector('.t-name').value,
-
-      days: {}
-    };
+    existing[idx] = { name: card.querySelector('.t-name').value, days: {} };
     card.querySelectorAll('.day-btn').forEach(btn => {
       existing[idx].days[btn.dataset.day] = btn.dataset.state;
     });
@@ -219,7 +219,7 @@ function generateTeacherInputs() {
     card.className = 'teacher-card';
     card.dataset.idx = i;
 
-    // Day buttons HTML
+    // Boutons des jours
     let daysHtml = '<div class="days-row">';
     activeDays.forEach(d => {
       const state = prevDays[d] !== undefined ? prevDays[d] : 'present';
@@ -248,10 +248,10 @@ function toggleDay(btn) {
   btn.setAttribute('aria-pressed', next === 'present');
 }
 
-// ─── GET TEACHERS ─────────────────────────────────────────────────
+// ─── LECTURE DES ENSEIGNANTS ─────────────────────────────────────
 function getTeachers() {
   const alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  const n = parseInt(document.getElementById('nb-teachers').value) || 0;
+  const n = nbEnseignants();
   const cards = document.querySelectorAll('.teacher-card');
   const hasMercredi = document.getElementById('mercredi-toggle').checked;
   const teachers = [];
@@ -264,14 +264,14 @@ function getTeachers() {
     card.querySelectorAll('.day-btn').forEach(btn => {
       days[btn.dataset.day] = btn.dataset.state === 'present';
     });
-    // Mercredi absent by default if not active
+    // Sans classe le mercredi, personne n'est présent ce jour-là
     if (!hasMercredi) days['Me'] = false;
     teachers.push({ id: i, name, days, colorIdx: i % 12 });
   }
   return teachers;
 }
 
-// ─── GRILLES ─────────────────────────────────────────────────────
+// ─── HORAIRES D'ACCUEIL ET DE RÉCRÉATION ─────────────────────────
 let grilleCount = 0;
 function addGrille(time='08:30', nb=2) {
   const id = ++grilleCount;
@@ -292,7 +292,7 @@ function addRec(period, start='', end='', nb=2) {
   document.getElementById('recs-' + period).appendChild(row);
 }
 
-// ─── INIT ─────────────────────────────────────────────────────────
+// ─── VALEURS DE DÉPART ───────────────────────────────────────────
 generateTeacherInputs();
 addGrille('08:30', 2);
 addGrille('13:30', 2);
@@ -301,18 +301,22 @@ addRec('matin', '10:15', '10:30', 2);
 addRec('aprem', '14:45', '15:00', 2);
 addRec('aprem', '15:00', '15:15', 2);
 
-// ─── PARSE ───────────────────────────────────────────────────────
+// ─── LECTURE DES HORAIRES ────────────────────────────────────────
+// Les lignes sans heure sont ignorées, et un horaire saisi deux fois n'est gardé qu'une fois :
+// sinon ses services seraient comptés dans la répartition sans apparaître dans le tableau.
+const unique = (lignes, cle) => lignes.filter((l, i) => lignes.findIndex(m => cle(m) === cle(l)) === i);
+const nombre = v => Math.min(10, Math.max(1, parseInt(v, 10) || 2));
 function parseGrilles() {
-  return [...document.querySelectorAll('#grille-rows .service-row')].map(r => {
+  return unique([...document.querySelectorAll('#grille-rows .service-row')].map(r => {
     const ins = r.querySelectorAll('input');
-    return { time: ins[0].value, nb: parseInt(ins[1].value) || 2 };
-  });
+    return { time: ins[0].value, nb: nombre(ins[1].value) };
+  }).filter(g => g.time), g => g.time);
 }
 function parseRecs(period) {
-  return [...document.querySelectorAll('#recs-' + period + ' .service-row')].map(r => {
+  return unique([...document.querySelectorAll('#recs-' + period + ' .service-row')].map(r => {
     const ins = r.querySelectorAll('input');
-    return { start: ins[0].value, end: ins[1].value, nb: parseInt(ins[2].value) || 2, period };
-  });
+    return { start: ins[0].value, end: ins[1].value, nb: nombre(ins[2].value), period };
+  }).filter(r => r.start), r => r.start + '–' + r.end);
 }
 
 function getDays() {
@@ -323,34 +327,27 @@ function getDays() {
   return days;
 }
 
-// ─── COMPUTE TARGETS ─────────────────────────────────────────────
-// Part de chaque enseignant dans le total des services, selon ses jours de présence
+// ─── PART DE CHAQUE ENSEIGNANT ───────────────────────────────────
+// Chaque jour, les services du jour sont partagés entre les enseignants présents ce jour-là.
+// Un jour chargé compte donc plus qu'un mercredi matin, et un enseignant n'est attendu que les jours où il est là.
 function computeTargets(teachers, slots) {
-  // Chaque enseignant doit sa part des créneaux des jours où il est là.
-  const totalPosts = slots.reduce((s, sl) => s + sl.nb, 0);
-
-  // Capacité = nombre de jours de présence
-  const totalCap = teachers.reduce((s, t) => {
-    return s + Object.values(t.days).filter(Boolean).length;
-  }, 0);
-
-  const targets = {};
-  teachers.forEach(t => {
-    const presentCount = Object.values(t.days).filter(Boolean).length;
-    targets[t.id] = totalCap > 0 ? Math.round((presentCount / totalCap) * totalPosts) : 0;
+  const part = {};
+  teachers.forEach(t => part[t.id] = 0);
+  [...new Set(slots.map(s => s.day))].forEach(day => {
+    const presents = teachers.filter(t => t.days[day]);
+    const postes = slots.filter(s => s.day === day).reduce((n, s) => n + Math.min(s.nb, presents.length), 0);
+    presents.forEach(t => part[t.id] += postes / presents.length);
   });
-
-  // Correction arrondi : la somme doit être égale à totalPosts
-  let diff = totalPosts - Object.values(targets).reduce((a,b)=>a+b,0);
-  const parCible = [...teachers].sort((a,b) => targets[b.id] - targets[a.id]);
-  let i = 0;
-  while (diff > 0 && i < parCible.length) { targets[parCible[i++].id]++; diff--; }
-  while (diff < 0 && i < parCible.length) { targets[parCible[i++].id]--; diff++; }
-
+  // Arrondi au plus fort reste : la somme des cibles est égale au nombre de postes
+  const targets = {};
+  teachers.forEach(t => targets[t.id] = Math.floor(part[t.id] + 1e-9));
+  let reste = Math.round(teachers.reduce((n, t) => n + part[t.id], 0)) - Object.values(targets).reduce((a, b) => a + b, 0);
+  [...teachers].sort((a, b) => (part[b.id] - targets[b.id]) - (part[a.id] - targets[a.id]))
+    .forEach(t => { if (reste-- > 0) targets[t.id]++; });
   return targets;
 }
 
-// ─── GENERATE ────────────────────────────────────────────────────
+// ─── RÉPARTITION ─────────────────────────────────────────────────
 function generate() {
   const teachers = getTeachers();
   if (!teachers.length) { alert('Veuillez renseigner au moins un enseignant.'); return; }
@@ -360,7 +357,7 @@ function generate() {
   const recsMatin = parseRecs('matin');
   const recsAprem = parseRecs('aprem');
 
-  // Build slots
+  // Créneaux de la semaine
   const slots = [];
   grilles.forEach(g => {
     // Accueil de l'après-midi (12 h ou plus) : pas de classe le mercredi après-midi
@@ -378,7 +375,7 @@ function generate() {
   // Cibles selon les jours de présence
   const targets = computeTargets(teachers, slots);
 
-  // Load counters : total semaine + par jour
+  // Services déjà attribués : sur la semaine et par jour
   const load = {};
   const loadDay = {};
   teachers.forEach(t => {
@@ -394,7 +391,7 @@ function generate() {
     dayCap[t.id] = presentCount > 0 ? Math.ceil(targets[t.id] / presentCount) : 0;
   });
 
-  // Deux passes : sous plafond d'abord, relache si insuffisant
+  // Pour chaque créneau : d'abord les enseignants sous leur plafond du jour, puis tous les présents si cela ne suffit pas
   slots.forEach(slot => {
     const dayKey = slot.day;
     const present = teachers.filter(t => t.days[dayKey] === true);
@@ -417,10 +414,28 @@ function generate() {
     });
   });
 
+  // Rééquilibrage : tant qu'un enseignant dépasse sa cible et qu'un autre est en dessous, on échange un de leurs
+  // services un jour où les deux sont présents (ex. un enseignant présent seulement le mercredi, à petite cible)
+  for (let tour = 0; tour < 200; tour++) {
+    const plus = teachers.filter(t => load[t.id] > targets[t.id]), moins = teachers.filter(t => load[t.id] < targets[t.id]);
+    let echange = null;
+    for (const m of moins) {
+      for (const p of plus) {
+        const s = slots.find(s => s.teachers.includes(p) && !s.teachers.includes(m) && m.days[s.day]);
+        if (s) { echange = { s, p, m }; break; }
+      }
+      if (echange) break;
+    }
+    if (!echange) break;
+    const { s, p, m } = echange;
+    s.teachers[s.teachers.indexOf(p)] = m;
+    load[p.id]--; load[m.id]++; loadDay[p.id][s.day]--; loadDay[m.id][s.day]++;
+  }
+
   renderResult(slots, teachers, days, load, targets, grilles, recsMatin, recsAprem);
 }
 
-// ─── RENDER ──────────────────────────────────────────────────────
+// ─── AFFICHAGE ───────────────────────────────────────────────────
 function renderResult(slots, teachers, days, load, targets, grilles, recsMatin, recsAprem) {
   select(null); // l'étiquette choisie appartenait à l'ancien planning
   const slotLabels = [];
@@ -431,7 +446,7 @@ function renderResult(slots, teachers, days, load, targets, grilles, recsMatin, 
   const totalPosts = Object.values(targets).reduce((a,b)=>a+b,0);
   const dayNames = days.map(d => DAY_NAMES[d] || d);
 
-  // Stats cards
+  // Bilan par enseignant
   let statsHtml = '<div class="stats-grid">';
   teachers.forEach(t => {
     const tgt = targets[t.id] || 0;
@@ -467,9 +482,15 @@ function renderResult(slots, teachers, days, load, targets, grilles, recsMatin, 
   if (warnings.length) {
     statsHtml += `<div class="alert alert-warning">⚠️ Dépassement de quota : ${warnings.join(' · ')}</div>`;
   }
+  // Créneaux qui n'ont pas assez d'enseignants présents ce jour-là
+  const incomplets = slots.filter(s => s.teachers.length < s.nb)
+    .map(s => `${DAY_NAMES[s.day]} ${s.label} (${s.teachers.length}/${s.nb})`);
+  if (incomplets.length) {
+    statsHtml += `<div class="alert alert-error">⚠️ Pas assez d'enseignants présents pour : ${incomplets.join(' · ')}</div>`;
+  }
   statsHtml += `<div class="alert alert-info">Total : <strong>${totalPosts} postes</strong> répartis sur ${days.length} jours — pondération par jours de présence.</div>`;
 
-  // Table
+  // Tableau
   const typeLabel = { grille: '🚪 Accueil', matin: '☀️ Récré matin', aprem: '🌤 Récré après-midi' };
   let html = `<thead><tr><th scope="col">Créneau</th>`;
   dayNames.forEach(d => html += `<th scope="col" class="day-header">${d}</th>`);
@@ -477,7 +498,7 @@ function renderResult(slots, teachers, days, load, targets, grilles, recsMatin, 
 
   slotLabels.forEach(sl => {
     html += `<tr><td><div class="slot-label slot-type-${sl.type}">${typeLabel[sl.type]}<br><strong>${sl.label}</strong></div></td>`;
-    days.forEach((day, di) => {
+    days.forEach(day => {
       const slot = slots.find(s => s.day === day && s.label === sl.label && s.type === sl.type);
       html += `<td>`;
       if (slot) {
@@ -540,7 +561,7 @@ function exportWord() {
   ], { paysage: true });
 }
 
-// ─── PRINT ───────────────────────────────────────────────────────
+// ─── IMPRESSION ──────────────────────────────────────────────────
 function printPlanning() {
   const table = document.querySelector('table.planning');
   if (!table) { alert('Générez d\'abord le planning.'); return; }

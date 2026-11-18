@@ -157,7 +157,7 @@ export function generer({ verifierSeulement = false } = {}) {
   // 2. accueil/outils.js
   ecrire('accueil/outils.js', `// Fichier généré automatiquement à partir du dossier Outils/ : ne pas modifier à la main.
 // Pour ajouter un outil : voir README.md
-window.APPS1D = ${JSON.stringify({ categories }, null, 2).replace(/</g, '\\u003c')};
+window.LABERUN76 = ${JSON.stringify({ categories }, null, 2).replace(/</g, '\\u003c')};
 `);
 
   // 3. Politique de sécurité de index.html
@@ -170,19 +170,19 @@ window.APPS1D = ${JSON.stringify({ categories }, null, 2).replace(/</g, '\\u003c
   ecrire('index.html', html);
 
   // 4. Service worker : les pages de la racine et tout le dossier accueil/ (logo compris s'il existe) est gardé hors ligne,
-  //    sauf les fichiers cachés ou système ignorés par git (.DS_Store, Thumbs.db…) : sinon le poste et GitHub divergent.
+  //    sauf les fichiers cachés ou système ignorés par git (.DS_Store, Thumbs.db…) : sinon le poste et la Forge divergent.
   //    La version tient aussi compte des fichiers des outils : un outil modifié est rechargé partout.
   const ignore = f => f.startsWith('.') || /^(thumbs\.db|desktop\.ini)$/i.test(f);
   const lister = d => readdirSync(join(RACINE, d)).filter(f => !ignore(f)).sort()
     .flatMap(f => statSync(join(RACINE, d, f)).isDirectory() ? lister(`${d}/${f}`) : [`${d}/${f}`]);
   const locaux = ['index.html', 'accessibilite.html', 'manifest.webmanifest', ...lister('accueil')];
   const empreinte = createHash('sha256');
-  // Fins de ligne ramenées à \n : un poste Windows (CRLF) et GitHub (LF) calculent la même version
+  // Fins de ligne ramenées à \n : un poste Windows (CRLF) et la Forge (LF) calculent la même version
   const contenu = f => { const b = readFileSync(join(RACINE, f)); return /\.(html?|css|js|mjs|json|svg|txt|md|webmanifest)$/i.test(f) ? b.toString('utf8').replace(/\r\n/g, '\n') : b; };
   [...locaux, ...lister('Outils')].forEach(f => empreinte.update(f).update(contenu(f)));
   const core = ['./', ...locaux.map(f => './' + f), POLICES + 'Marianne-Regular.woff2', POLICES + 'Marianne-Bold.woff2'];
   ecrire('sw.js', lire('sw.js')
-    .replace(/const VERSION = [^;]+;/, `const VERSION = 'apps1d-${empreinte.digest('hex').slice(0, 10)}';`)
+    .replace(/const VERSION = [^;]+;/, `const VERSION = 'laberun76-${empreinte.digest('hex').slice(0, 10)}';`)
     .replace(/const CORE = \[[^\]]*\];/, `const CORE = ${JSON.stringify(core)};`));
 
   console.log(ecrits.length ? `  ✔ mis à jour : ${ecrits.join(', ')}` : '  ✔ déjà à jour, rien à modifier');

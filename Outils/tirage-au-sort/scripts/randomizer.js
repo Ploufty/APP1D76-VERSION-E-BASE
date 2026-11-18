@@ -29,6 +29,11 @@
     var appEl = document.getElementById('app');
     var notifTimer = null;
 
+    // Réglage « Animations réduites » (panneau Affichage ou réglage du système), appliqué par accueil/outil.js
+    function animationsReduites() {
+        return document.documentElement.getAttribute('data-motion') === 'reduce';
+    }
+
     var diceCountRow = document.getElementById('diceCountRow');
     var diceSidesRow = document.getElementById('diceSidesRow');
     var diceStyleButtons = document.querySelectorAll('.pillBtn.iconPill[data-style]');
@@ -157,6 +162,8 @@
     // ---- Keyboard shortcuts ----
 
     document.addEventListener('keydown', function(e) {
+        // Panneau « Affichage » ouvert : le clavier sert au panneau, pas au tirage
+        if (document.querySelector('dialog[open]')) { return; }
         var tag = document.activeElement ? document.activeElement.tagName : '';
         var isTyping = tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT';
 
@@ -245,7 +252,8 @@
         resultName.className = 'rolling';
         statusText.innerHTML = 'Tirage en cours…';
 
-        var duration = parseInt(durationRange.value, 10) * 1000;
+        // Animations réduites : pas de défilement rapide des noms, le résultat arrive après une courte pause
+        var duration = animationsReduites() ? 600 : parseInt(durationRange.value, 10) * 1000;
         var start = new Date().getTime();
         var finalName = chooseRandom(names);
 
@@ -257,7 +265,9 @@
                 finishDraw(finalName);
                 return;
             }
-            resultName.textContent = chooseRandom(names); // texte, jamais HTML : une liste importée peut contenir du code
+            if (!animationsReduites()) {
+                resultName.textContent = chooseRandom(names); // texte, jamais HTML : une liste importée peut contenir du code
+            }
             var delay = 38 + Math.pow(progress, 2.4) * 190;
             setTimeout(tick, delay);
         }
@@ -513,7 +523,6 @@
         diceRollButton.disabled = false;
 
         var total = 0;
-        var i;
         for (i = 0; i < values.length; i++) {
             total += values[i];
         }
@@ -536,6 +545,7 @@
     // ---- Shared: confetti ----
 
     function launchConfetti(anchorEl) {
+        if (animationsReduites()) { return; }
         var colors = ['#2563eb', '#34c768', '#f5a623', '#f46274', '#9c7bff', '#f170b0'];
         var layerRect = confettiLayer.getBoundingClientRect();
         var cardRect = anchorEl ? anchorEl.getBoundingClientRect() : layerRect;
@@ -729,7 +739,8 @@
         confettiToggle.checked = savedConfetti === null ? true : savedConfetti === '1';
         var savedHistory = localStorage.getItem('randomizer_history');
         if (savedHistory) {
-            history = JSON.parse(savedHistory) || [];
+            history = JSON.parse(savedHistory);
+            if (!Array.isArray(history)) { history = []; }
         }
         var savedDiceStyle = localStorage.getItem('randomizer_dice_style');
         if (savedDiceStyle === 'pips' || savedDiceStyle === 'digits' || savedDiceStyle === 'hands') {

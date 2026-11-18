@@ -1,4 +1,4 @@
-# Guide du projet Apps1D76
+# Guide du projet LabERUN76
 
 > Ce fichier sert de **notice** pour les personnes qui maintiennent le projet et de **mémoire de travail** pour Claude
 > (Claude Code le lit automatiquement au début de chaque session). À tenir à jour quand l'organisation change.
@@ -7,9 +7,13 @@
 
 ## 1. Le projet en une minute
 
-**Apps1D76** est la page d'accueil des outils numériques de la **Mission Numérique Éducatif 76** (DSDEN de Seine-Maritime).
+**LabERUN76** est la page d'accueil des outils numériques de la **Mission Numérique Éducatif 76** (DSDEN de Seine-Maritime).
 Elle présente des applications web pour l'école primaire, rangées par catégories, avec recherche, mode sombre,
 réglages d'accessibilité, installation comme application et fonctionnement hors connexion.
+
+Elle est publiée sur **la Forge des communs numériques éducatifs** (GitLab de l'Éducation nationale) :
+- projet : <https://forge.apps.education.fr/missionnumerique76/laberun76> ;
+- site (adresse provisoire) : <https://missionnumerique76.forge.apps.education.fr/laberun76>.
 
 Le principe :
 
@@ -45,10 +49,9 @@ scripts/                Outils de maintenance (Node.js, sans dépendance)
   ajouter.mjs           Assistant en questions/réponses pour créer une fiche
   securite.mjs          Contrôle de sécurité (secrets, fichiers sensibles, CSP…)
 
-.github/workflows/mise-a-jour.yml   GitHub : relance npm run generer à chaque envoi sur main, master ou Clean
-.gitlab-ci.yml                      Forge (GitLab) : génère puis publie sur GitLab Pages
+.gitlab-ci.yml                      Forge : génère, contrôle et publie sur GitLab Pages (vérifie seulement hors de main)
 README.md                           Présentation et tutoriel « Ajouter un outil » (pour les collègues)
-IMPORTER-DANS-UN-NOUVEAU-DEPOT.md   Tutoriel : créer un nouveau dépôt à partir du zip
+PUBLIER-SUR-LA-FORGE.md             Tutoriel : créer le projet sur la Forge et mettre le site en ligne
 ACCESSIBILITE.md                    Cahier des charges accessibilité (RGAA) et modèle de déclaration
 CLAUDE.md                           Ce guide (lu automatiquement par Claude Code)
 ```
@@ -62,7 +65,7 @@ le design ou le comportement de la page.
 
 ```
 Outils/                     scripts/generer.mjs              index.html (dans le navigateur)
-├─ categories.json   ──┐                                      ├─ charge accueil/outils.js → window.APPS1D
+├─ categories.json   ──┐                                      ├─ charge accueil/outils.js → window.LABERUN76
 ├─ outil-a/outil.json ─┼──►  lit, vérifie, trie  ──►  accueil/outils.js └─ charge accueil/script.js → cartes
 └─ outil-b/outil.json ─┘     + met à jour CSP dans index.html
                              + met à jour VERSION/CORE dans sw.js
@@ -71,16 +74,17 @@ Outils/                     scripts/generer.mjs              index.html (dans le
 1. **`scripts/generer.mjs`** (partie catalogue, `construireCatalogue`) parcourt `Outils/`. Chaque sous-dossier est un outil. Les dossiers qui commencent par `.` ou `_` sont ignorés.
    - Si le dossier a une fiche `outil.json`, elle est lue et vérifiée.
    - Sinon, l'outil va dans la catégorie `autres`. Son titre et sa description sont lus dans les balises `<title>` et `<meta name="description">` de sa page.
-2. **`scripts/generer.mjs`** écrit ensuite `accueil/outils.js` (`window.APPS1D = { categories: [...] }`) et fait deux mises à jour :
+2. **`scripts/generer.mjs`** écrit ensuite `accueil/outils.js` (`window.LABERUN76 = { categories: [...] }`) et fait deux mises à jour :
    - l'empreinte SHA-256 du petit script intégré à `index.html` dans la balise **Content-Security-Policy** ;
    - `VERSION` (empreinte de l'accueil **et des fichiers des outils**, fins de ligne Windows et Linux confondues) et `CORE` (`index.html`, `accessibilite.html`, le manifeste et tout le dossier `accueil/`) dans `sw.js`.
 
    Le script n'écrit un fichier que si son contenu change. Le relancer sans rien modifier ne produit donc aucun changement.
-3. **`accueil/script.js`** lit `window.APPS1D`, génère les sections, les cartes et le menu, puis active les interactions.
+3. **`accueil/script.js`** lit `window.LABERUN76`, génère les sections, les cartes et le menu, puis active les interactions.
    Tous les textes venant des fiches sont **échappés** (fonction `esc`) : une fiche ne peut pas injecter de HTML.
-4. **Automatismes :**
-   - sur GitHub, le workflow `mise-a-jour.yml` exécute `npm run generer` à chaque envoi sur `main`, `master` ou `Clean` et enregistre les fichiers modifiés (commit « Mise à jour automatique… ») ;
-   - sur la Forge, `.gitlab-ci.yml` fait la même chose puis publie.
+4. **Automatisme (Forge) :** à chaque envoi sur `main`, `.gitlab-ci.yml` exécute `npm run generer` (catalogue, CSP, `sw.js`,
+   contrôle de sécurité) puis publie le dossier `public/`. Le site en ligne est donc toujours à jour, même si `accueil/outils.js`
+   n'a pas été régénéré avant l'envoi (cas d'un outil ajouté depuis le Web IDE). Le pipeline ne réécrit pas le dépôt :
+   la copie de `accueil/outils.js` dans le dépôt ne sert qu'à ouvrir `index.html` sur son ordinateur.
 
 ### Format des fichiers de données
 
@@ -115,7 +119,7 @@ Champs facultatifs :
 Pour ne copier que ce qui sert : prendre les fichiers de l'application, sans les `README.md`, notes de développement ni `node_modules`.
 
 ### Intégrer un outil confié à Claude
-La personne dépose les fichiers bruts dans `a-migrer/<nom>/` (sur GitHub : **Add file › Upload files**) puis écrit
+La personne dépose les fichiers bruts dans `a-migrer/<nom>/` (sur la Forge : **Web IDE**, glisser le dossier) puis écrit
 « Nouvel outil dans a-migrer/<nom> : intègre-le », avec parfois des indications (public, catégorie, nom souhaité).
 Claude fait alors tout, sans poser de question sauf blocage réel :
 1. **Branche** partant de `main` à jour.
@@ -125,7 +129,7 @@ Claude fait alors tout, sans poser de question sauf blocage réel :
 5. **Appliquer l'UI de référence** (voir « UI de référence des outils ») sans changer le fonctionnement de l'outil.
 6. **Contrôler l'outil** : chemins relatifs et majuscules exactes, pas de ressource en `http://`, pas de données d'élèves ni de secret, fonctionne hors connexion si possible. Corriger les petits défauts sans changer le fonctionnement ; signaler les gros.
 7. **`npm run generer`** (« Aucun problème bloquant »), puis test dans le navigateur : la carte, la recherche, l'ouverture de l'outil, aucune erreur dans la console.
-8. **Commit, push, demande de fusion** vers `main`, avec un résumé : catégorie choisie, description et corrections faites.
+8. **Commit, push sur une branche de travail, demande de fusion** vers `main` (la Forge propose le lien au moment du push), avec un résumé : catégorie choisie, description et corrections faites.
 
 ### UI de référence des outils
 Deux niveaux de design :
@@ -226,8 +230,10 @@ Pour tester l'installation et le hors ligne, il faut passer par `npm run apercu`
 
 ## 7. Publication
 
-- **GitHub Pages :** Settings › Pages › *Deploy from a branch* › **`main`** (ou `Clean` dans le dépôt de test) / (root). Pages publie la branche telle quelle, avec Jekyll, qui ignore les fichiers commençant par `.`.
-- **Forge (GitLab) :** `.gitlab-ci.yml` exécute `npm run generer`, copie `index.html`, `accessibilite.html`, `sw.js`, le manifeste, `accueil/` et `Outils/` dans `public/` et publie. Sur les autres branches, il ne fait que vérifier.
+- **Forge (GitLab Pages) :** sur `main`, `.gitlab-ci.yml` exécute `npm run generer`, copie `index.html`, `accessibilite.html`, `sw.js`, le manifeste, `accueil/` et `Outils/` (sans `Outils/_modele/` ni `categories.json`) dans `public/` et publie. Ni `a-migrer/`, ni `scripts/`, ni la documentation ne sont mis en ligne.
+- **Autres branches et demandes de fusion :** `npm run verifier` et `npm run securite`, sans publier. Un seul pipeline par envoi quand une demande de fusion est ouverte.
+- **Mise en place :** `PUBLIER-SUR-LA-FORGE.md` (import du projet, exécuteurs, adresse sans « domaine unique », visibilité de Pages).
+- **Chemins :** le site est servi dans un sous-dossier (`/laberun76/`). Tous les liens sont relatifs (`./`, `../../`) : ne jamais écrire de lien qui commence par `/`.
 - **Hors ligne :** chaque changement de contenu (accueil ou outils) modifie `VERSION` dans `sw.js`, et les navigateurs récupèrent alors la nouvelle version. `accueil/outils.js`, les pages et tous les fichiers de `Outils/` passent d'abord par le réseau (le cache ne sert que hors connexion), pour qu'un outil ajouté ou modifié soit à jour tout de suite.
 
 ---
@@ -236,8 +242,10 @@ Pour tester l'installation et le hors ligne, il faut passer par `npm run apercu`
 
 | Symptôme | Cause et solution |
 |---|---|
-| Pages affiche le README | La source de Pages n'est pas la bonne branche, ou les fichiers ont été importés dans un sous-dossier. Voir la section 7 et `IMPORTER-DANS-UN-NOUVEAU-DEPOT.md`. |
-| Un outil n'apparaît pas | `accueil/outils.js` n'a pas été régénéré : lancer `npm run generer`, ou vérifier l'onglet Actions de GitHub. |
+| Pipeline en attente sans fin | Aucun exécuteur activé : voir `PUBLIER-SUR-LA-FORGE.md`. |
+| Erreur 404 ou adresse en `laberun76-xxxx` | Pages pas encore publié, visibilité de Pages, ou option « domaine unique » : voir `PUBLIER-SUR-LA-FORGE.md`. |
+| Un outil n'apparaît pas en ligne | Le pipeline a échoué : **Compilation › Pipelines**, cliquer sur la tâche rouge pour lire le message. |
+| Un outil n'apparaît pas en local | `accueil/outils.js` n'a pas été régénéré : lancer `npm run generer`. |
 | « introuvable, mais X existe » | Erreur de majuscules dans `page` ou dans le nom du dossier. |
 | Page sans réglages ni thème après une modification | L'empreinte CSP n'est plus à jour : `npm run generer`. |
 | Police différente de Marianne | Le CDN jsDelivr est bloqué par le réseau. La police système prend le relais, c'est normal. |
@@ -259,7 +267,7 @@ Pour tester l'installation et le hors ligne, il faut passer par `npm run apercu`
   3. ouvrir `index.html` en double-clic et via `npm run apercu` : cartes, menu, recherche, thème, panneau, ouverture d'un outil, aucune erreur dans la console ;
   4. tester les largeurs 320, 390, 768, 1280 et 1920 px, sans défilement horizontal ;
   5. en cas de modification visuelle, vérifier les modes clair, sombre, contraste renforcé et texte à 130 %.
-- **Branches :** `main` est la branche de référence, celle que publie Pages (`Clean` n'existe que dans l'ancien dépôt de test). Les branches `claude/*` sont des branches de travail fusionnées dans `main` par demande de fusion.
+- **Branches :** `main` est la branche de référence, la seule que publie la Forge. Les autres branches (dont `claude/*`) sont des branches de travail fusionnées dans `main` par demande de fusion.
 - **Fonctionnalités écartées volontairement :** compilation et minification (v3/v4, jugées trop complexes pour l'équipe), police Marianne stockée dans le dépôt (licence réservée à l'administration).
 
 ---
@@ -276,3 +284,4 @@ Pour tester l'installation et le hors ligne, il faut passer par `npm run apercu`
 | Simplification | Fichiers de l'accueil regroupés dans `accueil/`, `catalogue.mjs` fusionné dans `generer.mjs`, `AJOUTER-UN-OUTIL.md` fusionné dans `README.md`, workflow GitHub et `.gitlab-ci.yml` rétablis |
 | UI des outils | UI de référence commune aux outils (`accueil/outil.css`, `accueil/outil.js`, modèle `Outils/_modele/`), réglages partagés avec l'accueil, export Word |
 | Relecture | Tirage au sort passé à l'UI de référence, étiquettes de l'organisateur déplaçables au doigt et au clavier, plus aucun `onclick` dans les outils, fichiers des outils toujours à jour hors ligne, branche de référence `main` |
+| **LabERUN76** | Renommage d'Apps1D76 en LabERUN76, publication sur la Forge uniquement (workflow GitHub retiré, tutoriels réécrits), revue du code (organisateur, tirage au sort) |

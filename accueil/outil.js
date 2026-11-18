@@ -1,4 +1,4 @@
-/* Apps1D76 — script commun des outils (UI de référence, à charger dans le <head>) :
+/* LabERUN76 — script commun des outils (UI de référence, à charger dans le <head>) :
      <script src="../../accueil/outil.js"></script>
    1. Réglages d'affichage partagés avec l'accueil (thème, contraste, taille du texte, animations), appliqués avant l'affichage
    2. Bouton de thème (#theme-toggle), panneau « Affichage » ajouté à côté, étapes repliables (.step-header)
@@ -8,7 +8,7 @@
   const d = document, root = d.documentElement;
 
   /* ================= 1. RÉGLAGES D'AFFICHAGE (même stockage et mêmes valeurs que l'accueil) ================= */
-  const KEY = 'apps1d-prefs', DEF = { theme: 'auto', text: '100', motion: 'auto', contrast: false };
+  const KEY = 'laberun76-prefs', DEF = { theme: 'auto', text: '100', motion: 'auto', contrast: false };
   const VALEURS = { theme: ['auto', 'light', 'dark'], text: ['100', '115', '130'], motion: ['auto', 'on', 'reduce'] };
   const nettoyer = p => ({ // on ne garde que des valeurs connues (stockage local modifiable par l'utilisateur)
     theme: VALEURS.theme.includes(p?.theme) ? p.theme : DEF.theme,
