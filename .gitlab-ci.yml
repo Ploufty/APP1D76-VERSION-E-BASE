@@ -18,7 +18,7 @@ pages:
     - npm run generer                  # outils.js, CSP de index.html, sw.js + contrôle de sécurité
     - mkdir public
     # Seuls les fichiers du site sont publiés (pas a-migrer/, scripts/, documentation…)
-    - cp -r index.html accessibilite.html sw.js manifest.webmanifest accueil Outils public/
+    - cp -r index.html plan-du-site.html mentions-legales.html contact.html accessibilite.html sw.js manifest.webmanifest accueil Outils public/
     - rm -rf public/Outils/_modele public/Outils/categories.json
   artifacts:
     paths: [public]

@@ -56,6 +56,8 @@
   });
   $('#reset').addEventListener('click', () => { prefs = { ...DEF }; save(); apply(); syncForm(); });
   dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); }); // clic sur le fond = fermer
+  // Lien « Paramètres d'accessibilité » du pied de page : ouvre le même panneau
+  $$('[data-affichage]').forEach(b => { b.hidden = false; b.addEventListener('click', () => $('#settings-open').click()); });
 
   /* ================= 2. RENDU DES OUTILS (window.LABERUN76, défini dans outils.js) ================= */
   const data = window.LABERUN76?.categories || [];

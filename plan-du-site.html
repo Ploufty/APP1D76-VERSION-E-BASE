@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<!-- Plan du site — LabERUN76. Page construite avec l'UI de référence des outils (accueil/outil.css). -->
+<html lang="fr" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Plan du site - LabERUN76</title>
+<meta name="description" content="Plan du site LabERUN76 : pages et outils numériques de la Mission Numérique Éducatif 76.">
+<meta name="theme-color" content="#0b5a73">
+<link rel="icon" href="accueil/icones/icon.svg" type="image/svg+xml">
+<link rel="stylesheet" href="accueil/outil.css">
+<script src="accueil/outil.js"></script>
+</head>
+<body>
+<a class="skip" href="#contenu">Aller au contenu</a>
+
+<header class="outil-header">
+  <div class="container brandbar">
+    <a class="brand" href="index.html" aria-label="Retour à l'accueil LabERUN76">
+      <span class="back" aria-hidden="true">←</span>
+      <img class="logo" src="accueil/icones/icon.svg" alt="" width="36" height="36">
+      <span><b>LabERUN<span>76</span></b><small>Mission Numérique Éducatif 76</small></span>
+    </a>
+    <div class="actions">
+      <button type="button" class="icon-btn" id="theme-toggle" aria-label="Activer le mode sombre">
+        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
+        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v3M12 19.5v3M1.5 12h3M19.5 12h3M4.6 4.6l2.1 2.1M17.3 17.3l2.1 2.1M4.6 19.4l2.1-2.1M17.3 6.7l2.1-2.1"/></svg>
+      </button>
+    </div>
+  </div>
+  <div class="container hero">
+    <h1>Plan <span class="accent">du site</span></h1>
+    <p>Toutes les pages et tous les outils de LabERUN76</p>
+  </div>
+  <div class="filet" aria-hidden="true"></div>
+</header>
+
+<main class="container prose" id="contenu" tabindex="-1">
+<section class="card" aria-labelledby="t-pages">
+    <h2 id="t-pages">Pages</h2>
+    <ul>
+      <li><a href="index.html">Accueil</a> : tous les outils, rangés par catégorie</li>
+      <li><a href="plan-du-site.html" aria-current="page">Plan du site</a></li>
+      <li><a href="mentions-legales.html">Mentions légales</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="accessibilite.html">Déclaration d'accessibilité</a></li>
+    </ul>
+  </section>
+
+  <section class="card" aria-labelledby="t-outils">
+    <h2 id="t-outils">Outils</h2>
+    <!-- outils:debut — liste mise à jour par « npm run generer » : ne pas modifier à la main -->
+    <h3>🏫 Direction d&#39;école</h3>
+    <ul>
+      <li><a href="./Outils/orga-recre/orga_recre.html">Organisateur de récréation</a> : Qui surveille quand ? Un organiseur de planning simple, avec étiquettes déplaçables.</li>
+    </ul>
+    <h3>🎯 Vie de classe</h3>
+    <ul>
+      <li><a href="./Outils/tirage-au-sort/index.html">Tirage au sort</a> : Tirer au sort un nom ou lancer des dés, avec animation, plein écran et historique.</li>
+    </ul>
+    <!-- outils:fin -->
+  </section>
+</main>
+
+<footer class="footer">
+  <nav class="pied-liens" aria-label="Liens utiles">
+    <ul>
+      <li><a href="plan-du-site.html" aria-current="page">Plan du site<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="9" y="3" width="6" height="5" rx="1"/><rect x="3" y="16" width="6" height="5" rx="1"/><rect x="15" y="16" width="6" height="5" rx="1"/><path d="M12 8v4M6 16v-4h12v4"/></svg></a></li>
+      <li><a href="mentions-legales.html">Mentions légales<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 11v6M12 7.5v.5"/></svg></a></li>
+      <li><a href="contact.html">Contact<svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a></li>
+      <li><a href="accessibilite.html">Accessibilité : non conforme<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="4.5" r="1.5"/><path d="M5 8.5 12 10l7-1.5M12 10v4.5M12 14.5l-3 6M12 14.5l3 6"/></svg></a></li>
+      <li><button type="button" data-affichage hidden>Paramètres d'accessibilité<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="3"/></svg></button></li>
+    </ul>
+  </nav>
+  <p>Retrouver la Mission Numérique 76 sur <a href="https://prim76.ac-normandie.fr/numerique">Prim76</a></p>
+  <p>Académie de Normandie · Seine-Maritime (76) · Mission Numérique Éducatif 76</p>
+</footer>
+</body>
+</html>

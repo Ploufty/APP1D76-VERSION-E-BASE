@@ -17,6 +17,7 @@ Outils/          ← UN DOSSIER PAR OUTIL : c'est le seul endroit où l'on trava
 a-migrer/        ← outils en attente : fiches de l'ancien site, et nouveaux outils déposés pour Claude
 index.html       ← la page d'accueil
 accessibilite.html  ← la déclaration d'accessibilité
+plan-du-site.html  mentions-legales.html  contact.html   ← pages du pied de page
 accueil/         ← apparence et fonctionnement de l'accueil, liste générée outils.js (ne pas modifier),
                    et l'UI commune des outils (outil.css, outil.js)
 sw.js  manifest.webmanifest   ← application installable et hors ligne
