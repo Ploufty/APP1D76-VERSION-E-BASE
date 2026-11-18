@@ -6,22 +6,22 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Déclaration d'accessibilité - LabERUN76</title>
 <meta name="description" content="Déclaration d'accessibilité du site LabERUN76 de la Mission Numérique Éducatif 76.">
-<meta name="theme-color" content="#0f4c5c">
+<meta name="theme-color" content="#0b5a73">
 <link rel="icon" href="accueil/icones/icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="accueil/outil.css">
 <script src="accueil/outil.js"></script>
 <style>
   /* ===== Déclaration d'accessibilité : mise en page propre à cette page (variables de outil.css) ===== */
-  :root { --largeur: 68rem; --glass: rgba(255, 255, 255, .72); --glow: rgba(15, 76, 92, .18); }
-  [data-theme="dark"] { --glass: rgba(24, 37, 43, .72); --glow: rgba(124, 196, 207, .25); }
+  :root { --largeur: 68rem; --glass: rgba(255, 255, 255, .72); --glow: rgba(11, 90, 115, .18); }
+  [data-theme="dark"] { --glass: rgba(28, 36, 49, .72); --glow: rgba(124, 196, 217, .25); }
 
   /* Fond : taches de couleur floues + grille de points */
   body { position: relative; isolation: isolate; }
   .fond { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
   .fond i { position: absolute; width: 38rem; height: 38rem; border-radius: 50%; filter: blur(90px); opacity: .32; animation: flotte 18s ease-in-out infinite alternate; }
-  .fond i:nth-child(1) { background: #7cc4cf; top: -12rem; left: -10rem; }
-  .fond i:nth-child(2) { background: #5fd0b8; top: 20rem; right: -14rem; animation-delay: -6s; }
-  .fond i:nth-child(3) { background: #a8d8cf; bottom: -16rem; left: 25%; animation-delay: -12s; }
+  .fond i:nth-child(1) { background: #7cc4d9; top: -12rem; left: -10rem; }
+  .fond i:nth-child(2) { background: #ff8a5c; top: 20rem; right: -14rem; animation-delay: -6s; }
+  .fond i:nth-child(3) { background: #cfe6ee; bottom: -16rem; left: 25%; animation-delay: -12s; }
   [data-theme="dark"] .fond i { opacity: .22; }
   .fond::after { content: ""; position: absolute; inset: 0; background-image: radial-gradient(var(--border) 1px, transparent 1px); background-size: 22px 22px; mask-image: linear-gradient(#000, transparent 70%); }
   @keyframes flotte { to { transform: translate(4rem, 3rem) scale(1.15); } }
@@ -99,7 +99,7 @@
   address { font-style: normal; margin-top: .6rem; padding: .9rem 1.1rem; border-radius: 1rem; background: var(--surface-2); border: 1px solid var(--border); line-height: 1.5; }
 
   /* Carte contact en dégradé (couleurs fixes : texte blanc lisible en clair comme en sombre) */
-  .contact { color: #fff; border: 0; background: linear-gradient(135deg, #0f4c5c, #16796b); box-shadow: 0 25px 50px -20px rgba(15, 76, 92, .55); overflow: clip; }
+  .contact { color: #fff; border: 0; background: linear-gradient(135deg, #0b5a73, #c2410c); box-shadow: 0 25px 50px -20px rgba(11, 90, 115, .55); overflow: clip; }
   .contact .surtitre { color: #fff; opacity: .9; }
   .contact a { color: #fff; }
   .contact .a-definir { background: rgba(255, 255, 255, .15); border-color: #fff; color: #fff; }
@@ -117,7 +117,7 @@
   [data-contrast="high"] { --glass: var(--surface); }
   [data-contrast="high"] .grad { background: none; color: var(--primary); }
   [data-contrast="high"] .tuile, [data-contrast="high"] .puces-nav ol { border-width: 2px; backdrop-filter: none; }
-  [data-contrast="high"] .contact { background: #0f4c5c; }
+  [data-contrast="high"] .contact { background: #0b5a73; }
   [data-theme="dark"][data-contrast="high"] .contact { background: #000; border: 2px solid #fff; }
 
   @media (max-width: 34rem) {

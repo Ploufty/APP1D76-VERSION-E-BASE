@@ -31,7 +31,7 @@
     root.dataset.contrast = prefs.contrast ? 'high' : 'normal';
     root.style.setProperty('--text-scale', prefs.text / 100);
     themeBtn.setAttribute('aria-label', dark ? 'Activer le mode clair' : 'Activer le mode sombre');
-    metaTheme.content = dark ? '#101a1e' : '#0f4c5c';
+    metaTheme.content = dark ? '#141a24' : '#0b5a73';
     anim.refresh();
   }
   darkMq.addEventListener?.('change', () => prefs.theme === 'auto' && apply());

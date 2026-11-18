@@ -134,7 +134,7 @@ Claude fait alors tout, sans poser de question sauf blocage réel :
 ### UI de référence des outils
 Deux niveaux de design :
 - **UI de base = la page d'accueil** (`accueil/style.css`) : animations, fond, constellation, cartes. Elle ne sert qu'à l'accueil.
-- **UI de référence des outils = `accueil/outil.css` + `accueil/outil.js`** : même identité (Atkinson Hyperlegible, encre & sarcelle, mêmes couleurs),
+- **UI de référence des outils = `accueil/outil.css` + `accueil/outil.js`** : même identité (Atkinson Hyperlegible, bleu canard & orange, mêmes couleurs),
   en plus simple, avec les réglages d'affichage **partagés** avec l'accueil (thème, contraste, taille du texte, animations).
 
 Pour un outil : partir de `Outils/_modele/index.html` (lien d'évitement, en-tête avec retour à l'accueil et bouton de thème — `outil.js` y ajoute
@@ -156,7 +156,7 @@ Pour une **nouvelle couleur** :
 1. dans `accueil/style.css`, section 3, ajouter `.cat-xxx { --cat: …; --cat-soft: …; }` et sa variante `[data-theme="dark"] .cat-xxx` ;
 2. dans `scripts/generer.mjs`, ajouter `'xxx'` à `COULEURS`.
 
-La couleur `--cat` doit avoir un **contraste d'au moins 4,5:1** sur le fond (blanc en clair, `#18252b` en sombre).
+La couleur `--cat` doit avoir un **contraste d'au moins 4,5:1** sur le fond (blanc en clair, `#1c2431` en sombre).
 
 ### Changer les textes de la page
 Dans `index.html` :
@@ -168,15 +168,16 @@ Dans `index.html` :
 Pour le logo : déposer `logo.png` dans `accueil/`, décommenter la ligne `<img src="accueil/logo.png">` dans `index.html`, puis lancer `npm run generer` (le logo est alors ajouté au hors ligne).
 
 ### Identité visuelle
-- **Couleurs** (variables, jamais de valeurs en dur) : `--primary` encre `#0f4c5c` (titres, boutons, en-têtes de tableau),
-  `--accent` sarcelle `#16796b` (mots mis en avant, nom « 76 », filet, bouton principal d'un outil),
-  `--danger` rouge `#b42318` réservé aux erreurs, absences et suppressions ; en sombre : `#7cc4cf`, `#5fd0b8`, `#ff8a80`.
+- **Couleurs** (variables, jamais de valeurs en dur) : `--primary` bleu canard `#0b5a73` (titres, boutons, en-têtes de tableau),
+  `--accent` orange `#c2410c` (mots mis en avant, nom « 76 », filet, bouton principal d'un outil),
+  `--danger` rouge `#b42318` réservé aux erreurs, absences et suppressions ; en sombre : `#7cc4d9`, `#ff8a5c`, `#ff8a80`
+  sur un fond `#141a24`. Les teintes `--primary-soft` et `--accent-soft` colorent le fond animé : assez saturées pour rester visibles.
   Toutes passent le contraste AA sur leur fond. Pas de bleu-blanc-rouge : le site n'utilise pas l'identité de l'État.
 - **Police** : Atkinson Hyperlegible (400 et 700), conçue pour la lisibilité ; le zéro barré est voulu (pas de confusion avec O).
-- **Logo** : `accueil/icones/icon.svg` (carré encre, « 76 », bulle et trait sarcelle), affiché à côté du nom dans les en-têtes.
+- **Logo** : `accueil/icones/icon.svg` (carré bleu canard, « 76 » blanc, bulle et trait orange), affiché à côté du nom dans les en-têtes.
   Les PNG (`apple-touch-icon`, `icon-192`, `icon-512`, `icon-maskable-512`) se régénèrent à partir de ce SVG
   (la version « maskable » a un fond plein et son contenu réduit à 80 %).
-- **Filet** : `.filet`, trait encre → sarcelle sous l'en-tête (remplace l'ancienne bande tricolore).
+- **Filet** : `.filet`, trait bleu canard → orange sous l'en-tête (remplace l'ancienne bande tricolore).
 
 ### Changer les couleurs, la police ou l'aspect
 Tout est dans `accueil/style.css`, découpé en 11 sections numérotées :
@@ -296,4 +297,4 @@ Pour tester l'installation et le hors ligne, il faut passer par `npm run apercu`
 | UI des outils | UI de référence commune aux outils (`accueil/outil.css`, `accueil/outil.js`, modèle `Outils/_modele/`), réglages partagés avec l'accueil, export Word |
 | Relecture | Tirage au sort passé à l'UI de référence, étiquettes de l'organisateur déplaçables au doigt et au clavier, plus aucun `onclick` dans les outils, fichiers des outils toujours à jour hors ligne, branche de référence `main` |
 | **LabERUN76** | Renommage d'Apps1D76 en LabERUN76, publication sur la Forge uniquement (workflow GitHub retiré, tutoriels réécrits), revue du code (organisateur, tirage au sort) |
-| Identité propre | Palette « encre & sarcelle », police Atkinson Hyperlegible, nouveau logo ; fin du bleu-blanc-rouge et de Marianne |
+| Identité propre | Palette « bleu canard & orange », police Atkinson Hyperlegible, nouveau logo ; fin du bleu-blanc-rouge et de Marianne |

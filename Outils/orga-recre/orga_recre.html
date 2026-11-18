@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Organisateur de récréation</title>
 <meta name="description" content="Répartition automatique des services d'accueil et de récréation entre les enseignants, exportable en Word.">
-<meta name="theme-color" content="#0f4c5c">
+<meta name="theme-color" content="#0b5a73">
 <link rel="icon" href="../../accueil/icones/icon.svg" type="image/svg+xml">
 <!-- UI de référence des outils LabERUN76 -->
 <link rel="stylesheet" href="../../accueil/outil.css">
@@ -537,7 +537,7 @@ function badgeHtml(t, day, label, type) {
 // Couleurs des étiquettes (mêmes que les classes .tc-0 à .tc-11) : [fond, texte]
 const TC = [['#DBEAFE','#1D4ED8'],['#FCE7F3','#9D174D'],['#D1FAE5','#065F46'],['#FEF3C7','#92400E'],['#EDE9FE','#5B21B6'],['#FFE4E6','#9F1239'],
             ['#CFFAFE','#164E63'],['#FEF9C3','#713F12'],['#F0FDF4','#14532D'],['#F5F3FF','#4C1D95'],['#FFF7ED','#7C2D12'],['#ECFDF5','#064E3B']];
-const TYPE_COULEUR = { grille: '#A94700', matin: '#0F4C5C', aprem: '#18753C' };
+const TYPE_COULEUR = { grille: '#A94700', matin: '#0B5A73', aprem: '#18753C' };
 
 // Le document reprend le tableau affiché, y compris les étiquettes déplacées à la main
 function exportWord() {
@@ -581,13 +581,13 @@ function printPlanning() {
   body { font-family: 'Atkinson Hyperlegible', Arial, sans-serif; background: white; color: #1a1a1a; padding: 24px; }
 
   .print-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 6px; }
-  .print-title { font-size: 22px; font-weight: 700; color: #0F4C5C; }
+  .print-title { font-size: 22px; font-weight: 700; color: #0B5A73; }
   .print-date { font-size: 11px; color: #6B7280; }
-  .stripe { height: 4px; background: linear-gradient(90deg, #0F4C5C, #16796B); margin-bottom: 18px; }
+  .stripe { height: 4px; background: linear-gradient(90deg, #0B5A73, #C2410C); margin-bottom: 18px; }
 
   table { width: 100%; border-collapse: collapse; font-size: 12px; }
   thead th {
-    background: #0F4C5C !important;
+    background: #0B5A73 !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
     color: white !important;
@@ -604,7 +604,7 @@ function printPlanning() {
 
   .slot-label { font-size: 11px; font-weight: 700; }
   .slot-type-grille { color: #A94700; }
-  .slot-type-matin  { color: #0F4C5C; }
+  .slot-type-matin  { color: #0B5A73; }
   .slot-type-aprem  { color: #18753C; }
 
   .cell-drop { display: flex; flex-wrap: wrap; gap: 3px; align-items: center; min-height: 28px; }

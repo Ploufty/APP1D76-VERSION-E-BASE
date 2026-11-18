@@ -9,18 +9,18 @@
 @font-face { font-family: "Atkinson Hyperlegible"; src: url(https://cdn.jsdelivr.net/npm/@fontsource/atkinson-hyperlegible@5.3.0/files/atkinson-hyperlegible-latin-400-normal.woff2) format("woff2"); font-weight: 400; font-display: swap; }
 @font-face { font-family: "Atkinson Hyperlegible"; src: url(https://cdn.jsdelivr.net/npm/@fontsource/atkinson-hyperlegible@5.3.0/files/atkinson-hyperlegible-latin-700-normal.woff2) format("woff2"); font-weight: 700; font-display: swap; }
 
-/* ---------- 2. THÈME : identité « encre & sarcelle » ---------- */
-/* --primary : encre (titres, boutons) · --accent : sarcelle (mots mis en avant, filet) · --danger : erreurs seulement */
+/* ---------- 2. THÈME : identité « bleu canard & orange » ---------- */
+/* --primary : bleu canard (titres, boutons) · --accent : orange (mots mis en avant, filet) · --danger : erreurs seulement */
 :root {
-  --bg: #f7f8f7; --surface: #ffffff; --surface-alpha: rgba(255, 255, 255, .92);
-  --text: #17242b; --muted: #4f5d63; --border: #e1e7e7;
-  --primary: #0f4c5c; --primary-soft: #e2eef0;
-  --accent: #16796b;  --accent-soft: #e0f3ef;
+  --bg: #ffffff; --surface: #ffffff; --surface-alpha: rgba(255, 255, 255, .92);
+  --text: #17242b; --muted: #4f5d63; --border: #dfe7ea;
+  --primary: #0b5a73; --primary-soft: #cfe6ee;
+  --accent: #c2410c;  --accent-soft: #ffd9c7;
   --danger: #b42318;  --danger-soft: #fdeceb;
   --on-accent: #ffffff;
-  --rgb-a: 15, 76, 92; --rgb-b: 22, 121, 107;       /* couleurs de la constellation */
-  --shadow: 0 2px 10px rgba(15, 40, 48, .06);
-  --shadow-hover: 0 22px 40px -12px rgba(15, 40, 48, .25);
+  --rgb-a: 11, 90, 115; --rgb-b: 194, 65, 12;       /* couleurs de la constellation */
+  --shadow: 0 2px 10px rgba(11, 45, 58, .07);
+  --shadow-hover: 0 22px 40px -12px rgba(11, 45, 58, .25);
   --radius: 1rem;
 --font: "Atkinson Hyperlegible", system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
   --ease: cubic-bezier(.2, .8, .2, 1);
@@ -29,19 +29,19 @@
   color-scheme: light;
 }
 [data-theme="dark"] {
-  --bg: #101a1e; --surface: #18252b; --surface-alpha: rgba(24, 37, 43, .92);
-  --text: #e6eef0; --muted: #a9b8be; --border: #2b3c43;
-  --primary: #7cc4cf; --primary-soft: rgba(124, 196, 207, .14);
-  --accent: #5fd0b8;  --accent-soft: rgba(95, 208, 184, .13);
+  --bg: #141a24; --surface: #1c2431; --surface-alpha: rgba(28, 36, 49, .92);
+  --text: #e6eef0; --muted: #a9b8be; --border: #2c3646;
+  --primary: #7cc4d9; --primary-soft: rgba(124, 196, 217, .22);
+  --accent: #ff8a5c;  --accent-soft: rgba(255, 138, 92, .2);
   --danger: #ff8a80;  --danger-soft: rgba(255, 138, 128, .12);
-  --on-accent: #101a1e;
-  --rgb-a: 124, 196, 207; --rgb-b: 95, 208, 184;
+  --on-accent: #141a24;
+  --rgb-a: 124, 196, 217; --rgb-b: 255, 138, 92;
   --shadow: 0 2px 10px rgba(0, 0, 0, .35);
   --shadow-hover: 0 22px 40px -12px rgba(0, 0, 0, .6);
   color-scheme: dark;
 }
 [data-contrast="high"] { --muted: var(--text); --border: #5f7076; }
-[data-theme="dark"][data-contrast="high"] { --border: #9fb2b8; --bg: #000; --surface: #0b1215; }
+[data-theme="dark"][data-contrast="high"] { --border: #9fb2b8; --bg: #000; --surface: #0b0f16; }
 
 /* ---------- 3. COULEURS DE CATÉGORIES (--cat : accent AA, --cat-soft : fond) ---------- */
 .cat-bleu      { --cat: #1f4e8c; --cat-soft: #e4ecf7; }
@@ -97,10 +97,10 @@ svg { flex: none; }
   transition: translate .8s var(--ease), background-color .4s;
   animation: drift 26s ease-in-out infinite alternate;
 }
-.blob-a { --d: 30px; width: 35rem; height: 35rem; top: -14rem; left: -12rem; background: var(--primary-soft); opacity: .85; }
+.blob-a { --d: 30px; width: 35rem; height: 35rem; top: -14rem; left: -12rem; background: var(--primary-soft); opacity: 1; }
 .blob-b { --d: -40px; width: 25rem; height: 25rem; bottom: -10rem; right: -8rem; background: var(--accent-soft); animation-delay: -9s; }
 .dots {
-  --d: 60px; position: absolute; top: 55%; right: 8%; width: 14rem; height: 14rem; border-radius: 50%; opacity: .22; color: var(--primary);
+  --d: 60px; position: absolute; top: 55%; right: 8%; width: 14rem; height: 14rem; border-radius: 50%; opacity: .35; color: var(--primary);
   background: radial-gradient(currentColor 1.4px, transparent 1.6px) 0 0 / 14px 14px;
   translate: calc(var(--px, 0) * var(--d)) calc(var(--py, 0) * var(--d)); transition: translate .8s var(--ease);
 }
