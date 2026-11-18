@@ -1,8 +1,8 @@
 /* LabERUN76 — service worker : fonctionnement hors ligne.
    VERSION et CORE sont mis à jour par « npm run generer » : les postes récupèrent la nouvelle version. */
-const VERSION = 'laberun76-a57a82f72e';
-const CORE = ["./","./index.html","./accessibilite.html","./manifest.webmanifest","./accueil/icones/apple-touch-icon.png","./accueil/icones/icon-192.png","./accueil/icones/icon-512.png","./accueil/icones/icon-maskable-512.png","./accueil/icones/icon.svg","./accueil/outil.css","./accueil/outil.js","./accueil/outils.js","./accueil/script.js","./accueil/style.css","https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/fonts/Marianne-Regular.woff2","https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/fonts/Marianne-Bold.woff2"];
-const POLICES = 'https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@';
+const VERSION = 'laberun76-bcbb7f1cf5';
+const CORE = ["./","./index.html","./accessibilite.html","./manifest.webmanifest","./accueil/icones/apple-touch-icon.png","./accueil/icones/icon-192.png","./accueil/icones/icon-512.png","./accueil/icones/icon-maskable-512.png","./accueil/icones/icon.svg","./accueil/outil.css","./accueil/outil.js","./accueil/outils.js","./accueil/script.js","./accueil/style.css","https://cdn.jsdelivr.net/npm/@fontsource/atkinson-hyperlegible@5.3.0/files/atkinson-hyperlegible-latin-400-normal.woff2","https://cdn.jsdelivr.net/npm/@fontsource/atkinson-hyperlegible@5.3.0/files/atkinson-hyperlegible-latin-700-normal.woff2"];
+const POLICES = 'https://cdn.jsdelivr.net/npm/@fontsource/atkinson-hyperlegible@';
 
 self.addEventListener('install', e => {
   // allSettled : un fichier indisponible ne bloque pas l'installation

@@ -134,12 +134,12 @@ Claude fait alors tout, sans poser de question sauf blocage réel :
 ### UI de référence des outils
 Deux niveaux de design :
 - **UI de base = la page d'accueil** (`accueil/style.css`) : animations, fond, constellation, cartes. Elle ne sert qu'à l'accueil.
-- **UI de référence des outils = `accueil/outil.css` + `accueil/outil.js`** : même esprit (Marianne, bleu-blanc-rouge, mêmes couleurs),
+- **UI de référence des outils = `accueil/outil.css` + `accueil/outil.js`** : même identité (Atkinson Hyperlegible, encre & sarcelle, mêmes couleurs),
   en plus simple, avec les réglages d'affichage **partagés** avec l'accueil (thème, contraste, taille du texte, animations).
 
 Pour un outil : partir de `Outils/_modele/index.html` (lien d'évitement, en-tête avec retour à l'accueil et bouton de thème — `outil.js` y ajoute
 le bouton « Affichage » et son panneau —, pied de page avec le lien vers la déclaration d'accessibilité), puis
-ajouter les styles propres à l'outil dans sa page en réutilisant les variables (`--blue`, `--surface`, `--border`, `--muted`, `--green`…).
+ajouter les styles propres à l'outil dans sa page en réutilisant les variables (`--primary`, `--accent`, `--danger`, `--surface`, `--border`, `--muted`, `--green`…).
 Composants : `.card`, `.step` (étape repliable), `.form-row`, `.toggle-wrap`, `.btn` / `.btn-ghost` / `.btn-accent` / `.btn-block` / `.btn-remove`,
 `.table-wrap` + `.table`, `.alert-info` / `-warning` / `-error`, `.hint`. En JS : `Outil.esc`, `Outil.telecharger`, `Outil.word` (export .docx sans dépendance).
 Pas de `onclick="…"` dans le HTML des outils non plus : brancher les événements en JavaScript (`addEventListener`).
@@ -156,7 +156,7 @@ Pour une **nouvelle couleur** :
 1. dans `accueil/style.css`, section 3, ajouter `.cat-xxx { --cat: …; --cat-soft: …; }` et sa variante `[data-theme="dark"] .cat-xxx` ;
 2. dans `scripts/generer.mjs`, ajouter `'xxx'` à `COULEURS`.
 
-La couleur `--cat` doit avoir un **contraste d'au moins 4,5:1** sur le fond (blanc en clair, `#1c1c2b` en sombre).
+La couleur `--cat` doit avoir un **contraste d'au moins 4,5:1** sur le fond (blanc en clair, `#18252b` en sombre).
 
 ### Changer les textes de la page
 Dans `index.html` :
@@ -167,12 +167,23 @@ Dans `index.html` :
 
 Pour le logo : déposer `logo.png` dans `accueil/`, décommenter la ligne `<img src="accueil/logo.png">` dans `index.html`, puis lancer `npm run generer` (le logo est alors ajouté au hors ligne).
 
+### Identité visuelle
+- **Couleurs** (variables, jamais de valeurs en dur) : `--primary` encre `#0f4c5c` (titres, boutons, en-têtes de tableau),
+  `--accent` sarcelle `#16796b` (mots mis en avant, nom « 76 », filet, bouton principal d'un outil),
+  `--danger` rouge `#b42318` réservé aux erreurs, absences et suppressions ; en sombre : `#7cc4cf`, `#5fd0b8`, `#ff8a80`.
+  Toutes passent le contraste AA sur leur fond. Pas de bleu-blanc-rouge : le site n'utilise pas l'identité de l'État.
+- **Police** : Atkinson Hyperlegible (400 et 700), conçue pour la lisibilité ; le zéro barré est voulu (pas de confusion avec O).
+- **Logo** : `accueil/icones/icon.svg` (carré encre, « 76 », bulle et trait sarcelle), affiché à côté du nom dans les en-têtes.
+  Les PNG (`apple-touch-icon`, `icon-192`, `icon-512`, `icon-maskable-512`) se régénèrent à partir de ce SVG
+  (la version « maskable » a un fond plein et son contenu réduit à 80 %).
+- **Filet** : `.filet`, trait encre → sarcelle sous l'en-tête (remplace l'ancienne bande tricolore).
+
 ### Changer les couleurs, la police ou l'aspect
 Tout est dans `accueil/style.css`, découpé en 11 sections numérotées :
 
 | Section | Contenu |
 |---|---|
-| 1 | Police Marianne (chargée depuis le paquet officiel du DSFR sur jsDelivr) |
+| 1 | Police Atkinson Hyperlegible (libre, licence OFL, chargée depuis le paquet `@fontsource` sur jsDelivr) |
 | 2 | **Thème** : toutes les couleurs en variables (`:root` = clair, `[data-theme="dark"]` = sombre, `[data-contrast="high"]` = contraste renforcé) |
 | 3 | Couleurs des catégories |
 | 4 | Base (typographie, liens, focus clavier, conteneur) |
@@ -248,7 +259,7 @@ Pour tester l'installation et le hors ligne, il faut passer par `npm run apercu`
 | Un outil n'apparaît pas en local | `accueil/outils.js` n'a pas été régénéré : lancer `npm run generer`. |
 | « introuvable, mais X existe » | Erreur de majuscules dans `page` ou dans le nom du dossier. |
 | Page sans réglages ni thème après une modification | L'empreinte CSP n'est plus à jour : `npm run generer`. |
-| Police différente de Marianne | Le CDN jsDelivr est bloqué par le réseau. La police système prend le relais, c'est normal. |
+| Police différente d'Atkinson Hyperlegible | Le CDN jsDelivr est bloqué par le réseau. La police système prend le relais, c'est normal. |
 | Ancienne version affichée | Cache du service worker : recharger avec Ctrl + F5, ou vérifier que `sw.js` a bien une nouvelle `VERSION`. |
 | Pas de bouton « Installer » | Normal en double-clic (`file://`) et sur iPad ; le panneau affiche alors la marche à suivre pour iOS. |
 
@@ -268,7 +279,7 @@ Pour tester l'installation et le hors ligne, il faut passer par `npm run apercu`
   4. tester les largeurs 320, 390, 768, 1280 et 1920 px, sans défilement horizontal ;
   5. en cas de modification visuelle, vérifier les modes clair, sombre, contraste renforcé et texte à 130 %.
 - **Branches :** `main` est la branche de référence, la seule que publie la Forge. Les autres branches (dont `claude/*`) sont des branches de travail fusionnées dans `main` par demande de fusion.
-- **Fonctionnalités écartées volontairement :** compilation et minification (v3/v4, jugées trop complexes pour l'équipe), police Marianne stockée dans le dépôt (licence réservée à l'administration).
+- **Fonctionnalités écartées volontairement :** compilation et minification (v3/v4, jugées trop complexes pour l'équipe), police Marianne (identité de l'État, remplacée par une identité propre).
 
 ---
 
@@ -285,3 +296,4 @@ Pour tester l'installation et le hors ligne, il faut passer par `npm run apercu`
 | UI des outils | UI de référence commune aux outils (`accueil/outil.css`, `accueil/outil.js`, modèle `Outils/_modele/`), réglages partagés avec l'accueil, export Word |
 | Relecture | Tirage au sort passé à l'UI de référence, étiquettes de l'organisateur déplaçables au doigt et au clavier, plus aucun `onclick` dans les outils, fichiers des outils toujours à jour hors ligne, branche de référence `main` |
 | **LabERUN76** | Renommage d'Apps1D76 en LabERUN76, publication sur la Forge uniquement (workflow GitHub retiré, tutoriels réécrits), revue du code (organisateur, tirage au sort) |
+| Identité propre | Palette « encre & sarcelle », police Atkinson Hyperlegible, nouveau logo ; fin du bleu-blanc-rouge et de Marianne |

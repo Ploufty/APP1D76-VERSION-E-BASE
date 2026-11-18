@@ -30,7 +30,7 @@
     root.style.setProperty('--text-scale', prefs.text / 100);
     d.getElementById('theme-toggle')?.setAttribute('aria-label', dark ? 'Activer le mode clair' : 'Activer le mode sombre');
     const meta = d.querySelector('meta[name="theme-color"]');
-    if (meta) meta.content = dark ? '#11111b' : '#000091';
+    if (meta) meta.content = dark ? '#101a1e' : '#0f4c5c';
   }
   appliquer();
   darkMq.addEventListener?.('change', () => prefs.theme === 'auto' && appliquer());
@@ -152,14 +152,14 @@
       return `<w:tbl><w:tblPr><w:tblW w:w="${utile}" w:type="dxa"/><w:tblBorders>${bord}</w:tblBorders>`
         + `<w:tblCellMar><w:top w:w="70" w:type="dxa"/><w:left w:w="100" w:type="dxa"/><w:bottom w:w="70" w:type="dxa"/><w:right w:w="100" w:type="dxa"/></w:tblCellMar></w:tblPr>`
         + `<w:tblGrid>${w.map(v => `<w:gridCol w:w="${v}"/>`).join('')}</w:tblGrid>`
-        + `<w:tr><w:trPr><w:tblHeader/></w:trPr>${entetes.map((e, i) => tc(para([{ texte: e, gras: true, couleur: 'FFFFFF' }]), i, '000091')).join('')}</w:tr>`
-        + lignes.map((l, r) => `<w:tr><w:trPr><w:cantSplit/></w:trPr>${l.map((c, i) => tc(cellule(c), i, r % 2 ? 'F6F6FB' : '')).join('')}</w:tr>`).join('')
+        + `<w:tr><w:trPr><w:tblHeader/></w:trPr>${entetes.map((e, i) => tc(para([{ texte: e, gras: true, couleur: 'FFFFFF' }]), i, '0F4C5C')).join('')}</w:tr>`
+        + lignes.map((l, r) => `<w:tr><w:trPr><w:cantSplit/></w:trPr>${l.map((c, i) => tc(cellule(c), i, r % 2 ? 'F2F5F5' : '')).join('')}</w:tr>`).join('')
         + `</w:tbl><w:p/>`;
     };
 
-    const corps = blocs.map(b => b.titre != null ? para([{ texte: b.titre, gras: true, taille: 20, couleur: '000091' }], 60)
+    const corps = blocs.map(b => b.titre != null ? para([{ texte: b.titre, gras: true, taille: 20, couleur: '0F4C5C' }], 60)
       : b.tableau ? tableau(b.tableau)
-      : para([b.discret ? { texte: b.texte, couleur: '555566', taille: 9 } : { texte: b.texte }], 200)).join('');
+      : para([b.discret ? { texte: b.texte, couleur: '4F5D63', taille: 9 } : { texte: b.texte }], 200)).join('');
 
     const docx = zip([
       ['[Content_Types].xml', '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>'],

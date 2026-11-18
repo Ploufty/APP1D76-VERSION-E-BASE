@@ -135,7 +135,7 @@ export function construireCatalogue() {
 }
 
 /* ---------- Génération des fichiers de la page ---------- */
-const POLICES = 'https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/fonts/';
+const POLICES = 'https://cdn.jsdelivr.net/npm/@fontsource/atkinson-hyperlegible@5.3.0/files/atkinson-hyperlegible-latin-';
 
 // Renvoie la liste des fichiers modifiés, ou null si le catalogue contient des erreurs
 export function generer({ verifierSeulement = false } = {}) {
@@ -180,7 +180,7 @@ window.LABERUN76 = ${JSON.stringify({ categories }, null, 2).replace(/</g, '\\u0
   // Fins de ligne ramenées à \n : un poste Windows (CRLF) et la Forge (LF) calculent la même version
   const contenu = f => { const b = readFileSync(join(RACINE, f)); return /\.(html?|css|js|mjs|json|svg|txt|md|webmanifest)$/i.test(f) ? b.toString('utf8').replace(/\r\n/g, '\n') : b; };
   [...locaux, ...lister('Outils')].forEach(f => empreinte.update(f).update(contenu(f)));
-  const core = ['./', ...locaux.map(f => './' + f), POLICES + 'Marianne-Regular.woff2', POLICES + 'Marianne-Bold.woff2'];
+  const core = ['./', ...locaux.map(f => './' + f), POLICES + '400-normal.woff2', POLICES + '700-normal.woff2'];
   ecrire('sw.js', lire('sw.js')
     .replace(/const VERSION = [^;]+;/, `const VERSION = 'laberun76-${empreinte.digest('hex').slice(0, 10)}';`)
     .replace(/const CORE = \[[^\]]*\];/, `const CORE = ${JSON.stringify(core)};`));
