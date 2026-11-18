@@ -1,4 +1,4 @@
-/* Apps1D76 — script partagé : rendu des outils, menu, recherche, préférences, animations, hors ligne */
+/* LabERUN76 — script partagé : rendu des outils, menu, recherche, préférences, animations, hors ligne */
 (() => {
   'use strict';
   const d = document, root = d.documentElement;
@@ -10,7 +10,7 @@
   const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 
   /* ================= 1. PRÉFÉRENCES D'AFFICHAGE ================= */
-  const KEY = 'apps1d-prefs', DEF = { theme: 'auto', text: '100', motion: 'auto', contrast: false };
+  const KEY = 'laberun76-prefs', DEF = { theme: 'auto', text: '100', motion: 'auto', contrast: false };
   const VALEURS = { theme: ['auto', 'light', 'dark'], text: ['100', '115', '130'], motion: ['auto', 'on', 'reduce'] };
   const nettoyer = p => ({ // on ne garde que des valeurs connues (stockage local modifiable par l'utilisateur)
     theme: VALEURS.theme.includes(p?.theme) ? p.theme : DEF.theme,
@@ -31,7 +31,7 @@
     root.dataset.contrast = prefs.contrast ? 'high' : 'normal';
     root.style.setProperty('--text-scale', prefs.text / 100);
     themeBtn.setAttribute('aria-label', dark ? 'Activer le mode clair' : 'Activer le mode sombre');
-    metaTheme.content = dark ? '#11111b' : '#000091';
+    metaTheme.content = dark ? '#141a24' : '#0b5a73';
     anim.refresh();
   }
   darkMq.addEventListener?.('change', () => prefs.theme === 'auto' && apply());
@@ -57,8 +57,8 @@
   $('#reset').addEventListener('click', () => { prefs = { ...DEF }; save(); apply(); syncForm(); });
   dlg.addEventListener('click', e => { if (e.target === dlg) dlg.close(); }); // clic sur le fond = fermer
 
-  /* ================= 2. RENDU DES OUTILS (window.APPS1D, défini dans outils.js) ================= */
-  const data = window.APPS1D?.categories || [];
+  /* ================= 2. RENDU DES OUTILS (window.LABERUN76, défini dans outils.js) ================= */
+  const data = window.LABERUN76?.categories || [];
   const box = $('#categories'), nav = $('#catnav');
   box.innerHTML = data.map(c => `
     <section class="category cat-${esc(c.couleur)}" id="${esc(c.id)}">

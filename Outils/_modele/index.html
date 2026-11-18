@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Modèle d'outil Apps1D76 (UI de référence). Le dossier commence par « _ » : il n'apparaît pas sur l'accueil.
+<!-- Modèle d'outil LabERUN76 (UI de référence). Le dossier commence par « _ » : il n'apparaît pas sur l'accueil.
      Pour un nouvel outil : copier ce dossier sous un nouveau nom (sans « _ »), remplacer le contenu de <main>,
      garder l'en-tête, le pied de page et les deux lignes accueil/outil.css et accueil/outil.js.
      Composants disponibles : voir le commentaire en tête de accueil/outil.css. -->
@@ -9,12 +9,12 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Nom de l'outil</title>
 <meta name="description" content="Une phrase qui dit ce qu'on fait avec l'outil.">
-<meta name="theme-color" content="#000091">
+<meta name="theme-color" content="#0b5a73">
 <link rel="icon" href="../../accueil/icones/icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="../../accueil/outil.css">
 <script src="../../accueil/outil.js"></script>
 <style>
-  /* Styles propres à l'outil : réutiliser les variables (--blue, --surface, --border, --muted…) */
+  /* Styles propres à l'outil : réutiliser les variables (--primary, --accent, --surface, --border, --muted…) */
 </style>
 </head>
 <body>
@@ -22,9 +22,10 @@
 
 <header class="outil-header">
   <div class="container brandbar">
-    <a class="brand" href="../../index.html" aria-label="Retour à l'accueil Apps1D76">
+    <a class="brand" href="../../index.html" aria-label="Retour à l'accueil LabERUN76">
       <span class="back" aria-hidden="true">←</span>
-      <span><b>Apps1D<span>76</span></b><small>Mission Numérique Éducatif 76</small></span>
+      <img class="logo" src="../../accueil/icones/icon.svg" alt="" width="36" height="36">
+      <span><b>LabERUN<span>76</span></b><small>Mission Numérique Éducatif 76</small></span>
     </a>
     <div class="actions">
       <button type="button" class="icon-btn" id="theme-toggle" aria-label="Activer le mode sombre">
@@ -37,7 +38,7 @@
     <h1>Nom <span class="accent">de l'outil</span></h1>
     <p>Sous-titre : à quoi sert l'outil</p>
   </div>
-  <div class="tricolore" aria-hidden="true"></div>
+  <div class="filet" aria-hidden="true"></div>
 </header>
 
 <main class="container" id="contenu" tabindex="-1">

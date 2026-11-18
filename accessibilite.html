@@ -1,27 +1,27 @@
 <!DOCTYPE html>
-<!-- Déclaration d'accessibilité d'Apps1D76. À mettre à jour à chaque audit, nouvel outil ou défaut connu (voir ACCESSIBILITE.md). -->
+<!-- Déclaration d'accessibilité d'LabERUN76. À mettre à jour à chaque audit, nouvel outil ou défaut connu (voir ACCESSIBILITE.md). -->
 <html lang="fr" data-theme="light">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Déclaration d'accessibilité - Apps1D76</title>
-<meta name="description" content="Déclaration d'accessibilité du site Apps1D76 de la Mission Numérique Éducatif 76.">
-<meta name="theme-color" content="#000091">
+<title>Déclaration d'accessibilité - LabERUN76</title>
+<meta name="description" content="Déclaration d'accessibilité du site LabERUN76 de la Mission Numérique Éducatif 76.">
+<meta name="theme-color" content="#0b5a73">
 <link rel="icon" href="accueil/icones/icon.svg" type="image/svg+xml">
 <link rel="stylesheet" href="accueil/outil.css">
 <script src="accueil/outil.js"></script>
 <style>
   /* ===== Déclaration d'accessibilité : mise en page propre à cette page (variables de outil.css) ===== */
-  :root { --largeur: 68rem; --violet: #6a1bd1; --glass: rgba(255, 255, 255, .72); --glow: rgba(0, 0, 145, .18); }
-  [data-theme="dark"] { --violet: #b18cff; --glass: rgba(28, 28, 43, .72); --glow: rgba(133, 133, 246, .25); }
+  :root { --largeur: 68rem; --glass: rgba(255, 255, 255, .72); --glow: rgba(11, 90, 115, .18); }
+  [data-theme="dark"] { --glass: rgba(28, 36, 49, .72); --glow: rgba(124, 196, 217, .25); }
 
   /* Fond : taches de couleur floues + grille de points */
   body { position: relative; isolation: isolate; }
   .fond { position: fixed; inset: 0; z-index: -1; overflow: hidden; pointer-events: none; }
   .fond i { position: absolute; width: 38rem; height: 38rem; border-radius: 50%; filter: blur(90px); opacity: .32; animation: flotte 18s ease-in-out infinite alternate; }
-  .fond i:nth-child(1) { background: #6b6bff; top: -12rem; left: -10rem; }
-  .fond i:nth-child(2) { background: #ff5a64; top: 20rem; right: -14rem; animation-delay: -6s; }
-  .fond i:nth-child(3) { background: #a970ff; bottom: -16rem; left: 25%; animation-delay: -12s; }
+  .fond i:nth-child(1) { background: #7cc4d9; top: -12rem; left: -10rem; }
+  .fond i:nth-child(2) { background: #ff8a5c; top: 20rem; right: -14rem; animation-delay: -6s; }
+  .fond i:nth-child(3) { background: #cfe6ee; bottom: -16rem; left: 25%; animation-delay: -12s; }
   [data-theme="dark"] .fond i { opacity: .22; }
   .fond::after { content: ""; position: absolute; inset: 0; background-image: radial-gradient(var(--border) 1px, transparent 1px); background-size: 22px 22px; mask-image: linear-gradient(#000, transparent 70%); }
   @keyframes flotte { to { transform: translate(4rem, 3rem) scale(1.15); } }
@@ -32,9 +32,9 @@
   /* Héros */
   .hero-decl { text-align: center; padding-block: clamp(2.5rem, 8vw, 5rem) 2rem; }
   .pill { display: inline-flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .5rem; padding: .4rem 1rem; border-radius: 999px; font-size: .85rem; font-weight: 700; background: var(--glass); border: 1px solid var(--border); box-shadow: var(--shadow); }
-  .pill b { color: var(--blue); }
-  .hero-decl h1 { margin: 1.25rem auto .9rem; max-width: 18ch; font-size: clamp(2.2rem, 7vw, 4.2rem); line-height: 1.05; letter-spacing: -.035em; font-weight: 700; color: var(--blue); }
-  .grad { background: linear-gradient(100deg, var(--blue), var(--violet) 50%, var(--red)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .pill b { color: var(--primary); }
+  .hero-decl h1 { margin: 1.25rem auto .9rem; max-width: 18ch; font-size: clamp(2.2rem, 7vw, 4.2rem); line-height: 1.05; letter-spacing: -.035em; font-weight: 700; color: var(--primary); }
+  .grad { background: linear-gradient(100deg, var(--primary), var(--accent)); -webkit-background-clip: text; background-clip: text; color: transparent; }
   .hero-decl > p { max-width: 38rem; margin: 0 auto; font-size: clamp(1rem, 2.2vw, 1.2rem); color: var(--muted); }
   .cta { display: flex; gap: .75rem; justify-content: center; flex-wrap: wrap; margin-top: 1.75rem; }
   .cta .btn { text-decoration: none; padding-inline: 1.5rem; }
@@ -65,13 +65,13 @@
   .puces-nav { position: sticky; top: 5.6rem; z-index: 5; margin: 1.5rem 0; }
   .puces-nav ol { list-style: none; display: flex; gap: .5rem; overflow-x: auto; padding: .4rem; border-radius: 999px; background: var(--glass); border: 1px solid var(--border); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); scrollbar-width: none; }
   .puces-nav a { display: flex; align-items: center; min-height: 2.75rem; padding: 0 1rem; border-radius: 999px; white-space: nowrap; font-size: .9rem; font-weight: 700; color: var(--text); text-decoration: none; transition: background-color .2s, color .2s; }
-  .puces-nav a:hover { background: var(--blue); color: var(--on-accent); }
+  .puces-nav a:hover { background: var(--primary); color: var(--on-accent); }
 
   /* Sections */
   .bloc { margin-bottom: 1rem; padding: clamp(1.25rem, 3vw, 2rem); }
   main [id^="t-"] { scroll-margin-top: 10rem; }  /* titres visibles sous l’en-tête et le sommaire collants */
   .bloc:hover { transform: none; }
-  .surtitre { display: block; font-size: .8rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--violet); margin-bottom: .3rem; }
+  .surtitre { display: block; font-size: .8rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); margin-bottom: .3rem; }
   .bloc h2 { font-size: clamp(1.35rem, 3vw, 1.8rem); letter-spacing: -.02em; margin-bottom: 1rem; }
   .bloc h3 { font-size: 1rem; margin: 1.25rem 0 .5rem; }
   .bloc p { line-height: 1.65; margin-bottom: .75rem; }
@@ -79,27 +79,27 @@
   .liens { display: grid; gap: .6rem; list-style: none; }
   .liens a { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-height: 2.75rem; padding: .8rem 1.1rem; border-radius: 1rem; background: var(--surface-2); border: 1px solid var(--border); font-weight: 700; text-decoration: none; transition: border-color .2s, transform .3s var(--spring); }
   .liens a::after { content: "↗"; flex: none; }
-  .liens a:hover { border-color: var(--blue); transform: translateX(4px); }
+  .liens a:hover { border-color: var(--primary); transform: translateX(4px); }
   .puces { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; }
-  .puces li { padding: .35rem .9rem; border-radius: 999px; background: var(--blue-soft); color: var(--blue); font-weight: 700; font-size: .9rem; }
+  .puces li { padding: .35rem .9rem; border-radius: 999px; background: var(--primary-soft); color: var(--primary); font-weight: 700; font-size: .9rem; }
 
   /* Mesures : tuiles avec icône en dégradé */
   .mesures { display: grid; gap: .8rem; grid-template-columns: repeat(auto-fit, minmax(min(100%, 13rem), 1fr)); list-style: none; }
   .mesures li { display: flex; gap: .9rem; align-items: flex-start; padding: 1rem; border-radius: 1.1rem; background: var(--surface-2); border: 1px solid var(--border); transition: transform .35s var(--spring), border-color .2s; }
-  .mesures li:hover { transform: translateY(-3px) rotate(-.4deg); border-color: var(--blue); }
-  .mesures .ico { flex: none; display: grid; place-items: center; width: 2.8rem; height: 2.8rem; border-radius: .9rem; font-size: 1.35rem; background: linear-gradient(135deg, var(--blue-soft), var(--red-soft)); }
+  .mesures li:hover { transform: translateY(-3px) rotate(-.4deg); border-color: var(--primary); }
+  .mesures .ico { flex: none; display: grid; place-items: center; width: 2.8rem; height: 2.8rem; border-radius: .9rem; font-size: 1.35rem; background: linear-gradient(135deg, var(--primary-soft), var(--accent-soft)); }
   .mesures strong { display: block; margin-bottom: .15rem; }
   .mesures span.txt { font-size: .9rem; color: var(--muted); }
 
   /* Voies de recours : frise */
   .frise { list-style: none; position: relative; display: grid; gap: 1.25rem; padding-left: 3.25rem; counter-reset: f; }
-  .frise::before { content: ""; position: absolute; left: 1.2rem; top: .5rem; bottom: .5rem; width: 3px; border-radius: 3px; background: linear-gradient(var(--blue), var(--violet), var(--red)); }
+  .frise::before { content: ""; position: absolute; left: 1.2rem; top: .5rem; bottom: .5rem; width: 3px; border-radius: 3px; background: linear-gradient(var(--primary), var(--accent)); }
   .frise li { position: relative; counter-increment: f; }
-  .frise li::before { content: counter(f); position: absolute; left: -3.25rem; top: -.2rem; width: 2.6rem; height: 2.6rem; display: grid; place-items: center; border-radius: 50%; font-weight: 700; background: var(--surface); border: 3px solid var(--blue); color: var(--blue); }
+  .frise li::before { content: counter(f); position: absolute; left: -3.25rem; top: -.2rem; width: 2.6rem; height: 2.6rem; display: grid; place-items: center; border-radius: 50%; font-weight: 700; background: var(--surface); border: 3px solid var(--primary); color: var(--primary); }
   address { font-style: normal; margin-top: .6rem; padding: .9rem 1.1rem; border-radius: 1rem; background: var(--surface-2); border: 1px solid var(--border); line-height: 1.5; }
 
   /* Carte contact en dégradé (couleurs fixes : texte blanc lisible en clair comme en sombre) */
-  .contact { color: #fff; border: 0; background: linear-gradient(135deg, #000091, #5b21b6 55%, #9d174d); box-shadow: 0 25px 50px -20px rgba(60, 20, 160, .55); overflow: clip; }
+  .contact { color: #fff; border: 0; background: linear-gradient(135deg, #0b5a73, #c2410c); box-shadow: 0 25px 50px -20px rgba(11, 90, 115, .55); overflow: clip; }
   .contact .surtitre { color: #fff; opacity: .9; }
   .contact a { color: #fff; }
   .contact .a-definir { background: rgba(255, 255, 255, .15); border-color: #fff; color: #fff; }
@@ -115,9 +115,9 @@
   /* Contraste renforcé : pas d'effet de verre, de dégradé ni de tache de couleur */
   [data-contrast="high"] .fond { display: none; }
   [data-contrast="high"] { --glass: var(--surface); }
-  [data-contrast="high"] .grad { background: none; color: var(--blue); }
+  [data-contrast="high"] .grad { background: none; color: var(--primary); }
   [data-contrast="high"] .tuile, [data-contrast="high"] .puces-nav ol { border-width: 2px; backdrop-filter: none; }
-  [data-contrast="high"] .contact { background: #000091; }
+  [data-contrast="high"] .contact { background: #0b5a73; }
   [data-theme="dark"][data-contrast="high"] .contact { background: #000; border: 2px solid #fff; }
 
   @media (max-width: 34rem) {
@@ -133,9 +133,10 @@
 
 <header class="outil-header">
   <div class="container brandbar">
-    <a class="brand" href="index.html" aria-label="Retour à l'accueil Apps1D76">
+    <a class="brand" href="index.html" aria-label="Retour à l'accueil LabERUN76">
       <span class="back" aria-hidden="true">←</span>
-      <span><b>Apps1D<span>76</span></b><small>Mission Numérique Éducatif 76</small></span>
+      <img class="logo" src="accueil/icones/icon.svg" alt="" width="36" height="36">
+      <span><b>LabERUN<span>76</span></b><small>Mission Numérique Éducatif 76</small></span>
     </a>
     <div class="actions">
       <button type="button" class="icon-btn" id="theme-toggle" aria-label="Activer le mode sombre">
@@ -144,14 +145,14 @@
       </button>
     </div>
   </div>
-  <div class="tricolore" aria-hidden="true"></div>
+  <div class="filet" aria-hidden="true"></div>
 </header>
 
 <main class="container" id="contenu" tabindex="-1">
   <section class="hero-decl" aria-labelledby="t-titre">
     <span class="pill"><span aria-hidden="true">♿</span> <b>RGAA 4.1.2</b> · mise à jour le <time datetime="2026-09-30">30 septembre 2026</time></span>
     <h1 id="t-titre">Déclaration <span class="grad">d'accessibilité</span></h1>
-    <p>Apps1D76 doit pouvoir être utilisé par tous les enseignants et tous les élèves. Voici où nous en sommes, et comment nous signaler un problème.</p>
+    <p>LabERUN76 doit pouvoir être utilisé par tous les enseignants et tous les élèves. Voici où nous en sommes, et comment nous signaler un problème.</p>
     <div class="cta">
       <a class="btn btn-glow" href="#t-contact">Signaler un problème</a>
       <a class="btn btn-ghost" href="#t-mesures">Voir ce qui est fait</a>
@@ -190,7 +191,7 @@
       La Mission Numérique Éducatif 76 (DSDEN de la Seine-Maritime, académie de Normandie) s'engage à rendre ses services
       numériques accessibles, conformément à l'article 47 de la loi n° 2005-102 du 11 février 2005.
     </p>
-    <p>Cette déclaration s'applique au site <strong>Apps1D76</strong> et à tous les outils qu'il présente.</p>
+    <p>Cette déclaration s'applique au site <strong>LabERUN76</strong> et à tous les outils qu'il présente.</p>
   </section>
 
   <section class="tuile bloc apparait" aria-labelledby="t-mesures">

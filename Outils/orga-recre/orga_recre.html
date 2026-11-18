@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Organisateur de récréation</title>
 <meta name="description" content="Répartition automatique des services d'accueil et de récréation entre les enseignants, exportable en Word.">
-<meta name="theme-color" content="#000091">
+<meta name="theme-color" content="#0b5a73">
 <link rel="icon" href="../../accueil/icones/icon.svg" type="image/svg+xml">
-<!-- UI de référence des outils Apps1D76 -->
+<!-- UI de référence des outils LabERUN76 -->
 <link rel="stylesheet" href="../../accueil/outil.css">
 <script src="../../accueil/outil.js"></script>
 <style>
@@ -16,17 +16,17 @@
   /* Cartes enseignants */
   #teachers-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(16.5rem, 1fr)); gap: .9rem; margin-top: 1rem; }
   .teacher-card { border: 1.5px solid var(--border); border-radius: .8rem; padding: .8rem .9rem; background: var(--surface-2); transition: border-color .2s; }
-  .teacher-card:focus-within { border-color: var(--blue); }
+  .teacher-card:focus-within { border-color: var(--primary); }
   .teacher-card-top { margin-bottom: .6rem; }
   .teacher-card-top label { font-size: .75rem; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; }
   .teacher-card-top input[type=text] { font-weight: 700; }
   .days-row { display: flex; gap: .25rem; flex-wrap: wrap; }
   .day-btn { width: 2.75rem; height: 2.75rem; border-radius: .5rem; border: 1.5px solid var(--border); font-size: .8rem; font-weight: 700; display: flex; align-items: center; justify-content: center; background: var(--surface); color: var(--muted); user-select: none; transition: background .15s, border-color .15s, color .15s; }
   .day-btn.present { background: var(--green-soft); border-color: var(--green); color: var(--green); }
-  .day-btn.absent  { background: var(--red-soft); border-color: var(--red); color: var(--red); text-decoration: line-through; }
+  .day-btn.absent  { background: var(--danger-soft); border-color: var(--danger); color: var(--danger); text-decoration: line-through; }
 
   /* Services */
-  .services-section h3 { font-size: .85rem; font-weight: 700; color: var(--blue); text-transform: uppercase; letter-spacing: .08em; margin-bottom: .75rem; }
+  .services-section h3 { font-size: .85rem; font-weight: 700; color: var(--primary); text-transform: uppercase; letter-spacing: .08em; margin-bottom: .75rem; }
   .services-section + .services-section { margin-top: 1.5rem; }
   .service-row { display: flex; align-items: center; gap: .6rem; margin-bottom: .6rem; flex-wrap: wrap; }
   .service-row input[type=time] { width: 8rem; }
@@ -37,15 +37,15 @@
   /* Résultat */
   #result { margin-top: 2rem; }
   .result-header { display: flex; align-items: center; justify-content: space-between; gap: .75rem; flex-wrap: wrap; margin-bottom: 1rem; }
-  .result-header h2 { font-size: 1.3rem; font-weight: 700; color: var(--blue); }
+  .result-header h2 { font-size: 1.3rem; font-weight: 700; color: var(--primary); }
   .planning th.day-header { text-align: center; }
   .slot-label { font-weight: 700; font-size: .78rem; white-space: nowrap; }
   .slot-label strong { font-size: .9rem; }
   .slot-type-grille { color: var(--orange); }
-  .slot-type-matin { color: var(--blue); }
+  .slot-type-matin { color: var(--primary); }
   .slot-type-aprem { color: var(--green); }
   .cell-drop { min-width: 6rem; min-height: 2.5rem; display: flex; flex-wrap: wrap; gap: .25rem; align-items: center; padding: .25rem; border-radius: .5rem; transition: background .15s; }
-  .cell-drop.drag-over { background: var(--blue-soft); outline: 2px dashed var(--blue); }
+  .cell-drop.drag-over { background: var(--primary-soft); outline: 2px dashed var(--primary); }
   .cell-empty { justify-content: center; color: var(--muted); opacity: .6; }
   .drag-tip { font-size: .8rem; color: var(--muted); margin-top: .75rem; text-align: center; }
 
@@ -53,9 +53,9 @@
   .teacher-badge { display: inline-flex; align-items: center; padding: .25rem .6rem; border-radius: 999px; font-size: .8rem; font-weight: 700; cursor: grab; user-select: none; white-space: nowrap; transition: transform .1s, box-shadow .1s; }
   .teacher-badge:active { cursor: grabbing; transform: scale(1.08); box-shadow: 0 4px 12px rgba(0,0,0,.15); }
   .teacher-badge.dragging { opacity: .4; }
-  .teacher-badge.selected { outline: 3px solid var(--blue); outline-offset: 2px; transform: scale(1.08); }
+  .teacher-badge.selected { outline: 3px solid var(--primary); outline-offset: 2px; transform: scale(1.08); }
   .planning.placing .cell-drop:not(.cell-empty) { outline: 2px dashed var(--border); cursor: pointer; }
-  .planning.placing .cell-drop:not(.cell-empty):hover { background: var(--blue-soft); }
+  .planning.placing .cell-drop:not(.cell-empty):hover { background: var(--primary-soft); }
   .tc-0 { background: #DBEAFE; color: #1D4ED8; }  .tc-1 { background: #FCE7F3; color: #9D174D; }
   .tc-2 { background: #D1FAE5; color: #065F46; }  .tc-3 { background: #FEF3C7; color: #92400E; }
   .tc-4 { background: #EDE9FE; color: #5B21B6; }  .tc-5 { background: #FFE4E6; color: #9F1239; }
@@ -69,16 +69,16 @@
   .stat-name { font-size: .85rem; font-weight: 700; margin-bottom: .1rem; overflow-wrap: anywhere; }
   .stat-quotite { font-size: .72rem; color: var(--muted); margin-bottom: .35rem; }
   .stat-counts { display: flex; align-items: baseline; gap: .35rem; margin-bottom: .25rem; }
-  .stat-done { font-size: 1.4rem; font-weight: 700; color: var(--blue); }
+  .stat-done { font-size: 1.4rem; font-weight: 700; color: var(--primary); }
   .stat-target { font-size: .8rem; color: var(--muted); }
   .stat-bar-wrap { height: 5px; background: var(--border); border-radius: 3px; overflow: hidden; }
-  .stat-bar { height: 100%; border-radius: 3px; background: var(--blue); transition: width .4s; }
-  .stat-bar.over { background: var(--red); }
+  .stat-bar { height: 100%; border-radius: 3px; background: var(--primary); transition: width .4s; }
+  .stat-bar.over { background: var(--danger); }
   .stat-bar.exact { background: var(--green); }
   .stat-days-mini { display: flex; gap: .2rem; margin-top: .4rem; }
   .stat-day-dot { min-width: 1.4rem; height: 1.1rem; border-radius: 3px; font-size: .6rem; font-weight: 700; display: flex; align-items: center; justify-content: center; }
   .stat-day-dot.p { background: var(--green-soft); color: var(--green); }
-  .stat-day-dot.a { background: var(--red-soft); color: var(--red); }
+  .stat-day-dot.a { background: var(--danger-soft); color: var(--danger); }
 
   @media (max-width: 34rem) { #teachers-grid { grid-template-columns: 1fr; } }
 </style>
@@ -89,9 +89,10 @@
 
 <header class="outil-header">
   <div class="container brandbar">
-    <a class="brand" href="../../index.html" aria-label="Retour à l'accueil Apps1D76">
+    <a class="brand" href="../../index.html" aria-label="Retour à l'accueil LabERUN76">
       <span class="back" aria-hidden="true">←</span>
-      <span><b>Apps1D<span>76</span></b><small>Mission Numérique Éducatif 76</small></span>
+      <img class="logo" src="../../accueil/icones/icon.svg" alt="" width="36" height="36">
+      <span><b>LabERUN<span>76</span></b><small>Mission Numérique Éducatif 76</small></span>
     </a>
     <div class="actions">
       <button type="button" class="icon-btn" id="theme-toggle" aria-label="Activer le mode sombre">
@@ -104,7 +105,7 @@
     <h1>Organisateur <span class="accent">de récréation</span></h1>
     <p>Répartition automatique des services d'accueil et de surveillance</p>
   </div>
-  <div class="tricolore" aria-hidden="true"></div>
+  <div class="filet" aria-hidden="true"></div>
 </header>
 
 <main class="container" id="contenu" tabindex="-1">
@@ -180,7 +181,7 @@
 </footer>
 
 <script>
-// ─── STATE ───────────────────────────────────────────────────────
+// ─── ÉTAT ────────────────────────────────────────────────────────
 let draggedBadge = null;
 const ALL_DAYS = ['L','M','Me','J','V'];
 const DAY_NAMES = { 'L':'Lundi','M':'Mardi','Me':'Mercredi','J':'Jeudi','V':'Vendredi' };
@@ -188,21 +189,21 @@ const DAY_NAMES = { 'L':'Lundi','M':'Mardi','Me':'Mercredi','J':'Jeudi','V':'Ven
 // Échappe un texte saisi avant de l'insérer dans le HTML (prénoms) : fourni par accueil/outil.js
 const esc = Outil.esc;
 
-// ─── TEACHER CARDS ───────────────────────────────────────────────
+// Nombre d'enseignants saisi, borné à 1–30 (comme le champ) : une saisie de 1000 ne crée pas 1000 cartes
+const MAX_ENSEIGNANTS = 30;
+const nbEnseignants = () => Math.min(MAX_ENSEIGNANTS, Math.max(0, parseInt(document.getElementById('nb-teachers').value, 10) || 0));
+
+// ─── CARTES ENSEIGNANTS ──────────────────────────────────────────
 function generateTeacherInputs() {
-  const n = parseInt(document.getElementById('nb-teachers').value) || 0;
+  const n = nbEnseignants();
   const hasMercredi = document.getElementById('mercredi-toggle').checked;
   const grid = document.getElementById('teachers-grid');
 
-  // Preserve existing data
+  // Conserve les prénoms et jours déjà saisis
   const existing = {};
   grid.querySelectorAll('.teacher-card').forEach(card => {
     const idx = card.dataset.idx;
-    existing[idx] = {
-      name: card.querySelector('.t-name').value,
-
-      days: {}
-    };
+    existing[idx] = { name: card.querySelector('.t-name').value, days: {} };
     card.querySelectorAll('.day-btn').forEach(btn => {
       existing[idx].days[btn.dataset.day] = btn.dataset.state;
     });
@@ -219,7 +220,7 @@ function generateTeacherInputs() {
     card.className = 'teacher-card';
     card.dataset.idx = i;
 
-    // Day buttons HTML
+    // Boutons des jours
     let daysHtml = '<div class="days-row">';
     activeDays.forEach(d => {
       const state = prevDays[d] !== undefined ? prevDays[d] : 'present';
@@ -248,10 +249,10 @@ function toggleDay(btn) {
   btn.setAttribute('aria-pressed', next === 'present');
 }
 
-// ─── GET TEACHERS ─────────────────────────────────────────────────
+// ─── LECTURE DES ENSEIGNANTS ─────────────────────────────────────
 function getTeachers() {
   const alpha = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  const n = parseInt(document.getElementById('nb-teachers').value) || 0;
+  const n = nbEnseignants();
   const cards = document.querySelectorAll('.teacher-card');
   const hasMercredi = document.getElementById('mercredi-toggle').checked;
   const teachers = [];
@@ -264,14 +265,14 @@ function getTeachers() {
     card.querySelectorAll('.day-btn').forEach(btn => {
       days[btn.dataset.day] = btn.dataset.state === 'present';
     });
-    // Mercredi absent by default if not active
+    // Sans classe le mercredi, personne n'est présent ce jour-là
     if (!hasMercredi) days['Me'] = false;
     teachers.push({ id: i, name, days, colorIdx: i % 12 });
   }
   return teachers;
 }
 
-// ─── GRILLES ─────────────────────────────────────────────────────
+// ─── HORAIRES D'ACCUEIL ET DE RÉCRÉATION ─────────────────────────
 let grilleCount = 0;
 function addGrille(time='08:30', nb=2) {
   const id = ++grilleCount;
@@ -292,7 +293,7 @@ function addRec(period, start='', end='', nb=2) {
   document.getElementById('recs-' + period).appendChild(row);
 }
 
-// ─── INIT ─────────────────────────────────────────────────────────
+// ─── VALEURS DE DÉPART ───────────────────────────────────────────
 generateTeacherInputs();
 addGrille('08:30', 2);
 addGrille('13:30', 2);
@@ -301,18 +302,22 @@ addRec('matin', '10:15', '10:30', 2);
 addRec('aprem', '14:45', '15:00', 2);
 addRec('aprem', '15:00', '15:15', 2);
 
-// ─── PARSE ───────────────────────────────────────────────────────
+// ─── LECTURE DES HORAIRES ────────────────────────────────────────
+// Les lignes sans heure sont ignorées, et un horaire saisi deux fois n'est gardé qu'une fois :
+// sinon ses services seraient comptés dans la répartition sans apparaître dans le tableau.
+const unique = (lignes, cle) => lignes.filter((l, i) => lignes.findIndex(m => cle(m) === cle(l)) === i);
+const nombre = v => Math.min(10, Math.max(1, parseInt(v, 10) || 2));
 function parseGrilles() {
-  return [...document.querySelectorAll('#grille-rows .service-row')].map(r => {
+  return unique([...document.querySelectorAll('#grille-rows .service-row')].map(r => {
     const ins = r.querySelectorAll('input');
-    return { time: ins[0].value, nb: parseInt(ins[1].value) || 2 };
-  });
+    return { time: ins[0].value, nb: nombre(ins[1].value) };
+  }).filter(g => g.time), g => g.time);
 }
 function parseRecs(period) {
-  return [...document.querySelectorAll('#recs-' + period + ' .service-row')].map(r => {
+  return unique([...document.querySelectorAll('#recs-' + period + ' .service-row')].map(r => {
     const ins = r.querySelectorAll('input');
-    return { start: ins[0].value, end: ins[1].value, nb: parseInt(ins[2].value) || 2, period };
-  });
+    return { start: ins[0].value, end: ins[1].value, nb: nombre(ins[2].value), period };
+  }).filter(r => r.start), r => r.start + '–' + r.end);
 }
 
 function getDays() {
@@ -323,34 +328,27 @@ function getDays() {
   return days;
 }
 
-// ─── COMPUTE TARGETS ─────────────────────────────────────────────
-// Part de chaque enseignant dans le total des services, selon ses jours de présence
+// ─── PART DE CHAQUE ENSEIGNANT ───────────────────────────────────
+// Chaque jour, les services du jour sont partagés entre les enseignants présents ce jour-là.
+// Un jour chargé compte donc plus qu'un mercredi matin, et un enseignant n'est attendu que les jours où il est là.
 function computeTargets(teachers, slots) {
-  // Chaque enseignant doit sa part des créneaux des jours où il est là.
-  const totalPosts = slots.reduce((s, sl) => s + sl.nb, 0);
-
-  // Capacité = nombre de jours de présence
-  const totalCap = teachers.reduce((s, t) => {
-    return s + Object.values(t.days).filter(Boolean).length;
-  }, 0);
-
-  const targets = {};
-  teachers.forEach(t => {
-    const presentCount = Object.values(t.days).filter(Boolean).length;
-    targets[t.id] = totalCap > 0 ? Math.round((presentCount / totalCap) * totalPosts) : 0;
+  const part = {};
+  teachers.forEach(t => part[t.id] = 0);
+  [...new Set(slots.map(s => s.day))].forEach(day => {
+    const presents = teachers.filter(t => t.days[day]);
+    const postes = slots.filter(s => s.day === day).reduce((n, s) => n + Math.min(s.nb, presents.length), 0);
+    presents.forEach(t => part[t.id] += postes / presents.length);
   });
-
-  // Correction arrondi : la somme doit être égale à totalPosts
-  let diff = totalPosts - Object.values(targets).reduce((a,b)=>a+b,0);
-  const parCible = [...teachers].sort((a,b) => targets[b.id] - targets[a.id]);
-  let i = 0;
-  while (diff > 0 && i < parCible.length) { targets[parCible[i++].id]++; diff--; }
-  while (diff < 0 && i < parCible.length) { targets[parCible[i++].id]--; diff++; }
-
+  // Arrondi au plus fort reste : la somme des cibles est égale au nombre de postes
+  const targets = {};
+  teachers.forEach(t => targets[t.id] = Math.floor(part[t.id] + 1e-9));
+  let reste = Math.round(teachers.reduce((n, t) => n + part[t.id], 0)) - Object.values(targets).reduce((a, b) => a + b, 0);
+  [...teachers].sort((a, b) => (part[b.id] - targets[b.id]) - (part[a.id] - targets[a.id]))
+    .forEach(t => { if (reste-- > 0) targets[t.id]++; });
   return targets;
 }
 
-// ─── GENERATE ────────────────────────────────────────────────────
+// ─── RÉPARTITION ─────────────────────────────────────────────────
 function generate() {
   const teachers = getTeachers();
   if (!teachers.length) { alert('Veuillez renseigner au moins un enseignant.'); return; }
@@ -360,7 +358,7 @@ function generate() {
   const recsMatin = parseRecs('matin');
   const recsAprem = parseRecs('aprem');
 
-  // Build slots
+  // Créneaux de la semaine
   const slots = [];
   grilles.forEach(g => {
     // Accueil de l'après-midi (12 h ou plus) : pas de classe le mercredi après-midi
@@ -378,7 +376,7 @@ function generate() {
   // Cibles selon les jours de présence
   const targets = computeTargets(teachers, slots);
 
-  // Load counters : total semaine + par jour
+  // Services déjà attribués : sur la semaine et par jour
   const load = {};
   const loadDay = {};
   teachers.forEach(t => {
@@ -394,7 +392,7 @@ function generate() {
     dayCap[t.id] = presentCount > 0 ? Math.ceil(targets[t.id] / presentCount) : 0;
   });
 
-  // Deux passes : sous plafond d'abord, relache si insuffisant
+  // Pour chaque créneau : d'abord les enseignants sous leur plafond du jour, puis tous les présents si cela ne suffit pas
   slots.forEach(slot => {
     const dayKey = slot.day;
     const present = teachers.filter(t => t.days[dayKey] === true);
@@ -417,10 +415,28 @@ function generate() {
     });
   });
 
+  // Rééquilibrage : tant qu'un enseignant dépasse sa cible et qu'un autre est en dessous, on échange un de leurs
+  // services un jour où les deux sont présents (ex. un enseignant présent seulement le mercredi, à petite cible)
+  for (let tour = 0; tour < 200; tour++) {
+    const plus = teachers.filter(t => load[t.id] > targets[t.id]), moins = teachers.filter(t => load[t.id] < targets[t.id]);
+    let echange = null;
+    for (const m of moins) {
+      for (const p of plus) {
+        const s = slots.find(s => s.teachers.includes(p) && !s.teachers.includes(m) && m.days[s.day]);
+        if (s) { echange = { s, p, m }; break; }
+      }
+      if (echange) break;
+    }
+    if (!echange) break;
+    const { s, p, m } = echange;
+    s.teachers[s.teachers.indexOf(p)] = m;
+    load[p.id]--; load[m.id]++; loadDay[p.id][s.day]--; loadDay[m.id][s.day]++;
+  }
+
   renderResult(slots, teachers, days, load, targets, grilles, recsMatin, recsAprem);
 }
 
-// ─── RENDER ──────────────────────────────────────────────────────
+// ─── AFFICHAGE ───────────────────────────────────────────────────
 function renderResult(slots, teachers, days, load, targets, grilles, recsMatin, recsAprem) {
   select(null); // l'étiquette choisie appartenait à l'ancien planning
   const slotLabels = [];
@@ -431,7 +447,7 @@ function renderResult(slots, teachers, days, load, targets, grilles, recsMatin, 
   const totalPosts = Object.values(targets).reduce((a,b)=>a+b,0);
   const dayNames = days.map(d => DAY_NAMES[d] || d);
 
-  // Stats cards
+  // Bilan par enseignant
   let statsHtml = '<div class="stats-grid">';
   teachers.forEach(t => {
     const tgt = targets[t.id] || 0;
@@ -467,9 +483,15 @@ function renderResult(slots, teachers, days, load, targets, grilles, recsMatin, 
   if (warnings.length) {
     statsHtml += `<div class="alert alert-warning">⚠️ Dépassement de quota : ${warnings.join(' · ')}</div>`;
   }
+  // Créneaux qui n'ont pas assez d'enseignants présents ce jour-là
+  const incomplets = slots.filter(s => s.teachers.length < s.nb)
+    .map(s => `${DAY_NAMES[s.day]} ${s.label} (${s.teachers.length}/${s.nb})`);
+  if (incomplets.length) {
+    statsHtml += `<div class="alert alert-error">⚠️ Pas assez d'enseignants présents pour : ${incomplets.join(' · ')}</div>`;
+  }
   statsHtml += `<div class="alert alert-info">Total : <strong>${totalPosts} postes</strong> répartis sur ${days.length} jours — pondération par jours de présence.</div>`;
 
-  // Table
+  // Tableau
   const typeLabel = { grille: '🚪 Accueil', matin: '☀️ Récré matin', aprem: '🌤 Récré après-midi' };
   let html = `<thead><tr><th scope="col">Créneau</th>`;
   dayNames.forEach(d => html += `<th scope="col" class="day-header">${d}</th>`);
@@ -477,7 +499,7 @@ function renderResult(slots, teachers, days, load, targets, grilles, recsMatin, 
 
   slotLabels.forEach(sl => {
     html += `<tr><td><div class="slot-label slot-type-${sl.type}">${typeLabel[sl.type]}<br><strong>${sl.label}</strong></div></td>`;
-    days.forEach((day, di) => {
+    days.forEach(day => {
       const slot = slots.find(s => s.day === day && s.label === sl.label && s.type === sl.type);
       html += `<td>`;
       if (slot) {
@@ -515,7 +537,7 @@ function badgeHtml(t, day, label, type) {
 // Couleurs des étiquettes (mêmes que les classes .tc-0 à .tc-11) : [fond, texte]
 const TC = [['#DBEAFE','#1D4ED8'],['#FCE7F3','#9D174D'],['#D1FAE5','#065F46'],['#FEF3C7','#92400E'],['#EDE9FE','#5B21B6'],['#FFE4E6','#9F1239'],
             ['#CFFAFE','#164E63'],['#FEF9C3','#713F12'],['#F0FDF4','#14532D'],['#F5F3FF','#4C1D95'],['#FFF7ED','#7C2D12'],['#ECFDF5','#064E3B']];
-const TYPE_COULEUR = { grille: '#A94700', matin: '#000091', aprem: '#18753C' };
+const TYPE_COULEUR = { grille: '#A94700', matin: '#0B5A73', aprem: '#18753C' };
 
 // Le document reprend le tableau affiché, y compris les étiquettes déplacées à la main
 function exportWord() {
@@ -540,7 +562,7 @@ function exportWord() {
   ], { paysage: true });
 }
 
-// ─── PRINT ───────────────────────────────────────────────────────
+// ─── IMPRESSION ──────────────────────────────────────────────────
 function printPlanning() {
   const table = document.querySelector('table.planning');
   if (!table) { alert('Générez d\'abord le planning.'); return; }
@@ -553,19 +575,19 @@ function printPlanning() {
 <meta charset="UTF-8">
 <title>Planning de récréation</title>
 <style>
-  @font-face { font-family: Marianne; src: url(https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/fonts/Marianne-Regular.woff2) format("woff2"); font-weight: 400; }
-  @font-face { font-family: Marianne; src: url(https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/fonts/Marianne-Bold.woff2) format("woff2"); font-weight: 700; }
+  @font-face { font-family: "Atkinson Hyperlegible"; src: url(https://cdn.jsdelivr.net/npm/@fontsource/atkinson-hyperlegible@5.3.0/files/atkinson-hyperlegible-latin-400-normal.woff2) format("woff2"); font-weight: 400; font-display: swap; }
+  @font-face { font-family: "Atkinson Hyperlegible"; src: url(https://cdn.jsdelivr.net/npm/@fontsource/atkinson-hyperlegible@5.3.0/files/atkinson-hyperlegible-latin-700-normal.woff2) format("woff2"); font-weight: 700; font-display: swap; }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { font-family: 'Marianne', Arial, sans-serif; background: white; color: #1a1a1a; padding: 24px; }
+  body { font-family: 'Atkinson Hyperlegible', Arial, sans-serif; background: white; color: #1a1a1a; padding: 24px; }
 
   .print-header { display: flex; align-items: flex-end; justify-content: space-between; margin-bottom: 6px; }
-  .print-title { font-size: 22px; font-weight: 700; color: #000091; }
+  .print-title { font-size: 22px; font-weight: 700; color: #0B5A73; }
   .print-date { font-size: 11px; color: #6B7280; }
-  .stripe { height: 4px; background: linear-gradient(90deg, #000091 0 33.3%, #fff 0 66.6%, #E1000F 0); margin-bottom: 18px; }
+  .stripe { height: 4px; background: linear-gradient(90deg, #0B5A73, #C2410C); margin-bottom: 18px; }
 
   table { width: 100%; border-collapse: collapse; font-size: 12px; }
   thead th {
-    background: #000091 !important;
+    background: #0B5A73 !important;
     -webkit-print-color-adjust: exact;
     print-color-adjust: exact;
     color: white !important;
@@ -582,7 +604,7 @@ function printPlanning() {
 
   .slot-label { font-size: 11px; font-weight: 700; }
   .slot-type-grille { color: #A94700; }
-  .slot-type-matin  { color: #000091; }
+  .slot-type-matin  { color: #0B5A73; }
   .slot-type-aprem  { color: #18753C; }
 
   .cell-drop { display: flex; flex-wrap: wrap; gap: 3px; align-items: center; min-height: 28px; }

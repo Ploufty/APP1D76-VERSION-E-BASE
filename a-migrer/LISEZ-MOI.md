@@ -4,8 +4,9 @@ Ce dossier accueille les outils qui ne sont pas encore sur la page d'accueil. De
 
 ## 1. Un nouvel outil à confier à Claude
 
-1. Sur GitHub, ouvrir `a-migrer` › **Add file › Upload files** et glisser le dossier de l'outil
-   (par exemple `a-migrer/calcul-flash/` avec sa page `.html`, ses images, ses scripts…). **Commit changes**.
+1. Sur la Forge, ouvrir le projet dans le **Web IDE** (**Modifier › Web IDE**, ou touche `.`) et glisser le dossier de l'outil
+   dans `a-migrer` (par exemple `a-migrer/calcul-flash/` avec sa page `.html`, ses images, ses scripts…).
+   Puis **Contrôle de source › Valider et pousser**.
 2. Demander à Claude : « Nouvel outil dans a-migrer/calcul-flash : intègre-le ».
    On peut ajouter des indications : public visé, catégorie, nom souhaité.
 3. Claude déplace l'outil dans `Outils/`, écrit sa fiche, lui applique l'UI commune, le vérifie
@@ -18,9 +19,9 @@ Chaque dossier ci-dessous contient déjà la **fiche** (`outil.json`) de l'outil
 1. Copier les fichiers de l'outil dans son dossier ici (ex. `a-migrer/course/index.html`, ses images, scripts…).
    Pour `carnet` et `thunderstruct`, la page d'entrée est indiquée par `"page"` dans la fiche.
 2. Déplacer le dossier complet dans `Outils/` (ou le confier à Claude comme ci-dessus).
-3. Envoyer sur GitHub (ou `npm run generer`) : l'outil apparaît sur l'accueil.
+3. Envoyer sur la Forge : le pipeline régénère la page et l'outil apparaît en ligne (en local : `npm run generer`).
 
 ## À savoir
 
-Ce dossier n'apparaît pas sur l'accueil et n'est pas publié sur la Forge, mais **GitHub Pages publie toute la branche** :
-ne jamais y déposer de données d'élèves. Supprimez-le quand tout est migré.
+Ce dossier n'apparaît pas sur l'accueil et n'est pas publié sur le site, mais il est visible par toute personne qui a accès
+au projet sur la Forge : ne jamais y déposer de données d'élèves. Supprimez-le quand tout est migré.

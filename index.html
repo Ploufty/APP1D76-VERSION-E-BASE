@@ -3,27 +3,27 @@
 <head>
 <meta charset="UTF-8">
 <!-- Politique de sécurité : l'empreinte du script ci-dessous est mise à jour par « npm run generer » -->
-<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-st4udG2+EKsnYmV8/2Q6iJsiL6TNn0WO3fgZ4HdOfqQ='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://cdn.jsdelivr.net; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
+<meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'sha256-Gdcahr/eP99KtA3oJC22nVZjyotvA7xZis7mVUBcdcg='; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self' https://cdn.jsdelivr.net; connect-src 'self' https://cdn.jsdelivr.net; manifest-src 'self'; worker-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="strict-origin-when-cross-origin">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Apps1D76 - Outils numériques</title>
+<title>LabERUN76 - Outils numériques</title>
 <meta name="description" content="Outils numériques pour l'école primaire - Mission Numérique Éducatif 76">
-<meta name="theme-color" content="#000091">
+<meta name="theme-color" content="#0b5a73">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="accueil/icones/icon.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="accueil/icones/apple-touch-icon.png">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="preload" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/fonts/Marianne-Regular.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="https://cdn.jsdelivr.net/npm/@gouvfr/dsfr@1.15.3/dist/fonts/Marianne-Bold.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fontsource/atkinson-hyperlegible@5.3.0/files/atkinson-hyperlegible-latin-400-normal.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/@fontsource/atkinson-hyperlegible@5.3.0/files/atkinson-hyperlegible-latin-700-normal.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="accueil/style.css">
 <!-- Applique les préférences d'affichage avant le premier rendu (évite le flash) -->
 <script>
 (function (d, p) {
-  try { p = JSON.parse(localStorage.getItem('apps1d-prefs')) || {}; } catch (e) { p = {}; }
+  try { p = JSON.parse(localStorage.getItem('laberun76-prefs')) || {}; } catch (e) { p = {}; }
   var mq = function (q) { return window.matchMedia && matchMedia(q).matches; };
   d.dataset.theme = p.theme === 'dark' || (p.theme !== 'light' && mq('(prefers-color-scheme: dark)')) ? 'dark' : 'light';
   d.dataset.motion = p.motion === 'reduce' || (p.motion !== 'on' && mq('(prefers-reduced-motion: reduce)')) ? 'reduce' : 'full';
-  d.dataset.contrast = p.contrast ? 'high' : 'normal';
+  d.dataset.contrast = p.contrast === true ? 'high' : 'normal';
   d.style.setProperty('--text-scale', ({ 115: 1.15, 130: 1.3 })[p.text] || 1);
   d.classList.add('js');
 })(document.documentElement);
@@ -37,14 +37,15 @@
   <div class="layer layer-b"><div class="blob blob-b"></div></div>
   <div class="layer layer-c"><div class="dots"></div></div>
 </div>
-<div class="tricolore" aria-hidden="true"></div>
+<div class="filet" aria-hidden="true"></div>
 
 <header>
   <div class="brandbar container">
     <a class="brand" href="./">
       <!-- Logo : déposer logo.png dans accueil/ puis décommenter la ligne suivante -->
       <!-- <img src="accueil/logo.png" alt="Logo DSDEN 76" height="46"> -->
-      <div><b>Apps1D<span>76</span></b><small>Mission Numérique Éducatif 76</small></div>
+      <img class="logo" src="accueil/icones/icon.svg" alt="" width="40" height="40">
+      <div><b>LabERUN<span>76</span></b><small>Mission Numérique Éducatif 76</small></div>
     </a>
     <div class="actions">
       <button type="button" class="icon-btn" id="theme-toggle" aria-label="Activer le mode sombre">

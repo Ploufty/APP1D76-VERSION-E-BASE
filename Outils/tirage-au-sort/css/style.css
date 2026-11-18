@@ -1,6 +1,6 @@
 /* Tirage au sort — styles propres à l'outil.
    Le thème, la police, l'en-tête, les boutons (.btn, .icon-btn) et les interrupteurs (.toggle-wrap)
-   viennent de accueil/outil.css : ici, uniquement les variables de l'UI de référence (--blue, --surface…). */
+   viennent de accueil/outil.css : ici, uniquement les variables de l'UI de référence (--primary, --surface…). */
 
 [hidden] { display: none !important; }
 :root { --largeur: 64rem; }
@@ -18,13 +18,13 @@ button, input[type="range"] { touch-action: manipulation; }
 .notifBanner {
   position: absolute; top: 0; left: 0; right: 0; z-index: 70;
   padding: .75rem 1.25rem; text-align: center; font-weight: 700; font-size: .9rem;
-  color: var(--on-accent); background: var(--blue); border-radius: var(--radius);
+  color: var(--on-accent); background: var(--primary); border-radius: var(--radius);
   transform: translateY(-140%); opacity: 0; pointer-events: none;
   transition: transform .35s var(--spring), opacity .2s;
 }
 .notifBanner.visible { transform: translateY(0); opacity: 1; }
 .notifBanner.success { background: var(--green); }
-.notifBanner.error { background: var(--red); }
+.notifBanner.error { background: var(--danger); }
 
 /* ---------- Barre du haut : onglets et actions ---------- */
 .topbar { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; }
@@ -40,8 +40,8 @@ button, input[type="range"] { touch-action: manipulation; }
   color: var(--muted); background: transparent; border: 0; border-radius: 999px; font-weight: 700;
   transition: background-color .2s, color .2s;
 }
-.tabButton:hover { color: var(--blue); }
-.tabButton.active { color: var(--on-accent); background: var(--blue); }
+.tabButton:hover { color: var(--primary); }
+.tabButton.active { color: var(--on-accent); background: var(--primary); }
 
 .optionsBar {
   display: flex; flex-wrap: wrap; align-items: center; gap: .2rem 1.5rem; padding: .4rem 1.1rem;
@@ -57,7 +57,7 @@ button, input[type="range"] { touch-action: manipulation; }
   box-shadow: var(--shadow); padding: 1rem;
 }
 .panelHeader { display: flex; align-items: center; justify-content: space-between; gap: .5rem; margin-bottom: .75rem; }
-.panelHeader h2 { font-size: 1.25rem; color: var(--blue); }
+.panelHeader h2 { font-size: 1.25rem; color: var(--primary); }
 .hint { margin: .6rem 0 0; font-size: .8rem; }
 
 .listPanel { flex: 1 1 16rem; min-width: min(15rem, 100%); display: flex; flex-direction: column; }
@@ -74,7 +74,7 @@ button, input[type="range"] { touch-action: manipulation; }
   min-height: 2.75rem; padding: 0 .4rem; color: var(--muted); background: none; border: 0;
   font-size: .85rem; font-weight: 700; text-decoration: underline;
 }
-.linkButton:hover { color: var(--blue); }
+.linkButton:hover { color: var(--primary); }
 
 /* ---------- Zone de tirage ---------- */
 .drawPanel { position: relative; flex: 2 1 24rem; min-width: min(17rem, 100%); display: flex; flex-direction: column; gap: 1rem; }
@@ -91,8 +91,8 @@ button, input[type="range"] { touch-action: manipulation; }
   max-width: 100%; color: var(--text); font-size: clamp(1.9rem, 6vw, 3.6rem); line-height: 1.1; font-weight: 700;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
-#resultName.rolling { color: var(--blue); }
-#resultName.winner { color: var(--blue); animation: popWinner .45s ease-out; }
+#resultName.rolling { color: var(--primary); }
+#resultName.winner { color: var(--primary); animation: popWinner .45s ease-out; }
 @keyframes popWinner {
   0% { transform: scale(.86); opacity: .7; }
   70% { transform: scale(1.08); opacity: 1; }
@@ -106,7 +106,7 @@ button, input[type="range"] { touch-action: manipulation; }
 /* Grand bouton « Lancer » avec son dé */
 .drawButton {
   width: 9.75rem; height: 6.75rem; flex: 0 0 auto;
-  color: var(--on-accent); background: var(--blue); border: 0; border-radius: 1.6rem;
+  color: var(--on-accent); background: var(--primary); border: 0; border-radius: 1.6rem;
   box-shadow: 0 6px 0 rgba(0, 0, 60, .35); font-size: 1.3rem; font-weight: 700;
   transition: transform .15s, box-shadow .15s;
 }
@@ -117,7 +117,7 @@ button, input[type="range"] { touch-action: manipulation; }
   position: relative; display: block; width: 3.1rem; height: 3.1rem; margin: 0 auto .5rem;
   background: #fff; border-radius: .9rem;
 }
-.dieButton i { position: absolute; display: block; width: .5rem; height: .5rem; background: #000091; border-radius: 50%; }
+.dieButton i { position: absolute; display: block; width: .5rem; height: .5rem; background: #0b5a73; border-radius: 50%; }
 .dieButton i:nth-child(1) { left: 22%; top: 22%; }
 .dieButton i:nth-child(2) { right: 22%; top: 22%; }
 .dieButton i:nth-child(3) { left: calc(50% - .25rem); top: calc(50% - .25rem); }
@@ -128,8 +128,8 @@ button, input[type="range"] { touch-action: manipulation; }
 .speedBox { flex: 1 1 12rem; padding: 1rem 1.25rem; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--radius); }
 .speedHeader { display: flex; align-items: center; justify-content: space-between; margin-bottom: .5rem; font-weight: 700; }
 .speedHeader label { margin: 0; font-size: 1rem; }
-.speedHeader strong { color: var(--blue); font-size: 1.3rem; }
-#durationRange { width: 100%; min-height: 2.75rem; margin: 0; accent-color: var(--blue); cursor: pointer; }
+.speedHeader strong { color: var(--primary); font-size: 1.3rem; }
+#durationRange { width: 100%; min-height: 2.75rem; margin: 0; accent-color: var(--primary); cursor: pointer; }
 .rangeLabels { display: flex; justify-content: space-between; color: var(--muted); font-size: .8rem; font-weight: 700; }
 
 /* ---------- Dés ---------- */
@@ -142,8 +142,8 @@ button, input[type="range"] { touch-action: manipulation; }
   color: var(--muted); background: var(--surface); border: 1.5px solid var(--border); border-radius: 999px; font-weight: 700;
   transition: border-color .2s, background-color .2s;
 }
-.pillBtn:hover { border-color: var(--blue); }
-.pillBtn.active { color: var(--on-accent); background: var(--blue); border-color: var(--blue); }
+.pillBtn:hover { border-color: var(--primary); }
+.pillBtn.active { color: var(--on-accent); background: var(--primary); border-color: var(--primary); }
 .pillBtn.iconPill { width: 3rem; height: 3rem; padding: 0; border-radius: .9rem; font-size: 1.15rem; }
 .miniPipFace, .miniHand { position: relative; display: block; width: 1.4rem; height: 1.4rem; }
 .miniPipFace .pipGrid { width: 100%; height: 100%; }
@@ -153,7 +153,7 @@ button, input[type="range"] { touch-action: manipulation; }
 .dieFace {
   position: relative; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;
   width: var(--dieSize); height: var(--dieSize); color: #1e1e2f; background: #fff;
-  border: 2.5px solid var(--blue); border-radius: 16px; box-shadow: var(--shadow);
+  border: 2.5px solid var(--primary); border-radius: 16px; box-shadow: var(--shadow);
   font-size: calc(var(--dieSize) * .4); font-weight: 700;
 }
 .dieFace.rolling { animation: dieShake .3s ease-in-out infinite; }
@@ -184,7 +184,7 @@ button, input[type="range"] { touch-action: manipulation; }
 [data-theme="dark"] .pillBtn.active .handImg { filter: brightness(0); }
 
 .diceTotal { font-weight: 700; }
-.diceTotal strong { color: var(--blue); font-size: 1.3rem; }
+.diceTotal strong { color: var(--primary); font-size: 1.3rem; }
 
 /* ---------- Confettis (supprimés si les animations sont réduites) ---------- */
 #confettiLayer { position: absolute; inset: 0; overflow: hidden; pointer-events: none; z-index: 50; border-radius: inherit; }
@@ -210,7 +210,7 @@ button, input[type="range"] { touch-action: manipulation; }
   font-size: .85rem; font-weight: 700;
 }
 .historyList li[data-kind="dice"] { border-left-color: var(--orange); }
-.historyList li:first-child { border-color: var(--blue); border-left-color: var(--green); }
+.historyList li:first-child { border-color: var(--primary); border-left-color: var(--green); }
 .historyList li[data-kind="dice"]:first-child { border-left-color: var(--orange); }
 .historyList .historyName { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .historyList .historyTime { flex: none; color: var(--muted); font-weight: 400; font-size: .75rem; }

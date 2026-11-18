@@ -1,6 +1,6 @@
 // Fichier généré automatiquement à partir du dossier Outils/ : ne pas modifier à la main.
 // Pour ajouter un outil : voir README.md
-window.APPS1D = {
+window.LABERUN76 = {
   "categories": [
     {
       "id": "direction",
